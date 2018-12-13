@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>测试页面-表格</title>
@@ -27,7 +27,7 @@
 
 <!--body里面的class一定要设置样式，不然是白色的-->
 <body class="hold-transition skin-blue sidebar-mini">
-<div class="wrapper">
+<div id="content_id" class="wrapper">
 
     <!--顶部导航栏-->
     <header class="main-header">
@@ -540,11 +540,11 @@
                                     <th>上映日期</th>
                                 </tr>
                                 <tr v-for="(film, index) in filmList">
-                                    <td>{{index + 1}}</td>
-                                    <td>{{film.name}}</td>
-                                    <td>{{film.address}}</td>
-                                    <td>{{film.actor.substr(0, 5)}}</td>
-                                    <td>{{film.dateRelease}}</td>
+                                    <td width="5%" v-text="index + 1 + pageStart"></td>
+                                    <td width="30%" v-text="film.name"></td>
+                                    <td width="5%" v-text="film.address"></td>
+                                    <td width="20%" v-text="subStringActor(film.actor)"></td>
+                                    <td v-text="film.dateRelease"></td>
                                 </tr>
                             </table>
                             <nav aria-label="分页">
@@ -555,20 +555,11 @@
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
-                                    <li class="active">
-                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(0)">1</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(1)">2</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(2)">3</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(3)">4</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(4)">5</a>
+                                    <li v-for="(page, index) in [0,1,2,3,4]"
+                                        v-bind:class="{active:setActiveClass(index)}">
+                                        <a href="javascript:void(0)"
+                                           v-on:click="getIndexFilm(page)"
+                                           v-text="page + 1"></a>
                                     </li>
                                     <li>
                                         <a href="javascript:void(0)" v-on:click="getIndexFilm(5)"
@@ -588,7 +579,7 @@
 
 <script>
     let app = new Vue({
-        el: '#tableFilm',
+        el: '#content_id',
 
         /**
          * 以下为Vue的生命周期
@@ -621,11 +612,16 @@
 
         },
         data: {
+            pageStart: 0,
+            isActive: false,
             filmList: [],
+            currentPage: 0,
         },
         methods: {
             getIndexFilm: function (page) {
                 let that = this;
+                that.pageStart = page * 20;
+                that.currentPage = page;
                 $.ajax({
                     url: 'http://118.25.107.131:8081/bts2/f/index/' + page,
                     type: 'GET',
@@ -650,6 +646,15 @@
                     }
                 })
             },
+            subStringActor: function (actor) {
+                if (!actor) {
+                    return 'null';
+                }
+                return actor.length > 20 ? actor.substring(0, 20) : actor;
+            },
+            setActiveClass: function (index) {
+                return index === this.currentPage;
+            }
         }
     })
 </script>
