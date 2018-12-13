@@ -547,25 +547,19 @@
                                     <td v-text="film.dateRelease"></td>
                                 </tr>
                             </table>
-                            <nav aria-label="分页">
+                            <nav>
                                 <ul class="pagination pull-right">
-                                    <li class="disabled">
-                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(0)"
-                                           aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
+                                    <li>
+                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(currentPage - 1)">&laquo;</a>
                                     </li>
-                                    <li v-for="(page, index) in [0,1,2,3,4]"
+                                    <li v-for="(page, index) in pages"
                                         v-bind:class="{active:setActiveClass(index)}">
                                         <a href="javascript:void(0)"
                                            v-on:click="getIndexFilm(page)"
                                            v-text="page + 1"></a>
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(5)"
-                                           aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
+                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(currentPage + 1)">&raquo;</a>
                                     </li>
                                 </ul>
                             </nav>
@@ -613,9 +607,10 @@
         },
         data: {
             pageStart: 0,
-            isActive: false,
-            filmList: [],
             currentPage: 0,
+            pages: [0, 1, 2, 3, 4],
+            isActive: false,
+            filmList: []
         },
         methods: {
             getIndexFilm: function (page) {
