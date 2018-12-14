@@ -23,6 +23,13 @@
     <!-- Jquery -->
     <script src="../../bower_components/jquery/dist/jquery.js"></script>
 
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
 </head>
 
 <!--body里面的class一定要设置样式，不然是白色的-->
@@ -535,31 +542,32 @@
                                 <tr>
                                     <th>序号</th>
                                     <th>电影名</th>
-                                    <th>导演</th>
+                                    <th>地址</th>
                                     <th>演员</th>
                                     <th>上映日期</th>
                                 </tr>
                                 <tr v-for="(film, index) in filmList">
-                                    <td width="5%" v-text="index + 1 + pageStart"></td>
+                                    <td width="3%" v-text="index + 1 + pageStart"></td>
                                     <td width="30%" v-text="film.name"></td>
                                     <td width="5%" v-text="film.address"></td>
-                                    <td width="20%" v-text="subStringActor(film.actor)"></td>
+                                    <td width="15%" v-text="subStringActor(film.actor)"></td>
                                     <td v-text="film.dateRelease"></td>
                                 </tr>
                             </table>
-                            <nav>
+                            <nav aria-label="分页">
                                 <ul class="pagination pull-right">
                                     <li>
-                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(currentPage - 1)">&laquo;</a>
+                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(nowPage - 1)">&laquo;</a>
                                     </li>
-                                    <li v-for="(page, index) in pages"
-                                        v-bind:class="{active:setActiveClass(index)}">
+                                    <li v-for="(page) in pages"
+                                        v-bind:class="{active:setActiveClass(page)}">
                                         <a href="javascript:void(0)"
                                            v-on:click="getIndexFilm(page)"
-                                           v-text="page + 1"></a>
+                                           v-text="page">
+                                        </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(currentPage + 1)">&raquo;</a>
+                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(nowPage + 1)">&raquo;</a>
                                     </li>
                                 </ul>
                             </nav>
@@ -607,16 +615,16 @@
         },
         data: {
             pageStart: 0,
-            currentPage: 0,
-            pages: [0, 1, 2, 3, 4],
+            nowPage: 1,
+            pages: [1, 2, 3, 4, 5],
             isActive: false,
             filmList: []
         },
         methods: {
             getIndexFilm: function (page) {
                 let that = this;
-                that.pageStart = page * 20;
-                that.currentPage = page;
+                that.pageStart = (page - 1) * 10;
+                that.nowPage = page;
                 $.ajax({
                     url: 'http://118.25.107.131:8081/bts2/f/index/' + page,
                     type: 'GET',
@@ -647,8 +655,8 @@
                 }
                 return actor.length > 20 ? actor.substring(0, 20) : actor;
             },
-            setActiveClass: function (index) {
-                return index === this.currentPage;
+            setActiveClass: function (page) {
+                return page === this.nowPage;
             }
         }
     })
