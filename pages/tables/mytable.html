@@ -543,31 +543,29 @@
                                     <th>序号</th>
                                     <th>电影名</th>
                                     <th>地址</th>
-                                    <th>演员</th>
-                                    <th>上映日期</th>
+                                    <th>年代</th>
                                 </tr>
                                 <tr v-for="(film, index) in filmList">
-                                    <td width="3%" v-text="index + 1 + pageStart"></td>
-                                    <td width="30%" v-text="film.name"></td>
-                                    <td width="5%" v-text="film.address"></td>
-                                    <td width="15%" v-text="subStringActor(film.actor)"></td>
-                                    <td v-text="film.dateRelease"></td>
+                                    <td width="10%" v-text="index + 1 + pageStart"></td>
+                                    <td width="50%" v-text="subStringActor(film.name)"></td>
+                                    <td width="10%" v-text="film.address"></td>
+                                    <td width="30%" v-text="subStringActor(film.year)"></td>
                                 </tr>
                             </table>
                             <nav aria-label="分页">
-                                <ul class="pagination pull-right">
-                                    <li>
-                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(nowPage - 1)">&laquo;</a>
+                                <ul class="pagination pull-right dis">
+                                    <li v-bind:class="{disabled:setPrevDisableClass()}">
+                                        <a href="javascript:void(0)" v-on:click="setPage(nowPage - 1, 'previous')">&laquo;</a>
                                     </li>
                                     <li v-for="(page) in pages"
                                         v-bind:class="{active:setActiveClass(page)}">
                                         <a href="javascript:void(0)"
-                                           v-on:click="getIndexFilm(page)"
+                                           v-on:click="setPage(page, 'mid')"
                                            v-text="page">
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="javascript:void(0)" v-on:click="getIndexFilm(nowPage + 1)">&raquo;</a>
+                                    <li v-bind:class="{disabled:setNextDisableClass()}">
+                                        <a href="javascript:void(0)" v-on:click="setPage(nowPage + 1, 'next')">&raquo;</a>
                                     </li>
                                 </ul>
                             </nav>
@@ -599,7 +597,7 @@
 
         },
         mounted: function () {
-            this.getIndexFilm(0);
+            this.getIndexFilm(1, 'mid');
         },
         beforeUpdate: function () {
 
@@ -621,10 +619,42 @@
             filmList: []
         },
         methods: {
+            setPage: function(page, flag){
+                if (flag === 'next') {
+                    if (this.nowPage === this.pages[4] && this.filmList.length === 10) {
+                        this.pageStart = (page - 1) * 10;
+                        this.nowPage = page;
+                        this.pages = this.pages.map(function (i) {return ++i;});
+                        this.getIndexFilm(page);
+                    }else if (this.nowPage !== this.pages[4] && this.filmList.length === 10) {
+                        this.pageStart = (page - 1) * 10;
+                        this.nowPage = page;
+                        this.getIndexFilm(page);
+                    } else {
+                        // 最后一页了
+                    }
+                } else if (flag === 'previous') {
+                    if (this.nowPage === this.pages[0] && this.nowPage > 1) {
+                        this.pageStart = (page - 1) * 10;
+                        this.nowPage = page;
+                        this.pages = this.pages.map(function (i) {return --i;});
+                        this.getIndexFilm(page);
+                    } else if (this.nowPage !== this.pages[0]) {
+                        this.pageStart = (page - 1) * 10;
+                        this.nowPage = page;
+                        this.getIndexFilm(page);
+                    } else if (this.nowPage === this.pages[0] && this.nowPage === 1) {
+                        // 最左边了
+                    }
+                } else if (flag === 'mid') {
+                    this.pageStart = (page - 1) * 10;
+                    this.nowPage = page;
+                    this.getIndexFilm(page);
+                }
+            },
+
             getIndexFilm: function (page) {
                 let that = this;
-                that.pageStart = (page - 1) * 10;
-                that.nowPage = page;
                 $.ajax({
                     url: 'http://118.25.107.131:8081/bts2/f/index/' + page,
                     type: 'GET',
@@ -657,6 +687,12 @@
             },
             setActiveClass: function (page) {
                 return page === this.nowPage;
+            },
+            setPrevDisableClass: function () {
+                return this.nowPage === 1;
+            },
+            setNextDisableClass: function () {
+                return this.filmList.length < 10 || this.filmList === null;
             }
         }
     })
