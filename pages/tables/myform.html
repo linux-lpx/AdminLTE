@@ -354,8 +354,6 @@
 
     <!--内容主体-->
     <div class="content">
-      <!--<div class="row">-->
-      <!--<div class="col-xs-12">-->
       <div class="box box-primary box-solid">
         <div class="box-header">
           <h3 class="box-title">添加用户</h3>
@@ -364,29 +362,27 @@
           <form role="form">
             <div class="form-group">
               <label for="userName">*用户名</label>
-              <input type="text" id="userName" class="form-control" placeholder="请输入用户名">
+              <input type="text" id="userName" v-model="userName" class="form-control" placeholder="请输入用户名">
             </div>
             <div class="form-group">
               <label for="password">*密码</label>
-              <input type="password" id="password" class="form-control" placeholder="请输入密码">
+              <input type="password" id="password" v-model="password" class="form-control" placeholder="请输入密码">
             </div>
             <div class="form-group">
               <label for="email">邮箱</label>
-              <input type="text" id="email" class="form-control" placeholder="请输入邮箱">
+              <input type="text" id="email" v-model="email" class="form-control" placeholder="请输入邮箱">
             </div>
             <div class="form-group">
               <label for="phonenumber">电话</label>
-              <input type="text" id="phonenumber" class="form-control" placeholder="请输入电话号码">
+              <input type="text" id="phonenumber" v-model="phonenumber" class="form-control" placeholder="请输入电话号码">
             </div>
             <div class="form-group">
               <div>&nbsp;</div>
-              <button type="submit" class="btn btn-block btn-primary">提交</button>
+              <button type="submit" class="btn btn-block btn-primary" v-on:click="addUser()">提交</button>
             </div>
           </form>
         </div>
       </div>
-      <!--</div>-->
-      <!--</div>-->
     </div>
   </section>
 </div>
@@ -425,8 +421,30 @@
         destroy: function () {
 
         },
-        data: {},
-        methods: {}
+        data: {
+            userName: '',
+            password: '',
+            email: '',
+            phonenumber: '',
+            user: {
+                name: userName,
+                password: password,
+                eMail: email,
+                phoneNumber: phonenumber
+            }
+        },
+        methods: {
+            addUser: function () {
+                $.ajax({
+                    url: 'http://localhost:8081/bts2/user/save',
+                    type: 'post',
+                    data: user,
+                    success: function (date) {
+                        console.log(date);
+                    }
+                })
+            }
+        }
     })
 </script>
 
