@@ -378,7 +378,7 @@
             </div>
             <div class="form-group">
               <div>&nbsp;</div>
-              <button type="submit" class="btn btn-block btn-primary" v-on:click="addUser()">提交</button>
+              <button type="button" class="btn btn-block btn-primary" v-on:click="addUser()">提交</button>
             </div>
           </form>
         </div>
@@ -425,22 +425,29 @@
             userName: '',
             password: '',
             email: '',
-            phonenumber: '',
-            user: {
-                name: userName,
-                password: password,
-                eMail: email,
-                phoneNumber: phonenumber
-            }
+            phonenumber: ''
         },
         methods: {
             addUser: function () {
+                let user = {
+                    name: this.userName,
+                    password: this.password,
+                    eMail: this.email,
+                    phoneNumber: this.phonenumber
+                };
+                console.log(user);
                 $.ajax({
-                    url: 'http://localhost:8081/bts2/user/save',
+                    url: 'http://118.25.107.131:8081/bts2/user/save',
                     type: 'post',
-                    data: user,
+                    contentType: 'application/json',
+                    data: JSON.stringify(user),
                     success: function (date) {
+                        alert(JSON.stringify(date));
                         console.log(date);
+                    },
+                    failed: function (date) {
+                        JSON.stringify(date);
+                        console.log("出错了！！！" + date.toString());
                     }
                 })
             }
