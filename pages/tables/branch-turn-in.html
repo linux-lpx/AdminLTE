@@ -2,7 +2,7 @@
 <html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>测试页面-表单</title>
+  <title>测试-网点上缴</title>
 
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -18,10 +18,22 @@
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">
+
+  <!-- daterange picker -->
+  <link rel="stylesheet" href="../../bower_components/bootstrap-daterangepicker/daterangepicker.css">
+  <!-- bootstrap datepicker -->
+  <link rel="stylesheet" href="../../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="../../plugins/iCheck/all.css">
+  <!-- Bootstrap Color Picker -->
+  <link rel="stylesheet" href="../../bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
+  <!-- Bootstrap time Picker -->
+  <link rel="stylesheet" href="../../plugins/timepicker/bootstrap-timepicker.min.css">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="../../bower_components/select2/dist/css/select2.min.css">
+
   <!-- Vue -->
   <script src="../../js/vue.js"></script>
-  <!-- Jquery -->
-  <script src="../../bower_components/jquery/dist/jquery.js"></script>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -347,8 +359,8 @@
 
     <!--内容头部-->
     <div class="content-header">
-      <h1>测试表单
-        <small>test form</small>
+      <h1>测试-网点上缴
+        <small>test branch-turn-in</small>
       </h1>
     </div>
 
@@ -356,38 +368,187 @@
     <div class="content">
       <div class="box box-primary box-solid">
         <div class="box-header">
-          <h3 class="box-title">添加用户</h3>
+          <h3 class="box-title">款箱{{boxNumber}}</h3>
         </div>
         <div class="box-body">
-          <form role="form">
-            <div class="form-group">
-              <label for="userName">*用户名</label>
-              <input type="text" id="userName" v-model="userName" class="form-control" placeholder="请输入用户名">
+          <div class="row">
+            <div class="col-md-3">
+              <form role="form">
+                <div class="form-group">
+                  <label for="aaa">上缴金库</label>
+                  <select name="msg" id="aaa" class="form-control select2" style="width: 100%">
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                  </select>
+                  <label for="eee">物品类别</label>
+                  <select name="msg" id="eee" class="form-control select2" style="width: 100%">
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                  </select>
+                </div>
+              </form>
             </div>
-            <div class="form-group">
-              <label for="password">*密码</label>
-              <input type="password" id="password" v-model="password" class="form-control" placeholder="请输入密码">
+            <div class="col-md-3">
+              <form role="form">
+                <div class="form-group">
+                  <label for="bbb">箱包类别</label>
+                  <select name="msg" id="bbb" class="form-control select2" style="width: 100%">
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                  </select>
+                  <label for="fff">尾箱编号</label>
+                  <select name="msg" id="fff" class="form-control select2" style="width: 100%">
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                  </select>
+                </div>
+              </form>
             </div>
-            <div class="form-group">
-              <label for="email">邮箱</label>
-              <input type="text" id="email" v-model="email" class="form-control" placeholder="请输入邮箱">
+            <div class="col-md-3">
+              <form role="form">
+                <div class="form-group">
+                  <label for="ccc">款箱类别</label>
+                  <select name="msg" id="ccc" class="form-control select2" style="width: 100%">
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                  </select>
+                  <label for="ggg">尾箱状态</label>
+                  <select name="msg" id="ggg" class="form-control select2" style="width: 100%">
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                  </select>
+                </div>
+              </form>
             </div>
-            <div class="form-group">
-              <label for="phonenumber">电话</label>
-              <input type="text" id="phonenumber" v-model="phonenumber" class="form-control" placeholder="请输入电话号码">
+            <div class="col-md-3">
+              <form role="form">
+                <div class="form-group">
+                  <label for="ddd">上缴日期</label>
+                  <select name="msg" id="ddd" class="form-control select2" style="width: 100%">
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                  </select>
+                  <label for="hhh">解领日期</label>
+                  <select name="msg" id="hhh" class="form-control select2" style="width: 100%">
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                    <option value="123456">123456</option>
+                  </select>
+                </div>
+              </form>
             </div>
-            <div class="form-group">
-              <div>&nbsp;</div>
-              <button type="button" class="btn btn-block btn-primary" v-on:click="addUser()">提交</button>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <button v-on:click="" class="btn btn-primary" style="width: 100%;">添加</button>
             </div>
-          </form>
+            <div class="col-md-6">
+              <button v-on:click="" class="btn btn-danger" style="width: 100%;">删除</button>
+            </div>
+          </div>
+          <br>
+          <div class="box box-default box-solid">
+            <div class="box-header">
+              <div>
+                <span><div class="box-title">款箱1 · 待装箱物品</div></span>
+                <span>&nbsp;</span>
+                <span><button class="btn btn-primary btn-sm">添加物品</button></span>
+              </div>
+
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <form role="form">
+                      <input type="text" class="form-control" placeholder="请填写信息" v-model="boxNumber">
+                    </form>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <form role="form">
+                      <input type="text" class="form-control" placeholder="请填写信息">
+                    </form>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <form role="form">
+                      <input type="text" class="form-control" placeholder="请填写信息">
+                    </form>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <form role="form">
+                      <input type="text" class="form-control" placeholder="请填写信息">
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <form role="form">
+                      <input type="text" class="form-control" placeholder="请填写信息">
+                    </form>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <form role="form">
+                      <input type="text" class="form-control" placeholder="请填写信息">
+                    </form>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <form role="form">
+                      <input type="text" class="form-control" placeholder="请填写信息">
+                    </form>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <form role="form">
+                      <input type="text" class="form-control" placeholder="请填写信息">
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </div>
     </div>
   </section>
 </div>
 
+<!-- jQuery 3 -->
+<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Select2 -->
+<script src="../../bower_components/select2/dist/js/select2.full.min.js"></script>
+<!-- Vue -->
+<script src="../../js/vue.js"></script>
+
 <script>
+
+   $(function () {
+       $('.select2').select2();
+   });
+
     let app = new Vue({
         el: '#content_id',
 
@@ -422,36 +583,9 @@
 
         },
         data: {
-            userName: '',
-            password: '',
-            email: '',
-            phonenumber: ''
+            boxNumber: '',
         },
-        methods: {
-            addUser: function () {
-                let user = {
-                    name: this.userName,
-                    password: this.password,
-                    eMail: this.email,
-                    phoneNumber: this.phonenumber
-                };
-                console.log(user);
-                $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/user/save',
-                    type: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify(user),
-                    success: function (date) {
-                        alert(JSON.stringify(date));
-                        console.log(date);
-                    },
-                    failed: function (date) {
-                        JSON.stringify(date);
-                        console.log("出错了！！！" + date.toString());
-                    }
-                })
-            }
-        }
+        methods: {}
     })
 </script>
 
