@@ -470,28 +470,28 @@
                 <div class="col-md-3">
                   <div class="form-group">
                     <form role="form">
-                      <input type="text" class="form-control" placeholder="请填写信息">
+                      <input type="text" class="form-control" v-model="item.aa" placeholder="请填写信息">
                     </form>
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
                     <form role="form">
-                      <input type="text" class="form-control" placeholder="请填写信息">
+                      <input type="text" class="form-control" v-model="item.bb" placeholder="请填写信息">
                     </form>
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
                     <form role="form">
-                      <input type="text" class="form-control" placeholder="请填写信息">
+                      <input type="text" class="form-control" v-model="item.cc" placeholder="请填写信息">
                     </form>
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
                     <form role="form">
-                      <input type="text" class="form-control" placeholder="请填写信息">
+                      <input type="text" class="form-control" v-model="item.dd" placeholder="请填写信息">
                     </form>
                   </div>
                 </div>
@@ -583,11 +583,22 @@
         },
         data: {
             boxNumber: '',
-            items: [],
+            items: [{
+                aa: '',
+                bb: '',
+                cc: '',
+                dd: ''
+            }],
         },
         methods: {
             addItem: function () {
-                this.items.push(1);
+                let item = {
+                    aa: '',
+                    bb: '',
+                    cc: '',
+                    dd: ''
+                };
+                this.items.push(item);
             },
             delItem: function () {
                 this.items.pop();
