@@ -366,9 +366,17 @@
 
     <!--内容主体-->
     <div class="content">
-      <div class="box box-primary box-solid">
+      <div class="row">
+        <div class="col-md-3">
+          <button v-on:click="addBox()" class="btn btn-primary" style="width: 100%">添加款箱</button>
+        </div>
+      </div>
+      <br>
+      <div class="box box-primary box-solid" v-for="item in items">
         <div class="box-header">
           <h3 class="box-title">款箱{{boxNumber}}</h3>
+          <span>&nbsp;</span>
+          <button v-on:click="" class="btn btn-sm btn-danger">删除</button>
         </div>
         <div class="box-body">
           <div class="row">
@@ -445,74 +453,44 @@
               </form>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6">
-              <button v-on:click="" class="btn btn-primary" style="width: 100%;">添加</button>
-            </div>
-            <div class="col-md-6">
-              <button v-on:click="" class="btn btn-danger" style="width: 100%;">删除</button>
-            </div>
-          </div>
-          <br>
+          <!--<div class="row">-->
+            <!--<div class="col-md-6">-->
+              <!--<button v-on:click="" class="btn btn-primary" style="width: 100%;">添加</button>-->
+            <!--</div>-->
+            <!--<div class="col-md-6">-->
+              <!--<button v-on:click="" class="btn btn-danger" style="width: 100%;">删除</button>-->
+            <!--</div>-->
+          <!--</div>-->
           <div class="box box-default box-solid">
             <div class="box-header">
               <div>
                 <span class="box-title">款箱1 · 待装箱物品</span>
                 <span>&nbsp;</span>
-                <button class="btn btn-primary btn-sm">添加物品</button>
+                <button class="btn btn-sm" v-on:click="addItem()">添加物品</button>
+                <button class="btn btn-sm" v-on:click="delItem()">删除物品</button>
               </div>
 
             </div>
             <div class="box-body">
-              <div class="row">
+              <div class="row" v-for="item in items">
                 <div class="col-md-3">
                   <div class="form-group">
                     <form role="form">
-                      <input type="text" class="form-control" placeholder="请填写信息" v-model="boxNumber">
+                      <input type="text" class="form-control" placeholder="请填写信息1" v-model="boxNumber">
                     </form>
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
                     <form role="form">
-                      <input type="text" class="form-control" placeholder="请填写信息">
+                      <input type="text" class="form-control" placeholder="请填写信息2">
                     </form>
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
                     <form role="form">
-                      <input type="text" class="form-control" placeholder="请填写信息">
-                    </form>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <form role="form">
-                      <input type="text" class="form-control" placeholder="请填写信息">
-                    </form>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <form role="form">
-                      <input type="text" class="form-control" placeholder="请填写信息">
-                    </form>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <form role="form">
-                      <input type="text" class="form-control" placeholder="请填写信息">
-                    </form>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <form role="form">
-                      <input type="text" class="form-control" placeholder="请填写信息">
+                      <input type="text" class="form-control" placeholder="请填写信息3（必填）" title="必填信息">
                     </form>
                   </div>
                 </div>
@@ -524,7 +502,7 @@
                           <div class="input-group-addon">
                             <i class="fa fa-calendar"></i>
                           </div>
-                          <input type="date" class="form-control pull-right" id="datepicker" placeholder="选择日期">
+                          <input type="date" class="form-control" id="datepicker" v-model="datepicker" title="选择日期">
                         </div>
                       </div>
                     </form>
@@ -576,13 +554,13 @@
 
 <script>
 
-   $(function () {
-       $('.select2').select2();
-   });
+    $(function () {
+        $('.select2').select2();
+    });
 
-   $('#datepicker').datepicker({
-       autoclose: true
-   });
+    $('#datepicker').datepicker({
+        autoclose: true
+    });
 
 
     let app = new Vue({
@@ -620,8 +598,22 @@
         },
         data: {
             boxNumber: '',
+            datepicker: '',
+            items: [],
+            index: 1,
         },
-        methods: {}
+        methods: {
+            addItem: function () {
+                this.items.push(111);
+            },
+            delItem: function () {
+                this.items.pop();
+            },
+            addBox: function () {
+                this.items.push(1);
+            }
+
+        }
     })
 </script>
 
