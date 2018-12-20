@@ -256,6 +256,7 @@
                           <label for="moduleParentId">父模块名称</label>
                           <select name="moduleParentId" id="moduleParentId" class="form-control select2"
                                   style="width: 100%" v-model="moduleParentId">
+                            <option value="0" disabled>请选择</option>
                             <option>父目录1</option>
                             <option>父目录2</option>
                             <option>父目录3</option>
@@ -419,6 +420,22 @@
             moduleType: '',
             moduleDescritpion: '',
         },
+        // 计算属性
+        computed: {
+            moduleInput: function () {
+                return {
+                    name: this.moduleName,
+                    description: this.moduleDescritpion,
+                    path: this.modulePath,
+                    parentId: this.moduleParentId,
+                    imgPath: this.moduleImgPath,
+                    isAvailable: this.moduleIsAvailable,
+                    type: this.moduleType
+                };
+            }
+        },
+        // 侦听器
+        watch: {},
         methods: {
             getModule: function () {
                 let that = this;
@@ -442,21 +459,12 @@
                 })
             },
             addModule: function () {
-                let module = {
-                    name: this.moduleName,
-                    description: this.moduleDescritpion,
-                    path: this.modulePath,
-                    parentId: this.moduleParentId,
-                    imgPath: this.moduleImgPath,
-                    isAvailable: this.moduleIsAvailable,
-                    type: this.moduleType
-                };
                 let that = this;
                 $.ajax({
                     url: 'http://localhost:8081/bts2/system_module/add',
                     type: 'post',
                     contentType: 'application/json',
-                    data:JSON.stringify(module),
+                    data: JSON.stringify(that.moduleInput),
                     success: function (data) {
                         console.log(data);
                     },
