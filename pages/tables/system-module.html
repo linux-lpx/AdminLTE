@@ -255,13 +255,12 @@
                           <br>
                           <label for="moduleParentId">父模块名称</label>
                           <select name="moduleParentId" id="moduleParentId" class="form-control select2"
-                                  style="width: 100%" v-model="moduleParentId">
-                            <option value="0" disabled>请选择</option>
+                                  style="width: 100%" v-model="selected">
                             <option>父目录1</option>
                             <option>父目录2</option>
                             <option>父目录3</option>
                           </select>
-                          <br><br>
+                          <br>
                           <label for="moduleIsAvailable">是否可用</label>
                           <select name="moduleIsAvailable" id="moduleIsAvailable" class="form-control select2"
                                   style="width: 100%" v-model="moduleIsAvailable">
@@ -372,9 +371,9 @@
 
 <script>
 
-    $(function () {
-        $('.select2').select2();
-    });
+    // $(function () {
+    //     $('.select2').select2();
+    // });
 
     let app = new Vue({
         el: '#content_id',
@@ -396,6 +395,9 @@
         },
         mounted: function () {
             this.getModule();
+            setTimeout(function () {
+                //$('.select2').select2();
+            }, 1000);
         },
         beforeUpdate: function () {
 
@@ -413,7 +415,7 @@
             result_type1: [],
             modules: [],
             moduleName: '',
-            moduleParentId: '',
+            selected: '',
             moduleIsAvailable: '',
             modulePath: '',
             moduleImgPath: '',
@@ -427,15 +429,13 @@
                     name: this.moduleName,
                     description: this.moduleDescritpion,
                     path: this.modulePath,
-                    parentId: this.moduleParentId,
+                    parentId: this.selected,
                     imgPath: this.moduleImgPath,
                     isAvailable: this.moduleIsAvailable,
                     type: this.moduleType
                 };
             }
         },
-        // 侦听器
-        watch: {},
         methods: {
             getModule: function () {
                 let that = this;
