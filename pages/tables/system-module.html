@@ -265,7 +265,7 @@
                         </form>
                       </div>
                       <div class="col-md-6">
-                        <form role="form">
+                        <form role="form" class="form-group">
                           <label for="modulePath">模块路径</label>
                           <input id="modulePath" type="text" class="form-control" v-model="modulePath">
                           <br>
@@ -284,7 +284,6 @@
                             <option>模块</option>
                             <option>目录</option>
                           </select>
-                          <!--<input id="moduleType" type="text" class="form-control">-->
                         </form>
                       </div>
                     </div>
@@ -439,7 +438,7 @@
             getModule: function () {
                 let that = this;
                 $.ajax({
-                    url: 'http://localhost:8081/bts2/system_module/all',
+                    url: 'http://118.25.107.131:8081/bts2/system_module/all',
                     type: 'GET',
                     success: function (data) {
                         that.modules = data.result;
@@ -460,7 +459,7 @@
             addModule: function () {
                 let that = this;
                 $.ajax({
-                    url: 'http://localhost:8081/bts2/system_module/add',
+                    url: 'http://118.25.107.131:8081/bts2/system_module/add',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify(that.moduleInput),
