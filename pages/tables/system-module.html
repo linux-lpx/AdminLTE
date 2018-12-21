@@ -253,19 +253,14 @@
                           <label for="moduleName">模块名称</label>
                           <input id="moduleName" type="text" class="form-control" v-model="moduleName">
                           <br>
-                          <label for="moduleParentId">父模块名称</label>
-                          <select name="moduleParentId" id="moduleParentId" class="form-control select2"
-                                  style="width: 100%" v-model="selected">
-                            <option>父目录1</option>
-                            <option>父目录2</option>
-                            <option>父目录3</option>
-                          </select>
+                          <label for="moduleImgPath">图标路径</label>
+                          <input id="moduleImgPath" type="text" class="form-control" v-model="moduleImgPath">
                           <br>
                           <label for="moduleIsAvailable">是否可用</label>
                           <select name="moduleIsAvailable" id="moduleIsAvailable" class="form-control select2"
                                   style="width: 100%" v-model="moduleIsAvailable">
-                            <option value="1" selected="selected">可用</option>
-                            <option value="0">不可用</option>
+                            <option>可用</option>
+                            <option>不可用</option>
                           </select>
                         </form>
                       </div>
@@ -274,14 +269,20 @@
                           <label for="modulePath">模块路径</label>
                           <input id="modulePath" type="text" class="form-control" v-model="modulePath">
                           <br>
-                          <label for="moduleImgPath">图标路径</label>
-                          <input id="moduleImgPath" type="text" class="form-control" v-model="moduleImgPath">
+                          <label for="moduleParentId">父模块名称</label>
+                          <select name="moduleParentId" id="moduleParentId" class="form-control select2"
+                                  style="width: 100%" v-model="moduleParentId">
+                            <option>父目录1</option>
+                            <option>父目录2</option>
+                            <option>父目录3</option>
+                          </select>
                           <br>
+
                           <label for="moduleType">模块类别</label>
                           <select name="moduleType" id="moduleType" class="form-control select2" style="width: 100%;"
                                   v-model="moduleType">
-                            <option value="1" selected="selected">模块</option>
-                            <option value="0">目录</option>
+                            <option>模块</option>
+                            <option>目录</option>
                           </select>
                           <!--<input id="moduleType" type="text" class="form-control">-->
                         </form>
@@ -290,7 +291,8 @@
                     <div>
                       <form role="form" class="form-group">
                         <label for="moduleDescritpion">模块说明</label>
-                        <input type="text" class="form-control" id="moduleDescritpion" v-model="moduleDescritpion">
+                        <input type="text" class="form-control" id="moduleDescritpion"
+                               placeholder="请说明模块作用（至多120个字符）" v-model="moduleDescritpion">
                       </form>
                     </div>
                   </div>
@@ -395,9 +397,6 @@
         },
         mounted: function () {
             this.getModule();
-            setTimeout(function () {
-                //$('.select2').select2();
-            }, 1000);
         },
         beforeUpdate: function () {
 
@@ -415,11 +414,11 @@
             result_type1: [],
             modules: [],
             moduleName: '',
-            selected: '',
-            moduleIsAvailable: '',
+            moduleIsAvailable: '可用',
             modulePath: '',
             moduleImgPath: '',
-            moduleType: '',
+            moduleParentId: '',
+            moduleType: '模块',
             moduleDescritpion: '',
         },
         // 计算属性
@@ -429,7 +428,7 @@
                     name: this.moduleName,
                     description: this.moduleDescritpion,
                     path: this.modulePath,
-                    parentId: this.selected,
+                    parentId: this.moduleParentId,
                     imgPath: this.moduleImgPath,
                     isAvailable: this.moduleIsAvailable,
                     type: this.moduleType
