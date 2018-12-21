@@ -182,7 +182,7 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header"><b>主菜单</b></li>
 
-        <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in result_type1">
+        <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModule">
           <a href="#">
             <i class="fa fa-dashboard">&numsp;</i>
             <span>{{item.name}}</span>
@@ -269,12 +269,10 @@
                           <label for="modulePath">模块路径</label>
                           <input id="modulePath" type="text" class="form-control" v-model="modulePath">
                           <br>
-                          <label for="moduleParentId">父模块名称</label>
-                          <select name="moduleParentId" id="moduleParentId" class="form-control select2"
-                                  style="width: 100%" v-model="moduleParentId">
-                            <option>父目录1</option>
-                            <option>父目录2</option>
-                            <option>父目录3</option>
+                          <label for="moduleParentName">父模块名称</label>
+                          <select name="moduleParentName" id="moduleParentName" class="form-control select2"
+                                  style="width: 100%" v-model="moduleParentName">
+                            <option v-for="module in parentModule">{{module.name}}</option>
                           </select>
                           <br>
 
@@ -289,9 +287,9 @@
                     </div>
                     <div>
                       <form role="form" class="form-group">
-                        <label for="moduleDescritpion">模块说明</label>
-                        <input type="text" class="form-control" id="moduleDescritpion"
-                               placeholder="请说明模块作用（至多120个字符）" v-model="moduleDescritpion">
+                        <label for="moduleDescription">模块说明</label>
+                        <input type="text" class="form-control" id="moduleDescription"
+                               placeholder="请说明模块作用（至多120个字符）" v-model="moduleDescription">
                       </form>
                     </div>
                   </div>
@@ -322,9 +320,9 @@
               <th><input type="checkbox" title="选中"></th>
               <td>{{module.id}}</td>
               <td>{{module.name}}</td>
-              <td>{{module.descritpion}}</td>
+              <td>{{module.description}}</td>
               <td>{{module.path}}</td>
-              <td>{{module.parentId}}</td>
+              <td>{{module.parentName}}</td>
               <td>{{module.imgPath}}</td>
               <td>{{module.isAvailable}}</td>
               <td>{{module.type}}</td>
@@ -372,10 +370,6 @@
 
 <script>
 
-    // $(function () {
-    //     $('.select2').select2();
-    // });
-
     let app = new Vue({
         el: '#content_id',
 
@@ -410,27 +404,27 @@
 
         },
         data: {
-            result_type1: [],
             modules: [],
+            parentModule: [],
             moduleName: '',
-            moduleIsAvailable: '可用',
             modulePath: '',
             moduleImgPath: '',
-            moduleParentId: '',
+            moduleParentName: '',
+            moduleIsAvailable: '可用',
             moduleType: '模块',
-            moduleDescritpion: '',
+            moduleDescription: '',
         },
         // 计算属性
         computed: {
             moduleInput: function () {
                 return {
                     name: this.moduleName,
-                    description: this.moduleDescritpion,
+                    description: this.moduleDescription,
                     path: this.modulePath,
-                    parentId: this.moduleParentId,
+                    parentName: this.moduleParentName,
                     imgPath: this.moduleImgPath,
-                    isAvailable: this.moduleIsAvailable,
-                    type: this.moduleType
+                    isAvailable: this.moduleIsAvailable === '可用' ? 1 : 0,
+                    type: this.moduleType === '模块' ? 1 : 0
                 };
             }
         },
@@ -438,11 +432,12 @@
             getModule: function () {
                 let that = this;
                 $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/system_module/all',
+                    // url: 'http://118.25.107.131:8081/bts2/system_module/all',
+                    url: 'http://localhost:8081/bts2/system_module/all',
                     type: 'GET',
                     success: function (data) {
                         that.modules = data.result;
-                        that.result_type1 = data.result.filter(function (vaule) {
+                        that.parentModule = data.result.filter(function (vaule) {
                             if (vaule.type === 0) {
                                 let children = data.result.filter(function (item) {
                                     if (item.parentId === vaule.id) {
@@ -451,27 +446,43 @@
                                 });
                                 return vaule['children'] = children;
                             }
-                        })
-
+                        });
                     }
-                })
+                });
             },
             addModule: function () {
                 let that = this;
+                if (this.checkName()) {
+                    $.ajax({
+                        // url: 'http://118.25.107.131:8081/bts2/system_module/add',
+                        url: 'http://localhost:8081/bts2/system_module/add',
+                        type: 'post',
+                        contentType: 'application/json',
+                        data: JSON.stringify(that.moduleInput),
+                        success: function (data) {
+                            alert(data.result);
+                        }
+                    });
+                } else {
+                    alert("模块名已被使用，请重新填写！");
+                }
+            },
+            checkName:function () {
+                let that = this;
                 $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/system_module/add',
-                    type: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify(that.moduleInput),
+                    url: 'http://localhost:8081/bts2/system_module/checkName/' + that.moduleName,
+                    type: 'get',
                     success: function (data) {
-                        console.log(data);
-                    },
-                    failed: function (data) {
-                        console.log(data);
+                        if (data === 'used') {
+                            // TODO 验证模块名有没有被使用
+                        } else if (data === 'unused') {
+                            return true;
+                        }
                     }
-                })
+                });
+                return true;
             }
-        },
+        }
 
     })
 </script>
