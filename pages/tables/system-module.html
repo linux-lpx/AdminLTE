@@ -254,7 +254,7 @@
                           <input id="moduleName" type="text" class="form-control" v-model="moduleName">
                           <br>
                           <label for="moduleParentId">父模块名称</label>
-                          <select name="moduleParentId" id="moduleParentId" class="form-control select2"
+                          <select name="moduleParentId" id="moduleParentId" class="form-control"
                                   style="width: 100%" v-model="moduleParentId">
                             <option value="0" disabled>请选择</option>
                             <option>父目录1</option>
@@ -263,7 +263,7 @@
                           </select>
                           <br><br>
                           <label for="moduleIsAvailable">是否可用</label>
-                          <select name="moduleIsAvailable" id="moduleIsAvailable" class="form-control select2"
+                          <select name="moduleIsAvailable" id="moduleIsAvailable" class="form-control"
                                   style="width: 100%" v-model="moduleIsAvailable">
                             <option value="1" selected="selected">可用</option>
                             <option value="0">不可用</option>
@@ -279,7 +279,7 @@
                           <input id="moduleImgPath" type="text" class="form-control" v-model="moduleImgPath">
                           <br>
                           <label for="moduleType">模块类别</label>
-                          <select name="moduleType" id="moduleType" class="form-control select2" style="width: 100%;"
+                          <select name="moduleType" id="moduleType" class="form-control" style="width: 100%;"
                                   v-model="moduleType">
                             <option value="1" selected="selected">模块</option>
                             <option value="0">目录</option>
@@ -372,10 +372,6 @@
 
 <script>
 
-    $(function () {
-        $('.select2').select2();
-    });
-
     let app = new Vue({
         el: '#content_id',
 
@@ -440,7 +436,7 @@
             getModule: function () {
                 let that = this;
                 $.ajax({
-                    url: 'http://localhost:8081/bts2/system_module/all',
+                    url: 'http://118.25.107.131:8081/bts2/system_module/all',
                     type: 'GET',
                     success: function (data) {
                         that.modules = data.result;
@@ -461,7 +457,7 @@
             addModule: function () {
                 let that = this;
                 $.ajax({
-                    url: 'http://localhost:8081/bts2/system_module/add',
+                    url: 'http://118.25.107.131:8081/bts2/system_module/add',
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify(that.moduleInput),

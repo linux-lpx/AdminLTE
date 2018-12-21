@@ -309,13 +309,13 @@
             getModule:function () {
                 let that = this;
                 $.ajax({
-                    url: 'http://localhost:8081/bts2/system_module/all',
+                    url: 'http://118.25.107.131:8081/bts2/system_module/all',
                     type: 'GET',
                     success: function (data) {
                         that.result_type1 = data.result.filter(function (vaule) {
-                            if (vaule.type === 1) {
+                            if (vaule.type === 0) {
                                 let children = data.result.filter(function (item) {
-                                    if (item.type === 2 && item.parentId === vaule.id) {
+                                    if (item.type === 1 && item.parentId === vaule.id) {
                                         return item;
                                     }
                                 });
