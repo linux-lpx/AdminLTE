@@ -180,9 +180,9 @@
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="header"><b>主菜单</b></li>
+        <li class="header" style="font-size: large"><b>主菜单</b></li>
 
-        <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModule">
+        <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable">
           <a href="#">
             <i class="fa fa-dashboard">&numsp;</i>
             <span>{{item.name}}</span>
@@ -194,28 +194,6 @@
             <li v-for="child in item.children">
               <a href="#">
                 <i class="fa fa-circle-o">&numsp;</i>{{child.name}}
-              </a>
-            </li>
-          </ul>
-        </li>
-
-
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li>
-              <a href="../../index.html">
-                <i class="fa fa-circle-o"></i> Dashboard v1
-              </a>
-            </li>
-            <li>
-              <a href="../../index2.html">
-                <i class="fa fa-circle-o"></i> Dashboard v2
               </a>
             </li>
           </ul>
@@ -272,7 +250,7 @@
                           <label for="moduleParentName">父模块名称</label>
                           <select name="moduleParentName" id="moduleParentName" class="form-control select2"
                                   style="width: 100%" v-model="moduleParentName">
-                            <option v-for="module in parentModule">{{module.name}}</option>
+                            <option v-for="module in parentModuleAll">{{module.name}}</option>
                           </select>
                           <br>
 
@@ -405,7 +383,8 @@
         },
         data: {
             modules: [],
-            parentModule: [],
+            parentModuleAll: [],
+            parentModuleAvailable: [],
             moduleName: '',
             modulePath: '',
             moduleImgPath: '',
@@ -432,15 +411,20 @@
             getModule: function () {
                 let that = this;
                 $.ajax({
-                    // url: 'http://118.25.107.131:8081/bts2/system_module/all',
-                    url: 'http://localhost:8081/bts2/system_module/all',
+                    url: 'http://118.25.107.131:8081/bts2/system_module/all',
+                    // url: 'http://localhost:8081/bts2/system_module/all',
                     type: 'GET',
                     success: function (data) {
                         that.modules = data.result;
-                        that.parentModule = data.result.filter(function (vaule) {
-                            if (vaule.type === 0) {
+                        that.parentModuleAll = data.result.filter(function (item) {
+                            if (item.type === 0) {
+                                return item;
+                            }
+                        });
+                        that.parentModuleAvailable = data.result.filter(function (vaule) {
+                            if (vaule.type === 0 && vaule.isAvailable === 1) {
                                 let children = data.result.filter(function (item) {
-                                    if (item.parentId === vaule.id) {
+                                    if (item.parentId === vaule.id && item.isAvailable === 1) {
                                         return item;
                                     }
                                 });
@@ -454,13 +438,13 @@
                 let that = this;
                 if (this.checkName()) {
                     $.ajax({
-                        // url: 'http://118.25.107.131:8081/bts2/system_module/add',
-                        url: 'http://localhost:8081/bts2/system_module/add',
+                        url: 'http://118.25.107.131:8081/bts2/system_module/add',
+                        // url: 'http://localhost:8081/bts2/system_module/add',
                         type: 'post',
                         contentType: 'application/json',
                         data: JSON.stringify(that.moduleInput),
                         success: function (data) {
-                            alert(data.result);
+                            alert('添加成功' + data.toString());
                         }
                     });
                 } else {
@@ -470,7 +454,8 @@
             checkName:function () {
                 let that = this;
                 $.ajax({
-                    url: 'http://localhost:8081/bts2/system_module/checkName/' + that.moduleName,
+                    url: 'http://118.25.107.131:8081/bts2/system_module/checkName/' + that.moduleName,
+                    // url: 'http://localhost:8081/bts2/system_module/checkName/' + that.moduleName,
                     type: 'get',
                     success: function (data) {
                         if (data === 'used') {
