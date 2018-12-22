@@ -184,7 +184,7 @@
 
         <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable">
           <a href="#">
-            <i class="fa fa-dashboard">&numsp;</i>
+            <i class="fa fa-folder">&numsp;</i>
             <span>{{item.name}}</span>
             <span class="pull-right-container">
               <i class="fa pull-right" v-bind:class="{'fa-angle-left':item.children.length > 0}">&numsp;</i>
@@ -193,7 +193,7 @@
           <ul class="treeview-menu">
             <li v-for="child in item.children">
               <a href="#">
-                <i class="fa fa-circle-o">&numsp;</i>{{child.name}}
+                <i class="fa fa-file-text-o">&numsp;</i>{{child.name}}
               </a>
             </li>
           </ul>
@@ -216,6 +216,10 @@
           <button class="btn btn-warning btn-sm" id="btn_dialog" tabindex="-1"
                   data-toggle="modal" data-target="#modalTest">添加模块
           </button>
+          <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
+                  data-toggle="modal" data-target="#modalTest" v-on:click="updateModule()">更新模块
+          </button>
+          <!--模态框-->
           <div class="modal fade" id="modalTest" role="dialog">
             <div style="color: #1b6d85">
               <div class="modal-dialog">
@@ -229,36 +233,37 @@
                       <div class="col-md-6">
                         <form role="form" class="form-group">
                           <label for="moduleName">模块名称</label>
-                          <input id="moduleName" type="text" class="form-control" v-model="moduleName">
+                          <input id="moduleName" type="text" class="form-control" v-model="moduleInput.name">
                           <br>
                           <label for="moduleImgPath">图标路径</label>
-                          <input id="moduleImgPath" type="text" class="form-control" v-model="moduleImgPath">
+                          <input id="moduleImgPath" type="text" class="form-control" v-model="moduleInput.imgPath">
                           <br>
                           <label for="moduleIsAvailable">是否可用</label>
                           <select name="moduleIsAvailable" id="moduleIsAvailable" class="form-control select2"
-                                  style="width: 100%" v-model="moduleIsAvailable">
-                            <option>可用</option>
-                            <option>不可用</option>
+                                  style="width: 100%" v-model.number="moduleInput.isAvailable">
+                            <option value="1">可用</option>
+                            <option value="0">不可用</option>
                           </select>
                         </form>
                       </div>
                       <div class="col-md-6">
                         <form role="form" class="form-group">
                           <label for="modulePath">模块路径</label>
-                          <input id="modulePath" type="text" class="form-control" v-model="modulePath">
+                          <input id="modulePath" type="text" class="form-control" v-model="moduleInput.path">
                           <br>
                           <label for="moduleParentName">父模块名称</label>
                           <select name="moduleParentName" id="moduleParentName" class="form-control select2"
-                                  style="width: 100%" v-model="moduleParentName">
-                            <option v-for="module in parentModuleAll">{{module.name}}</option>
+                                  style="width: 100%" v-model="moduleInput.parentName">
+                            <option v-for="module in parentModuleAll" v-bind:value="module.id + ':' + module.name">
+                              {{module.name}}
+                            </option>
                           </select>
                           <br>
-
                           <label for="moduleType">模块类别</label>
                           <select name="moduleType" id="moduleType" class="form-control select2" style="width: 100%;"
-                                  v-model="moduleType">
-                            <option>模块</option>
-                            <option>目录</option>
+                                  v-model.number="moduleInput.type">
+                            <option value="1">模块</option>
+                            <option value="0">目录</option>
                           </select>
                         </form>
                       </div>
@@ -267,7 +272,7 @@
                       <form role="form" class="form-group">
                         <label for="moduleDescription">模块说明</label>
                         <input type="text" class="form-control" id="moduleDescription"
-                               placeholder="请说明模块作用（至多120个字符）" v-model="moduleDescription">
+                               placeholder="请说明模块作用（至多120个字符）" v-model="moduleInput.description">
                       </form>
                     </div>
                   </div>
@@ -279,14 +284,15 @@
               </div>
             </div>
           </div>
+          <button class="btn btn-info btn-sm fa fa-refresh pull-right" v-on:click="getModule()">刷新</button>
         </div>
         <div class="box-body">
           <table class="table table-striped table-bordered table-hover">
             <tr>
               <th><input type="checkbox" title="选中"></th>
-              <th>模块编号</th>
-              <th>模块名称</th>
-              <th>模块说明</th>
+              <th>编号</th>
+              <th>名称</th>
+              <th>说明</th>
               <th>路径</th>
               <th>父目录</th>
               <th>图标路径</th>
@@ -294,16 +300,16 @@
               <th>类型</th>
               <th>隶属角色</th>
             </tr>
-            <tr v-for="module in modules">
-              <th><input type="checkbox" title="选中"></th>
+            <tr v-for="(module, index) in modules">
+              <th><input type="checkbox" v-bind:value="index" title="选中" v-model="selectedModuleIndex"></th>
               <td>{{module.id}}</td>
               <td>{{module.name}}</td>
               <td>{{module.description}}</td>
               <td>{{module.path}}</td>
               <td>{{module.parentName}}</td>
               <td>{{module.imgPath}}</td>
-              <td>{{module.isAvailable}}</td>
-              <td>{{module.type}}</td>
+              <td>{{module.isAvailable === 1 ? '可用' : '不可用'}}</td>
+              <td>{{module.type === 1 ? '页面' : '目录'}}</td>
               <td>{{module.roleId}}</td>
             </tr>
           </table>
@@ -358,55 +364,39 @@
          * @date 2018/12/13 10:27
          */
         beforeCreate: function () {
-
         },
         create: function () {
-
         },
         beforeMount: function () {
-
         },
         mounted: function () {
             this.getModule();
         },
         beforeUpdate: function () {
-
         },
         updated: function () {
-
         },
         beforeDestroy: function () {
-
         },
         destroy: function () {
-
         },
         data: {
             modules: [],
             parentModuleAll: [],
             parentModuleAvailable: [],
-            moduleName: '',
-            modulePath: '',
-            moduleImgPath: '',
-            moduleParentName: '',
-            moduleIsAvailable: '可用',
-            moduleType: '模块',
-            moduleDescription: '',
-        },
-        // 计算属性
-        computed: {
-            moduleInput: function () {
-                return {
-                    name: this.moduleName,
-                    description: this.moduleDescription,
-                    path: this.modulePath,
-                    parentName: this.moduleParentName,
-                    imgPath: this.moduleImgPath,
-                    isAvailable: this.moduleIsAvailable === '可用' ? 1 : 0,
-                    type: this.moduleType === '模块' ? 1 : 0
-                };
+            selectedModuleIndex: [],
+            moduleInput: {
+                name: '',
+                description: '',
+                path: '',
+                parentName: '',
+                imgPath: '',
+                isAvailable: 1,
+                type: 1
             }
         },
+        // 计算属性
+        computed: {},
         methods: {
             getModule: function () {
                 let that = this;
@@ -422,7 +412,7 @@
                             }
                         });
                         that.parentModuleAvailable = data.result.filter(function (vaule) {
-                            if (vaule.type === 0 && vaule.isAvailable === 1) {
+                            if (vaule.isAvailable === 1) {
                                 let children = data.result.filter(function (item) {
                                     if (item.parentId === vaule.id && item.isAvailable === 1) {
                                         return item;
@@ -451,21 +441,28 @@
                     alert("模块名已被使用，请重新填写！");
                 }
             },
-            checkName:function () {
+            checkName: function () {
                 let that = this;
                 $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/system_module/checkName/' + that.moduleName,
+                    url: 'http://118.25.107.131:8081/bts2/system_module/checkName/' + that.moduleInput.name,
                     // url: 'http://localhost:8081/bts2/system_module/checkName/' + that.moduleName,
                     type: 'get',
                     success: function (data) {
                         if (data === 'used') {
-                            // TODO 验证模块名有没有被使用
                         } else if (data === 'unused') {
                             return true;
                         }
                     }
                 });
                 return true;
+            },
+
+            updateModule: function () {
+                if (this.selectedModuleIndex.length !== 1) {
+                    alert('不能同时更新多个模块！');
+                    return;
+                }
+                this.moduleInput = this.modules[this.selectedModuleIndex[0]];
             }
         }
 
