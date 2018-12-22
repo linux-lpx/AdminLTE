@@ -182,9 +182,10 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header" style="font-size: large"><b>主菜单</b></li>
 
-        <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable">
+        <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable"
+            v-if="item.type === 0 || item.parentId === 1">
           <a href="#">
-            <i class="fa fa-folder">&numsp;</i>
+            <i class="fa fa-folder" v-bind:class="{'fa-file-text-o' : item.type === 1}">&numsp;</i>
             <span>{{item.name}}</span>
             <span class="pull-right-container">
               <i class="fa pull-right" v-bind:class="{'fa-angle-left':item.children.length > 0}">&numsp;</i>
