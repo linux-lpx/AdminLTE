@@ -61,10 +61,10 @@
     <nav class="navbar navbar-static-top">
       <!-- Sidebar toggle button--><!--切换按钮（左侧的菜单栏的收缩与展开）-->
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
+        <!--<span class="sr-only">Toggle navigation</span>-->
+        <!--<span class="icon-bar"></span>-->
+        <!--<span class="icon-bar"></span>-->
+        <!--<span class="icon-bar"></span>-->
       </a>
 
       <div class="navbar-custom-menu">
@@ -126,7 +126,7 @@
         <div class="box-header">
           <span class="box-title">模块列表&nbsp;&nbsp;</span>
           <button class="btn btn-warning btn-sm" id="btn_dialog" tabindex="-1"
-                  data-toggle="modal" data-target="#modalTest">添加模块
+                  data-toggle="modal" data-target="#modalTest" v-on:click="clearInputData()">添加模块
           </button>
           <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
                   data-toggle="modal" data-target="#modalTest" v-on:click="updateModule()">更新模块
@@ -165,9 +165,8 @@
                           <br>
                           <label for="moduleParentName">父模块名称</label>
                           <select name="moduleParentName" id="moduleParentName" class="form-control"
-                                  style="width: 100%" v-model="moduleInput.parentId"
-                                  @change="getIdByName(moduleInput, $event)" >
-                            <option v-for="module in parentModuleAll" v-bind:value="module.id">
+                                  style="width: 100%" v-model="moduleInput.parentName">
+                            <option v-for="module in parentModuleAll" v-bind:value="module.name">
                               {{module.name}}
                             </option>
                           </select>
@@ -314,8 +313,7 @@
             }
         },
         // 计算属性
-        computed: {
-        },
+        computed: {},
         methods: {
             getModule: function () {
                 let that = this;
@@ -354,6 +352,9 @@
                         data: JSON.stringify(that.moduleInput),
                         success: function (data) {
                             alert('添加成功' + data.toString());
+                        },
+                        error: function (data) {
+                            alert('失败成功');
                         }
                     });
                 } else {
@@ -383,6 +384,7 @@
                     alert('请选择一个模块！');
                 } else {
                     this.moduleInput = this.modules[this.selectedModuleIndex[0]];
+                    this.moduleInput.parentId = null;
                 }
             },
             getIdByName: function (moduleInput, e) {
@@ -397,6 +399,20 @@
                 //         return item.id;
                 //     }
                 // })
+            },
+            clearInputData: function () {
+                this.moduleInput = {
+                    id: null,
+                    name: '',
+                    description: '',
+                    path: '',
+                    parentId: null,
+                    parentName: '',
+                    imgPath: '',
+                    isAvailable: 1,
+                    type: 1,
+                    roleId: null
+                }
             }
         }
 
