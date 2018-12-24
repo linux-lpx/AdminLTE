@@ -85,10 +85,70 @@
     <div class="content">
       <div class="box box-solid box-primary">
         <div class="box-header">
-          <div class="box-title">角色列表</div>
+          <div class="box-title">
+            角色列表
+            <button class="btn btn-warning btn-sm" id="btn_dialog" tabindex="-1"
+                    data-toggle="modal" data-target="#roleModal">添加模块
+            </button>
+            <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
+                    data-toggle="modal" data-target="#roleModal">更新模块
+            </button>
+            <!--模态框-->
+            <div class="modal fade" id="roleModal" role="dialog">
+              <div style="color: #1b6d85">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 style="display: inline">添加/修改角色</h3>
+                      <button class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <form role="form" class="form-group">
+                            <label for="inputRoleName">角色名</label>
+                            <input type="text" class="form-control" id="inputRoleName" placeholder="请输入角色名">
+                            <br>
+                            <label for="selectRoleIsAvailable">是否可用</label>
+                            <select id="selectRoleIsAvailable" class="form-control" style="width: 100%">
+                              <option value="1">可用</option>
+                              <option value="0">不可用</option>
+                            </select>
+                          </form>
+                        </div>
+                        <div class="col-md-6">
+                          <form role="form">
+                            <label for="inputRoleParentId">父角色</label>
+                            <input type="text" class="form-control" id="inputRoleParentId" placeholder="请输入父角色">
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                      <button class="btn btn-primary" data-dismiss="modal">确定</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="box-body">
-
+          <table class="table table-bordered table-striped table-hover">
+            <tr>
+              <th>编号</th>
+              <th>角色名</th>
+              <th>父角色名</th>
+              <th>是否可用</th>
+            </tr>
+            <tr v-for="role in roles">
+              <td>{{role.id}}</td>
+              <td>{{role.name}}</td>
+              <td>{{role.parentId}}</td>
+              <td>{{role.isAvailable === 1 ? '可用' : '不可用'}}</td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
@@ -117,9 +177,14 @@
         el: '#content_id',
         mounted: function () {
             this.getModule();
+            this.getRole();
         },
         data: {
+            // 侧边栏目录模块对应的数据
             parentModuleAvailable: [],
+
+            // 角色表格中的数据
+            roles: []
         },
         methods: {
             getModule: function () {
@@ -138,6 +203,16 @@
                                 return vaule['children'] = children;
                             }
                         });
+                    }
+                });
+            },
+            getRole: function () {
+                let that = this;
+                $.ajax({
+                    url: 'http://localhost:8081/bts2/system_role/all',
+                    type: 'GET',
+                    success: function (data) {
+                        that.roles = data.result;
                     }
                 });
             }
