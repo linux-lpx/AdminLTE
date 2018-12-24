@@ -106,10 +106,10 @@
                       <div class="row">
                         <div class="col-md-6">
                           <form role="form" class="form-group">
-                            <label for="inputRoleName">角色名</label>
+                            <label for="inputRoleName" style="font-size: 14px">角色名</label>
                             <input type="text" class="form-control" id="inputRoleName" placeholder="请输入角色名">
                             <br>
-                            <label for="selectRoleIsAvailable">是否可用</label>
+                            <label for="selectRoleIsAvailable" style="font-size: 14px">是否可用</label>
                             <select id="selectRoleIsAvailable" class="form-control" style="width: 100%">
                               <option value="1">可用</option>
                               <option value="0">不可用</option>
@@ -117,8 +117,8 @@
                           </form>
                         </div>
                         <div class="col-md-6">
-                          <form role="form">
-                            <label for="inputRoleParentId">父角色</label>
+                          <form role="form" class="form-group">
+                            <label for="inputRoleParentId" style="font-size: 14px">父角色</label>
                             <input type="text" class="form-control" id="inputRoleParentId" placeholder="请输入父角色">
                           </form>
                         </div>
@@ -184,7 +184,14 @@
             parentModuleAvailable: [],
 
             // 角色表格中的数据
-            roles: []
+            roles: [],
+            // 模态框中的数据
+            roleInput: {
+                id: null,
+                name: '',
+                parentId: null,
+                isAvailable: null
+            }
         },
         methods: {
             getModule: function () {
@@ -213,6 +220,18 @@
                     type: 'GET',
                     success: function (data) {
                         that.roles = data.result;
+                    }
+                });
+            },
+            addRole: function () {
+                let that = this;
+                $.ajax({
+                    url: 'http://localhost:8081/bts2/system_role/add',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(that.roleInput),
+                    success: function (data) {
+                        alert(data)
                     }
                 });
             }
