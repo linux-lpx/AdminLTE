@@ -82,7 +82,7 @@
     <div class="content">
       <div class="box box-solid box-primary">
         <div class="box-header">
-          <span class="box-title">模块列表&nbsp;&nbsp;</span>
+          <span class="box-title">模块列表</span>
           <button class="btn btn-warning btn-sm" id="btn_dialog" tabindex="-1"
                   data-toggle="modal" data-target="#modalTest" v-on:click="clearInputData()">添加模块
           </button>
@@ -110,7 +110,7 @@
                           <br>
                           <label for="moduleIsAvailable">是否可用</label>
                           <select name="moduleIsAvailable" id="moduleIsAvailable" class="form-control"
-                                  style="width: 100%" v-model.number="moduleInput.isAvailable">
+                                  v-model.number="moduleInput.isAvailable">
                             <option value="1">可用</option>
                             <option value="0">不可用</option>
                           </select>
@@ -123,7 +123,7 @@
                           <br>
                           <label for="moduleParentName">父模块名称</label>
                           <select name="moduleParentName" id="moduleParentName" class="form-control"
-                                  style="width: 100%" v-model="moduleInput.parentName">
+                                  v-model="moduleInput.parentName">
                             <option v-for="module in parentModuleAll" v-bind:value="module.name">
                               {{module.name}}
                             </option>
@@ -174,7 +174,7 @@
               <th>隶属角色</th>
             </tr>
             <tr v-for="(module, index) in modules">
-              <th><input type="checkbox" v-bind:value="index" title="选中" v-model="selectedModuleIndex"></th>
+              <td><input type="checkbox" v-bind:value="index" title="选中" v-model="selectedModuleIndex"></td>
               <td>{{module.id}}</td>
               <td>{{module.name}}</td>
               <td>{{module.description}}</td>
