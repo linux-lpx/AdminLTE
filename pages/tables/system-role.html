@@ -52,10 +52,8 @@
           <a href="#"><i class="fa fa-circle text-success">&numsp;</i> Online</a>
         </div>
       </div>
-
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header" style="font-size: large">主菜单</li>
-
         <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable"
             v-if="item.type === 0 || item.parentId === 1">
           <a href="#">
@@ -73,7 +71,6 @@
             </li>
           </ul>
         </li>
-
       </ul>
     </section>
   </aside>
@@ -94,7 +91,7 @@
             <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
                     data-toggle="modal" data-target="#roleModal" v-on:click="updateRole()">更新模块
             </button>
-            <!--模态框-->
+            <!--模态框-角色编辑-->
             <div class="modal fade" style="color: #1b6d85" id="roleModal" role="dialog">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -127,7 +124,7 @@
                           <br>
                           <label for="inputFile" style="font-size: 14px">文件上传</label>
                           <input type="file" title="文件上传" id="inputFile" class="form-control"
-                                 v-model="file">
+                                 v-on:change="fileOpearate()">
                         </form>
                       </div>
                     </div>
@@ -158,21 +155,46 @@
               <td>{{role.parentName}}</td>
               <td>{{role.isAvailable === 1 ? '可用' : '不可用'}}</td>
               <td>
-                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#moduleToRoleModal">
-                  查看 / 设置
+                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#moduleToRoleModal"
+                        v-on:click="selectedRoleId = role.id">查看 / 设置
                 </button>
               </td>
             </tr>
           </table>
+          <!--模态框-权限编辑-->
           <div class="modal fade" style="color: #1b6d85" role="dialog" id="moduleToRoleModal">
             <div class="modal-dialog">
               <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="background: #1a2226">
                   <h3 style="display: inline">查看/修改角色权限</h3>
-                  <button class="close" data-dismiss="modal">&times;</button>
+                  <button class="close" data-dismiss="modal" style="color: white">&times;</button>
                 </div>
-                <div class="modal-body">1</div>
-                <div class="modal-footer">
+                <div class="modal-body" style="background: #222d32">
+                  <!--类似左侧边栏的权限配置框-->
+                  <ul class="sidebar-menu" data-widget="tree">
+                    <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable"
+                        v-if="item.type === 0 || item.parentId === 1">
+                      <a href="#">
+                        <i class="fa fa-folder" v-bind:class="{'fa-file-text-o' : item.type === 1}">&numsp;</i>
+                        <span>{{item.name}}</span>
+                        <span class="pull-right-container">
+                          <i class="fa pull-right" v-bind:class="{'fa-angle-left':item.children.length > 0}">&numsp;</i>
+                        </span>
+                      </a>
+                      <ul class="treeview-menu" style="width: 90%; margin: 0 auto">
+                        <li v-for="child in item.children">
+                          <a href="#">
+                            <input type="checkbox" title="选中" v-model="moduleChecked"
+                                   v-bind:value="child.parentId + '-' + child.id">
+                            <span>&nbsp;</span>
+                            {{child.name}}
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div class="modal-footer" style="background: #3c4b4f">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
                   <button class="btn btn-primary" data-dismiss="modal" v-on:click="addRole()">确定</button>
                 </div>
@@ -228,7 +250,14 @@
                 isAvailable: 1
             },
 
-            file: ''
+            // 文件
+            file: '',
+
+            // 模块（权限）选择
+            moduleChecked: [],
+
+            // 点击按钮选中的角色id
+            selectedRoleId: 0,
 
         },
         methods: {
@@ -284,6 +313,12 @@
                 } else {
                     this.roleInput = this.roles[this.selectedRoleIndex[0]];
                 }
+            },
+            fileOpearate: function () {
+                // TODO 处理文件
+            },
+            setSelectRole: function (roleId) {
+                this.selectedRoleId = roleId;
             }
         }
 
