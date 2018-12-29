@@ -156,7 +156,7 @@
               <td>{{role.isAvailable === 1 ? '可用' : '不可用'}}</td>
               <td>
                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#moduleToRoleModal"
-                       v-on:click="setSelectRole(role.id)">查看 / 设置
+                        v-on:click="setSelectRole(role.id)">查看 / 设置
                 </button>
               </td>
             </tr>
@@ -224,6 +224,7 @@
 <script src="../../dist/js/adminlte.min.js"></script>
 <script src="../../dist/js/demo.js"></script>
 <script src="../../js/vue.js"></script>
+<script src="constant.js"></script>
 <script>
     new Vue({
         el: '#content_id',
@@ -270,7 +271,8 @@
             getModule: function () {
                 let that = this;
                 $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/system_module/all',
+                    url: getIpTxy() + getPort() + '/bts2/system_module/all',
+                    // url: 'http://118.25.107.131:8081/bts2/system_module/all',
                     type: 'GET',
                     success: function (data) {
                         that.parentModuleAvailable = data.result.filter(function (vaule) {
