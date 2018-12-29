@@ -2,7 +2,7 @@
 <html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>测试-iframe</title>
+  <title>测试-用户管理</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
@@ -80,18 +80,104 @@
   <!--内容-->
   <section class="content-wrapper">
     <div class="content-header">
-      <h1>ifame-test</h1>
+      <h1>用户管理</h1>
     </div>
     <div class="content">
       <div class="box box-solid box-primary">
         <div class="box-header">
-          <div class="box-title">ifame-test</div>
+          <div class="box-title">
+            用户列表
+            <button class="btn btn-warning btn-sm" id="btn_dialog" tabindex="-1"
+                    data-toggle="modal" data-target="#roleModal">添加用户
+            </button>
+            <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
+                    data-toggle="modal" v-bind:data-target="targetModal" v-on:click="updateRole()">更新用户
+            </button>
+            <div class="modal fade" style="color: #1b6d85" id="roleModal" role="dialog">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3 style="display: inline">添加/修改用户</h3>
+                    <button class="close" data-dismiss="modal">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="input-group">
+                          <span class="input-group-addon">登录名</span>
+                          <input type="text" class="form-control" title="请输入登录名">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">密码</span>
+                          <input type="password" class="form-control" title="请输入密码">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">手机号</span>
+                          <input type="text" class="form-control" title="请输入手机号">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">隶属机构</span>
+                          <select id="" class="form-control" title="选择隶属机构">
+                            <option value="1">支行金库</option>
+                            <option value="1">支行金库</option>
+                            <option value="1">支行金库</option>
+                          </select>
+                        </div>
+
+                      </div>
+                      <div class="col-md-6">
+                        <div class="input-group">
+                          <span class="input-group-addon">姓名</span>
+                          <input type="text" class="form-control" title="请输入姓名">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">Email</span>
+                          <input type="text" class="form-control" title="请输入Email">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">头像</span>
+                          <input type="file" class="form-control" title="请选择头像图片上传">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                    <button class="btn btn-primary" data-dismiss="modal" v-on:click="addRole()">确定</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="box-body">
-          <div>ifame-test</div>
-          <!--<iframe src="./system-role.html" frameborder="0" width="100%" height="800px" scrolling="no">-->
-            <p>你的浏览器不支持iframe标签</p>
-          <!--</iframe>-->
+          <table class="table table-hover table-striped table-bordered">
+            <tr>
+              <th>选择</th>
+              <th>用户登录名</th>
+              <th>用户真实姓名</th>
+              <th>隶属机构编号</th>
+              <th>隶属机构名</th>
+              <th>手机号码</th>
+              <th>email</th>
+              <th>上次登录时间</th>
+            </tr>
+            <tr>
+              <td><input type="checkbox" title="选择"></td>
+              <td>{{}}</td>
+              <td>{{}}</td>
+              <td>{{}}</td>
+              <td>{{}}</td>
+              <td>{{}}</td>
+              <td>{{}}</td>
+              <td>{{}}</td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
@@ -123,6 +209,11 @@
         },
         data: {
             parentModuleAvailable: [],
+            userInput: {
+                name: '',
+                password: '',
+
+            },
         },
         methods: {
             getModule: function () {
