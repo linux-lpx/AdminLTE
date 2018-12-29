@@ -184,7 +184,7 @@
                       <ul class="treeview-menu" style="width: 90%; margin: 0 auto">
                         <li v-for="child in item.children">
                           <a href="#">
-                            <input type="checkbox" title="选中" v-model="moduleChecked"
+                            <input type="checkbox" title="选中" v-model="permissions.moduleChecked"
                                    v-bind:value="child.parentId + '-' + child.id">
                             <span>&nbsp;</span>
                             {{child.name}}
@@ -196,7 +196,7 @@
                 </div>
                 <div class="modal-footer" style="background: #3c4b4f">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="addRole()">确定</button>
+                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="addPermissions()">确定</button>
                 </div>
               </div>
             </div>
@@ -261,10 +261,10 @@
             file: '',
 
             // 模块（权限）选择
-            moduleChecked: [],
-
-            // 点击按钮选中的角色id
-            selectedRoleId: 0,
+            permissions: {
+                selectedRoleId: 0,
+                moduleChecked: [],
+            },
 
         },
         methods: {
@@ -328,7 +328,19 @@
             },
             setSelectRole: function (roleId) {
                 console.log(roleId + '----lpx');
-                this.selectedRoleId = roleId;
+                this.permissions.selectedRoleId = roleId;
+            },
+            addPermissions: function () {
+                let that = this;
+                $.ajax({
+                    url: 'http://localhost:8081/bts2/module_to_role/addAll',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(that.permissions),
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
             }
         }
 
