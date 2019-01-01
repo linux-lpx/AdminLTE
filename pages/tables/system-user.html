@@ -88,12 +88,12 @@
           <div class="box-title">
             用户列表
             <button class="btn btn-warning btn-sm" id="btn_dialog" tabindex="-1"
-                    data-toggle="modal" data-target="#roleModal">添加用户
+                    data-toggle="modal" data-target="#userModal">添加用户
             </button>
             <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
-                    data-toggle="modal" v-bind:data-target="targetModal" v-on:click="updateRole()">更新用户
+                    data-toggle="modal" data-target="#userModal" v-on:click="updateRole()">更新用户
             </button>
-            <div class="modal fade" style="color: #1b6d85" id="roleModal" role="dialog">
+            <div class="modal fade" style="color: #1b6d85" id="userModal" role="dialog">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -105,22 +105,22 @@
                       <div class="col-md-6">
                         <div class="input-group">
                           <span class="input-group-addon">登录名</span>
-                          <input type="text" class="form-control" title="请输入登录名">
+                          <input type="text" class="form-control" title="请输入登录名" v-model="userInput.loginName">
                         </div>
                         <br>
                         <div class="input-group">
                           <span class="input-group-addon">密码</span>
-                          <input type="password" class="form-control" title="请输入密码">
+                          <input type="password" class="form-control" title="请输入密码" v-model="userInput.password">
                         </div>
                         <br>
                         <div class="input-group">
                           <span class="input-group-addon">手机号</span>
-                          <input type="text" class="form-control" title="请输入手机号">
+                          <input type="text" class="form-control" title="请输入手机号" v-model="userInput.phone">
                         </div>
                         <br>
                         <div class="input-group">
                           <span class="input-group-addon">隶属机构</span>
-                          <select id="" class="form-control" title="选择隶属机构">
+                          <select id="" class="form-control" title="选择隶属机构" v-model="userInput.departmentName">
                             <option value="1">支行金库</option>
                             <option value="1">支行金库</option>
                             <option value="1">支行金库</option>
@@ -131,12 +131,12 @@
                       <div class="col-md-6">
                         <div class="input-group">
                           <span class="input-group-addon">姓名</span>
-                          <input type="text" class="form-control" title="请输入姓名">
+                          <input type="text" class="form-control" title="请输入姓名" v-model="userInput.name">
                         </div>
                         <br>
                         <div class="input-group">
                           <span class="input-group-addon">Email</span>
-                          <input type="text" class="form-control" title="请输入Email">
+                          <input type="text" class="form-control" title="请输入Email" v-model="userInput.email">
                         </div>
                         <br>
                         <div class="input-group">
@@ -148,7 +148,7 @@
                   </div>
                   <div class="modal-footer">
                     <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                    <button class="btn btn-primary" data-dismiss="modal" v-on:click="addRole()">确定</button>
+                    <button class="btn btn-primary" data-dismiss="modal" v-on:click="addUser()">确定</button>
                   </div>
                 </div>
               </div>
@@ -167,15 +167,15 @@
               <th>email</th>
               <th>上次登录时间</th>
             </tr>
-            <tr>
+            <tr v-for="user in users">
               <td><input type="checkbox" title="选择"></td>
-              <td>{{}}</td>
-              <td>{{}}</td>
-              <td>{{}}</td>
-              <td>{{}}</td>
-              <td>{{}}</td>
-              <td>{{}}</td>
-              <td>{{}}</td>
+              <td>{{user.loginName}}</td>
+              <td>{{user.name}}</td>
+              <td>{{user.departmentId}}</td>
+              <td>{{user.departmentName}}</td>
+              <td>{{user.phone}}</td>
+              <td>{{user.email}}</td>
+              <td>{{user.lastLoginTime}}</td>
             </tr>
           </table>
         </div>
@@ -206,13 +206,18 @@
         el: '#content_id',
         mounted: function () {
             this.getModule();
+            this.getUser();
         },
         data: {
             parentModuleAvailable: [],
+            users: [],
             userInput: {
+                loginName: '',
                 name: '',
                 password: '',
-
+                email: '',
+                phone: '',
+                departmentName: ''
             },
         },
         methods: {
@@ -232,6 +237,31 @@
                                 return vaule['children'] = children;
                             }
                         });
+                    }
+                });
+            },
+            getUser: function () {
+                let that = this;
+                $.ajax({
+                    url: 'http://localhost:8081/bts2/system_user/all',
+                    type: 'get',
+                    success: function (data) {
+                        that.users = data.result;
+                    }
+                });
+            },
+            addUser: function () {
+                let that = this;
+                $.ajax({
+                    url: 'http://localhost:8081/bts2/system_user/add',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(that.userInput),
+                    success: function (data) {
+                        console.log('添加用户成功！' + data);
+                    },
+                    error: function (data) {
+                        console.log('添加用户失败！' + data);
                     }
                 });
             }
