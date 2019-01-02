@@ -86,7 +86,7 @@
           <div class="box-title">
             角色列表
             <button class="btn btn-warning btn-sm" id="btn_dialog" tabindex="-1"
-                    data-toggle="modal" data-target="#roleModal">添加角色
+                    data-toggle="modal" data-target="#roleModal" v-on:click="clearInputData()">添加角色
             </button>
             <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
                     data-toggle="modal" v-bind:data-target="targetModal" v-on:click="updateRole()">更新角色
@@ -317,9 +317,9 @@
             updateRole: function () {
                 this.targetModal = this.selectedRoleIndex.length === 1 ? '#roleModal' : '';
                 if (this.selectedRoleIndex.length > 1) {
-                    alert('不能同时更新多个模块！');
+                    alert('不能同时更新多个角色！');
                 } else if (this.selectedRoleIndex.length === 0) {
-                    alert('请选择一个模块！');
+                    alert('请选择一个角色！');
                 } else {
                     this.roleInput = this.roles[this.selectedRoleIndex[0]];
                 }
@@ -342,6 +342,15 @@
                         console.log(data);
                     }
                 });
+            },
+            clearInputData: function () {
+                this.roleInput = {
+                    id: null,
+                    name: null,
+                    parentId: null,
+                    parentName: null,
+                    isAvailable: 1
+                }
             }
         }
 
