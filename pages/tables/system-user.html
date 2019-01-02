@@ -258,10 +258,12 @@
                     contentType: 'application/json',
                     data: JSON.stringify(that.userInput),
                     success: function (data) {
-                        console.log('添加用户成功！' + data);
+                        alert('添加用户成功！' + data);
+                        that.getUser();
                     },
                     error: function (data) {
-                        console.log('添加用户失败！' + data);
+                        alert('添加用户失败！' + data);
+                        that.getUser();
                     }
                 });
             }

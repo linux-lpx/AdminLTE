@@ -272,7 +272,6 @@
                 let that = this;
                 $.ajax({
                     url: getIpTxy() + getPort() + '/bts2/system_module/all',
-                    // url: 'http://118.25.107.131:8081/bts2/system_module/all',
                     type: 'GET',
                     success: function (data) {
                         that.parentModuleAvailable = data.result.filter(function (vaule) {
@@ -306,9 +305,11 @@
                     contentType: 'application/json',
                     data: JSON.stringify(that.roleInput),
                     success: function (data) {
+                        that.getRole();
                         alert('添加角色成功！');
                     },
                     error: function (data) {
+                        that.getRole();
                         alert('添加角色失败！');
                     }
                 });
