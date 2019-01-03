@@ -72,7 +72,6 @@
             </li>
           </ul>
         </li>
-
       </ul>
     </section>
   </aside>
@@ -85,7 +84,87 @@
     <div class="content">
       <div class="box box-solid box-primary">
         <div class="box-header">
-          <div class="box-title">机构列表</div>
+          <div class="box-title">
+            机构列表
+            <button class="btn btn-warning btn-sm" id="btn_dialog" tabindex="-1"
+                    data-toggle="modal" data-target="#bankModal" v-on:click="clearInputData()">添加机构
+            </button>
+            <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
+                    data-toggle="modal" data-target="#bankModal" v-on:click="updateBank()">更新机构
+            </button>
+            <!--模态框-机构编辑-->
+            <div class="modal fade" style="color: #1b6d85" id="bankModal" role="dialog">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3 style="display: inline">添加/修改机构</h3>
+                    <button class="close" data-dismiss="modal">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="input-group">
+                          <span class="input-group-addon">编号</span>
+                          <input type="text" class="form-control" title="请输入编号">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">名称</span>
+                          <input type="text" class="form-control" title="请输入名称">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">联系人</span>
+                          <input type="text" class="form-control" title="请输入联系人">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">联系电话</span>
+                          <input type="text" class="form-control" title="请输入联系电话">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">上级机构</span>
+                          <select class="form-control" title="请选择上级机构">
+                            <option value="1">支行金库1</option>
+                            <option value="2">支行金库2</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="input-group">
+                          <span class="input-group-addon">类型</span>
+                          <select class="form-control" title="选择类型">
+                            <option value="1">网点</option>
+                            <option value="0">金库</option>
+                          </select>
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">简称</span>
+                          <input type="text" class="form-control" title="请输入简称">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">联系邮箱</span>
+                          <input type="email" class="form-control" title="请输入联系邮箱">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">地址</span>
+                          <input type="text" class="form-control" title="请输入地址">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                    <button class="btn btn-primary" data-dismiss="modal" v-on:click="addRole()">确定</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="box-body">
           <table class="table table-bordered table-striped table-hover">
