@@ -121,9 +121,9 @@
                         <div class="input-group">
                           <span class="input-group-addon">隶属机构</span>
                           <select id="" class="form-control" title="选择隶属机构" v-model="userInput.departmentName">
-                            <option value="1">支行金库</option>
-                            <option value="1">支行金库</option>
-                            <option value="1">支行金库</option>
+                            <option value="704">支行金库1</option>
+                            <option value="700">支行金库2</option>
+                            <option value="830">网点1</option>
                           </select>
                         </div>
 
@@ -226,11 +226,13 @@
                 password: null,
                 phone: null,
             },
+            userSession: null,
             selectedUserIndex: [],
         },
         methods: {
             getModule: function () {
                 let that = this;
+                that.userSession = localStorage.getItem('user');
                 $.ajax({
                     url: 'http://118.25.107.131:8081/bts2/system_module/all',
                     type: 'GET',

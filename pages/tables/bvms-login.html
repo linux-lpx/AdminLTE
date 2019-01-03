@@ -89,7 +89,14 @@
                     contentType: 'application/json',
                     data: JSON.stringify(that.inputData),
                     success: function (data) {
-                        alert('登录成功' + data);
+                        console.log(data);
+                        if (data.result === '登录成功！') {
+                            // TODO 跳转到主页面
+                            alert(data.result);
+                            window.location.href = './system-user.html';
+                        } else if (data.result === '用户名或密码错误！') {
+                            alert(data.result);
+                        }
                     },
                     error: function (data) {
                         alert('登录失败' + data);
