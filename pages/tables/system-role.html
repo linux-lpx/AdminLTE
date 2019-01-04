@@ -65,7 +65,7 @@
           </a>
           <ul class="treeview-menu">
             <li v-for="child in item.children">
-              <a href="#">
+              <a v-bind:href="child.path">
                 <i class="fa fa-file-text-o">&numsp;</i>{{child.name}}
               </a>
             </li>
@@ -290,7 +290,7 @@
             getRole: function () {
                 let that = this;
                 $.ajax({
-                    url: 'http://localhost:8081/bts2/system_role/all',
+                    url: getIpLocal() + getPort() + '/bts2/system_role/all',
                     type: 'GET',
                     success: function (data) {
                         that.roles = data.result;

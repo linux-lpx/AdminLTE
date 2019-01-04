@@ -66,7 +66,7 @@
           </a>
           <ul class="treeview-menu">
             <li v-for="child in item.children">
-              <a href="#">
+              <a v-bind:href="child.path">
                 <i class="fa fa-file-text-o">&numsp;</i>{{child.name}}
               </a>
             </li>
@@ -92,6 +92,7 @@
             <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
                     data-toggle="modal" data-target="#bankModal" v-on:click="updateBank()">更新机构
             </button>
+            <button class="btn btn-danger btn-sm" id="btn_delete" v-on:click="deleteBank()">删除机构</button>
             <!--模态框-机构编辑-->
             <div class="modal fade" style="color: #1b6d85" id="bankModal" role="dialog">
               <div class="modal-dialog">
@@ -127,7 +128,7 @@
                       <div class="col-md-6">
                         <div class="input-group">
                           <span class="input-group-addon">类型</span>
-                          <select class="form-control" title="选择类型" v-model.number="bankInput.type">
+                          <select class="form-control" title="请选择机构类型" v-model.number="bankInput.type">
                             <option value="1">网点</option>
                             <option value="0">金库</option>
                           </select>
@@ -235,6 +236,7 @@
             parentModuleAvailable: [],
             banks: [],
             selectedBankIndex: [],
+            deleteBankId: [],
             bankInput: {
                 code: null,
                 name: null,
@@ -294,12 +296,10 @@
                     contentType: 'application/json',
                     data: JSON.stringify(that.bankInput),
                     success: function (data) {
-                        // TODO 成功
                         console.log(data);
                         that.getBank();
                     },
                     error: function (data) {
-                        // TODO 失败
                         console.log(data)
                     }
                 });
@@ -311,6 +311,16 @@
                     alert('请选择一个机构！');
                 } else {
                     this.bankInput = this.banks[this.selectedBankIndex[0]];
+                }
+            },
+            deleteBank: function () {
+                // TODO 删除机构
+                if (this.selectedBankIndex.length === 0) {
+                    alert("请至少选择一个机构");
+                } else {
+                    this.deleteBankId = this.selectedBankIndex.filter(function (item) {
+                        return this.banks[item].id;
+                    })
                 }
             },
             clearInputData: function () {

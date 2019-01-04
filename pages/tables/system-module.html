@@ -63,13 +63,12 @@
           </a>
           <ul class="treeview-menu">
             <li v-for="child in item.children">
-              <a href="#">
+              <a v-bind:href="child.path">
                 <i class="fa fa-file-text-o">&numsp;</i>{{child.name}}
               </a>
             </li>
           </ul>
         </li>
-
       </ul>
     </section>
   </aside>
@@ -209,6 +208,7 @@
 <script src="../../dist/js/adminlte.min.js"></script>
 <script src="../../dist/js/demo.js"></script>
 <script src="../../js/vue.js"></script>
+<script src="./constant.js"></script>
 
 <script>
     new Vue({
@@ -238,8 +238,7 @@
             getModule: function () {
                 let that = this;
                 $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/system_module/all',
-                    // url: 'http://localhost:8081/bts2/system_module/all',
+                    url: getIpTxy() + getPort() + '/bts2/system_module/all',
                     type: 'GET',
                     success: function (data) {
                         that.modules = data.result;
@@ -265,13 +264,13 @@
                 let that = this;
                 if (this.checkName()) {
                     $.ajax({
-                        url: 'http://118.25.107.131:8081/bts2/system_module/add',
-                        // url: 'http://localhost:8081/bts2/system_module/add',
+                        url: getIpTxy() + getPort() + '/bts2/system_module/add',
                         type: 'post',
                         contentType: 'application/json',
                         data: JSON.stringify(that.moduleInput),
                         success: function (data) {
                             alert('操作成功');
+                            that.getModule();
                         },
                         error: function (data) {
                             alert('操作失败');
@@ -284,8 +283,7 @@
             checkName: function () {
                 let that = this;
                 $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/system_module/checkName/' + that.moduleInput.name,
-                    // url: 'http://localhost:8081/bts2/system_module/checkName/' + that.moduleName,
+                    url: getIpTxy() + getPort() + '/bts2/system_module/checkName/' + that.moduleInput.name,
                     type: 'get',
                     success: function (data) {
                         if (data === 'used') {
