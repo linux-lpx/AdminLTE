@@ -105,36 +105,29 @@
                       <div class="col-md-6">
                         <div class="input-group">
                           <span class="input-group-addon">编号</span>
-                          <input type="text" class="form-control" title="请输入编号">
+                          <input type="text" class="form-control" title="请输入编号" v-model="bankInput.code">
                         </div>
                         <br>
                         <div class="input-group">
                           <span class="input-group-addon">名称</span>
-                          <input type="text" class="form-control" title="请输入名称">
+                          <input type="text" class="form-control" title="请输入名称" v-model="bankInput.name">
                         </div>
                         <br>
                         <div class="input-group">
                           <span class="input-group-addon">联系人</span>
-                          <input type="text" class="form-control" title="请输入联系人">
+                          <input type="text" class="form-control" title="请输入联系人" v-model="bankInput.contacts">
                         </div>
                         <br>
                         <div class="input-group">
                           <span class="input-group-addon">联系电话</span>
-                          <input type="text" class="form-control" title="请输入联系电话">
+                          <input type="text" class="form-control" title="请输入联系电话" v-model="bankInput.contactTele">
                         </div>
                         <br>
-                        <div class="input-group">
-                          <span class="input-group-addon">上级机构</span>
-                          <select class="form-control" title="请选择上级机构">
-                            <option value="1">支行金库1</option>
-                            <option value="2">支行金库2</option>
-                          </select>
-                        </div>
                       </div>
                       <div class="col-md-6">
                         <div class="input-group">
                           <span class="input-group-addon">类型</span>
-                          <select class="form-control" title="选择类型">
+                          <select class="form-control" title="选择类型" v-model.number="bankInput.type">
                             <option value="1">网点</option>
                             <option value="0">金库</option>
                           </select>
@@ -142,24 +135,33 @@
                         <br>
                         <div class="input-group">
                           <span class="input-group-addon">简称</span>
-                          <input type="text" class="form-control" title="请输入简称">
+                          <input type="text" class="form-control" title="请输入简称" v-model="bankInput.nameForShort">
                         </div>
                         <br>
                         <div class="input-group">
                           <span class="input-group-addon">联系邮箱</span>
-                          <input type="email" class="form-control" title="请输入联系邮箱">
+                          <input type="email" class="form-control" title="请输入联系邮箱" v-model="bankInput.email">
                         </div>
                         <br>
                         <div class="input-group">
-                          <span class="input-group-addon">地址</span>
-                          <input type="text" class="form-control" title="请输入地址">
+                          <span class="input-group-addon">上级机构</span>
+                          <select class="form-control" title="请选择上级机构" v-model="bankInput.parentCode">
+                            <option v-bind:value="null">无</option>
+                            <option v-for="bank in banks" v-bind:value="bank.code">{{bank.name}}</option>
+                          </select>
                         </div>
+                        <br>
                       </div>
+                    </div>
+                    <div class="input-group">
+                      <span class="input-group-addon">地址</span>
+                      <input type="text" class="form-control" title="请输入地址" placeholder="请输入不超过200个字符"
+                             v-model="bankInput.address">
                     </div>
                   </div>
                   <div class="modal-footer">
                     <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                    <button class="btn btn-primary" data-dismiss="modal" v-on:click="addRole()">确定</button>
+                    <button class="btn btn-primary" data-dismiss="modal" v-on:click="addBank()">确定</button>
                   </div>
                 </div>
               </div>
@@ -184,7 +186,7 @@
               <th>类型</th>
             </tr>
             <tr v-for="(bank, index) in banks">
-              <td><input type="checkbox" title="选中"></td>
+              <td><input type="checkbox" title="选中" v-bind:value="index" v-model="selectedBankIndex"></td>
               <td>{{bank.code}}</td>
               <td>{{bank.name}}</td>
               <td>{{bank.nameForShort}}</td>
@@ -227,10 +229,12 @@
         el: '#content_id',
         mounted: function () {
             this.getModule();
+            this.getBank();
         },
         data: {
             parentModuleAvailable: [],
             banks: [],
+            selectedBankIndex: [],
             bankInput: {
                 code: null,
                 name: null,
@@ -275,7 +279,7 @@
             getBank: function () {
                 let that = this;
                 $.ajax({
-                    url: getIpLocal() + getPort() + '/bank/all',
+                    url: getIpLocal() + getPort() + '/bts2/bank/all',
                     type: 'get',
                     success: function (data) {
                         that.banks = data.result;
@@ -283,10 +287,31 @@
                 });
             },
             addBank: function () {
-
+                let that = this;
+                $.ajax({
+                    url: getIpLocal() + getPort() + '/bts2/bank/add',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(that.bankInput),
+                    success: function (data) {
+                        // TODO 成功
+                        console.log(data);
+                        that.getBank();
+                    },
+                    error: function (data) {
+                        // TODO 失败
+                        console.log(data)
+                    }
+                });
             },
             updateBank: function () {
-
+                if (this.selectedBankIndex.length > 1) {
+                    alert('不能同时更新多个机构！');
+                } else if (this.selectedBankIndex.length === 0) {
+                    alert('请选择一个机构！');
+                } else {
+                    this.bankInput = this.banks[this.selectedBankIndex[0]];
+                }
             },
             clearInputData: function () {
                 this.bankInput = {
