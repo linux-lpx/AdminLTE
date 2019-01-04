@@ -95,6 +95,15 @@
 
     <!--内容主体-->
     <div class="content">
+      <div class="row">
+        <div class="col-md-2">
+          <button v-on:click="" class="btn btn-primary" style="width: 100%;">添加</button>
+        </div>
+        <div class="col-md-2">
+          <button v-on:click="" class="btn btn-danger" style="width: 100%;">删除</button>
+        </div>
+      </div>
+      <br>
       <div class="box box-primary box-solid">
         <div class="box-header">
           <h3 class="box-title">款箱{{boxNumber}}</h3>
@@ -102,84 +111,72 @@
         <div class="box-body">
           <div class="row">
             <div class="col-md-3">
-              <form role="form">
-                <div class="form-group">
-                  <label for="aaa">上缴金库</label>
-                  <select name="msg" id="aaa" class="form-control" style="width: 100%">
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                  </select>
-                  <label for="eee">物品类别</label>
-                  <select name="msg" id="eee" class="form-control" style="width: 100%">
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                  </select>
-                </div>
-              </form>
+              <div class="input-group">
+                <span class="input-group-addon">上缴金库</span>
+                <select name="msg" class="form-control" style="width: 100%" title="选择上缴金库">
+                  <option value="123456">发的发达</option>
+                  <option value="123456">123456</option>
+                  <option value="123456">123456</option>
+                </select>
+              </div>
+              <br>
+              <div class="input-group">
+                <span class="input-group-addon">物品类别</span>
+                <select name="msg" class="form-control" style="width: 100%" title="选择物品类别">
+                  <option value="123456">123456</option>
+                  <option value="123456">123456</option>
+                  <option value="123456">123456</option>
+                </select>
+              </div>
             </div>
             <div class="col-md-3">
-              <form role="form">
-                <div class="form-group">
-                  <label for="bbb">箱包类别</label>
-                  <select name="msg" id="bbb" class="form-control" style="width: 100%">
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                  </select>
-                  <label for="fff">尾箱编号</label>
-                  <select name="msg" id="fff" class="form-control" style="width: 100%">
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                  </select>
-                </div>
-              </form>
+              <div class="input-group">
+                <span class="input-group-addon">箱包类别</span>
+                <select name="msg" class="form-control" style="width: 100%" title="选择箱包类别">
+                  <option value="123456">发的发达</option>
+                  <option value="123456">123456</option>
+                  <option value="123456">123456</option>
+                </select>
+              </div>
+              <br>
+              <div class="input-group">
+                <span class="input-group-addon">尾箱编号</span>
+                <select name="msg" class="form-control" style="width: 100%" title="选择尾箱编号">
+                  <option value="123456">123456</option>
+                  <option value="123456">123456</option>
+                  <option value="123456">123456</option>
+                </select>
+              </div>
             </div>
             <div class="col-md-3">
-              <form role="form">
-                <div class="form-group">
-                  <label for="ccc">款箱类别</label>
-                  <select name="msg" id="ccc" class="form-control" style="width: 100%">
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                  </select>
-                  <label for="ggg">尾箱状态</label>
-                  <select name="msg" id="ggg" class="form-control" style="width: 100%">
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                  </select>
-                </div>
-              </form>
+              <div class="input-group">
+                <span class="input-group-addon">款箱类别</span>
+                <select name="msg" class="form-control" style="width: 100%" title="选择款箱类别">
+                  <option value="123456">发的发达</option>
+                  <option value="123456">123456</option>
+                  <option value="123456">123456</option>
+                </select>
+              </div>
+              <br>
+              <div class="input-group">
+                <span class="input-group-addon">尾箱状态</span>
+                <select name="msg" class="form-control" style="width: 100%" title="选择尾箱状态">
+                  <option value="123456">123456</option>
+                  <option value="123456">123456</option>
+                  <option value="123456">123456</option>
+                </select>
+              </div>
             </div>
             <div class="col-md-3">
-              <form role="form">
-                <div class="form-group">
-                  <label for="ddd">上缴日期</label>
-                  <select name="msg" id="ddd" class="form-control" style="width: 100%">
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                  </select>
-                  <label for="hhh">解领日期</label>
-                  <select name="msg" id="hhh" class="form-control" style="width: 100%">
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                    <option value="123456">123456</option>
-                  </select>
-                </div>
-              </form>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <button v-on:click="" class="btn btn-primary" style="width: 100%;">添加</button>
-            </div>
-            <div class="col-md-6">
-              <button v-on:click="" class="btn btn-danger" style="width: 100%;">删除</button>
+              <div class="input-group">
+                <span class="input-group-addon">上缴日期</span>
+                <input type="date" class="form-control" title="请选择上缴日期">
+              </div>
+              <br>
+              <div class="input-group">
+                <span class="input-group-addon">解领日期</span>
+                <input type="date" class="form-control" title="选择解领日期">
+              </div>
             </div>
           </div>
           <br>
@@ -195,32 +192,16 @@
             <div class="box-body">
               <div class="row" v-for="item in items">
                 <div class="col-md-3">
-                  <div class="form-group">
-                    <form role="form">
-                      <input type="text" class="form-control" v-model="item.aa" placeholder="请填写信息">
-                    </form>
-                  </div>
+                  <input type="text" class="form-control" v-model="item.aa" placeholder="请填写信息">
                 </div>
                 <div class="col-md-3">
-                  <div class="form-group">
-                    <form role="form">
-                      <input type="text" class="form-control" v-model="item.bb" placeholder="请填写信息">
-                    </form>
-                  </div>
+                  <input type="text" class="form-control" v-model="item.bb" placeholder="请填写信息">
                 </div>
                 <div class="col-md-3">
-                  <div class="form-group">
-                    <form role="form">
-                      <input type="text" class="form-control" v-model="item.cc" placeholder="请填写信息">
-                    </form>
-                  </div>
+                  <input type="text" class="form-control" v-model="item.cc" placeholder="请填写信息">
                 </div>
                 <div class="col-md-3">
-                  <div class="form-group">
-                    <form role="form">
-                      <input type="text" class="form-control" v-model="item.dd" placeholder="请填写信息">
-                    </form>
-                  </div>
+                  <input type="text" class="form-control" v-model="item.dd" placeholder="请填写信息">
                 </div>
               </div>
             </div>
