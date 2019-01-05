@@ -269,66 +269,66 @@
 
 <script>
 
-    let app = new Vue({
-        el: '#content_id',
+  let app = new Vue({
+    el: '#content_id',
 
-        /**
-         * 以下为Vue的生命周期
-         *
-         * @author lpx
-         * @date 2018/12/13 10:27
-         */
-        beforeCreate: function () {
+    /**
+     * 以下为Vue的生命周期
+     *
+     * @author lpx
+     * @date 2018/12/13 10:27
+     */
+    beforeCreate: function () {
 
-        },
-        create: function () {
+    },
+    create: function () {
 
-        },
-        beforeMount: function () {
+    },
+    beforeMount: function () {
 
-        },
-        mounted: function () {
-            this.getModule();
-        },
-        beforeUpdate: function () {
+    },
+    mounted: function () {
+      this.getModule();
+    },
+    beforeUpdate: function () {
 
-        },
-        updated: function () {
+    },
+    updated: function () {
 
-        },
-        beforeDestroy: function () {
+    },
+    beforeDestroy: function () {
 
-        },
-        destroy: function () {
+    },
+    destroy: function () {
 
-        },
-        data: {
-            result_type1: [],
-        },
-        methods: {
-            getModule:function () {
-                let that = this;
-                $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/system_module/all',
-                    type: 'GET',
-                    success: function (data) {
-                        that.result_type1 = data.result.filter(function (vaule) {
-                            if (vaule.type === 0) {
-                                let children = data.result.filter(function (item) {
-                                    if (item.type === 1 && item.parentId === vaule.id) {
-                                        return item;
-                                    }
-                                });
-                                return vaule['children'] = children;
-                            }
-                        })
+    },
+    data: {
+      result_type1: [],
+    },
+    methods: {
+      getModule: function () {
+        let that = this;
+        $.ajax({
+          url: 'http://118.25.107.131:8081/bts2/system_module/all',
+          type: 'GET',
+          success: function (data) {
+            that.result_type1 = data.result.filter(function (vaule) {
+              if (vaule.type === 0) {
+                let children = data.result.filter(function (item) {
+                  if (item.type === 1 && item.parentId === vaule.id) {
+                    return item;
+                  }
+                });
+                return vaule['children'] = children;
+              }
+            })
 
-                    }
-                })
-            }
+          }
+        })
+      }
 
-        }
-    })
+    }
+  })
 </script>
 
 </body>

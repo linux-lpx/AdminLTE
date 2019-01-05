@@ -454,12 +454,12 @@
             </div>
           </div>
           <!--<div class="row">-->
-            <!--<div class="col-md-6">-->
-              <!--<button v-on:click="" class="btn btn-primary" style="width: 100%;">添加</button>-->
-            <!--</div>-->
-            <!--<div class="col-md-6">-->
-              <!--<button v-on:click="" class="btn btn-danger" style="width: 100%;">删除</button>-->
-            <!--</div>-->
+          <!--<div class="col-md-6">-->
+          <!--<button v-on:click="" class="btn btn-primary" style="width: 100%;">添加</button>-->
+          <!--</div>-->
+          <!--<div class="col-md-6">-->
+          <!--<button v-on:click="" class="btn btn-danger" style="width: 100%;">删除</button>-->
+          <!--</div>-->
           <!--</div>-->
           <div class="box box-default box-solid">
             <div class="box-header">
@@ -554,63 +554,63 @@
 
 <script>
 
-    $('#datepicker').datepicker({
-        autoclose: true
-    });
+  $('#datepicker').datepicker({
+    autoclose: true
+  });
 
 
-    let app = new Vue({
-        el: '#content_id',
+  let app = new Vue({
+    el: '#content_id',
 
-        /**
-         * 以下为Vue的生命周期
-         *
-         * @author lpx
-         * @date 2018/12/13 10:27
-         */
-        beforeCreate: function () {
+    /**
+     * 以下为Vue的生命周期
+     *
+     * @author lpx
+     * @date 2018/12/13 10:27
+     */
+    beforeCreate: function () {
 
-        },
-        create: function () {
+    },
+    create: function () {
 
-        },
-        beforeMount: function () {
+    },
+    beforeMount: function () {
 
-        },
-        mounted: function () {
+    },
+    mounted: function () {
 
-        },
-        beforeUpdate: function () {
+    },
+    beforeUpdate: function () {
 
-        },
-        updated: function () {
+    },
+    updated: function () {
 
-        },
-        beforeDestroy: function () {
+    },
+    beforeDestroy: function () {
 
-        },
-        destroy: function () {
+    },
+    destroy: function () {
 
-        },
-        data: {
-            boxNumber: '',
-            datepicker: '',
-            items: [],
-            index: 1,
-        },
-        methods: {
-            addItem: function () {
-                this.items.push(111);
-            },
-            delItem: function () {
-                this.items.pop();
-            },
-            addBox: function () {
-                this.items.push(1);
-            }
+    },
+    data: {
+      boxNumber: '',
+      datepicker: '',
+      items: [],
+      index: 1,
+    },
+    methods: {
+      addItem: function () {
+        this.items.push(111);
+      },
+      delItem: function () {
+        this.items.pop();
+      },
+      addBox: function () {
+        this.items.push(1);
+      }
 
-        }
-    })
+    }
+  })
 </script>
 
 </body>

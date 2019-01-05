@@ -202,110 +202,110 @@
 <script src="../../js/vue.js"></script>
 <script src="constant.js"></script>
 <script>
-    new Vue({
-        el: '#content_id',
-        mounted: function () {
-            this.getModule();
-            this.getUser();
-        },
-        data: {
-            parentModuleAvailable: [],
-            users: [],
-            userInput: {
-                createTime: null,
-                departmentId: null,
-                departmentName: null,
-                email: null,
-                fingerprintId: null,
-                id: null,
-                imgPath: null,
-                isAvailable: null,
-                lastLoginTime: null,
-                loginName: null,
-                name: null,
-                password: null,
-                phone: null,
-            },
-            userSession: null,
-            selectedUserIndex: [],
-        },
-        methods: {
-            getModule: function () {
-                let that = this;
-                that.userSession = localStorage.getItem('user');
-                $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/system_module/all',
-                    type: 'GET',
-                    success: function (data) {
-                        that.parentModuleAvailable = data.result.filter(function (vaule) {
-                            if (vaule.isAvailable === 1) {
-                                let children = data.result.filter(function (item) {
-                                    if (item.parentId === vaule.id && item.isAvailable === 1) {
-                                        return item;
-                                    }
-                                });
-                                return vaule['children'] = children;
-                            }
-                        });
-                    }
+  new Vue({
+    el: '#content_id',
+    mounted: function () {
+      this.getModule();
+      this.getUser();
+    },
+    data: {
+      parentModuleAvailable: [],
+      users: [],
+      userInput: {
+        createTime: null,
+        departmentId: null,
+        departmentName: null,
+        email: null,
+        fingerprintId: null,
+        id: null,
+        imgPath: null,
+        isAvailable: null,
+        lastLoginTime: null,
+        loginName: null,
+        name: null,
+        password: null,
+        phone: null,
+      },
+      userSession: null,
+      selectedUserIndex: [],
+    },
+    methods: {
+      getModule: function () {
+        let that = this;
+        that.userSession = localStorage.getItem('user');
+        $.ajax({
+          url: 'http://118.25.107.131:8081/bts2/system_module/all',
+          type: 'GET',
+          success: function (data) {
+            that.parentModuleAvailable = data.result.filter(function (vaule) {
+              if (vaule.isAvailable === 1) {
+                let children = data.result.filter(function (item) {
+                  if (item.parentId === vaule.id && item.isAvailable === 1) {
+                    return item;
+                  }
                 });
-            },
-            getUser: function () {
-                let that = this;
-                $.ajax({
-                    url: 'http://localhost:8081/bts2/system_user/all',
-                    type: 'get',
-                    success: function (data) {
-                        that.users = data.result;
-                    }
-                });
-            },
-            addUser: function () {
-                let that = this;
-                $.ajax({
-                    url: 'http://localhost:8081/bts2/system_user/add',
-                    type: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify(that.userInput),
-                    success: function (data) {
-                        that.getUser();
-                        alert('添加用户成功！' + data);
-                    },
-                    error: function (data) {
-                        that.getUser();
-                        alert('添加用户失败！' + data);
-                    }
-                });
-            },
-            clearInputData: function () {
-                this.userInput = {
-                    createTime: null,
-                    departmentId: null,
-                    departmentName: null,
-                    email: null,
-                    fingerprintId: null,
-                    id: null,
-                    imgPath: null,
-                    isAvailable: null,
-                    lastLoginTime: null,
-                    loginName: null,
-                    name: null,
-                    password: null,
-                    phone: null,
-                };
-            },
-            updateUser: function () {
-                if (this.selectedUserIndex.length > 1) {
-                    alert('不能同时更新多个用户！');
-                } else if (this.selectedUserIndex.length === 0) {
-                    alert('请选择一个用户！');
-                } else {
-                    this.userInput = this.users[this.selectedUserIndex[0]];
-                }
-            }
+                return vaule['children'] = children;
+              }
+            });
+          }
+        });
+      },
+      getUser: function () {
+        let that = this;
+        $.ajax({
+          url: 'http://localhost:8081/bts2/system_user/all',
+          type: 'get',
+          success: function (data) {
+            that.users = data.result;
+          }
+        });
+      },
+      addUser: function () {
+        let that = this;
+        $.ajax({
+          url: 'http://localhost:8081/bts2/system_user/add',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(that.userInput),
+          success: function (data) {
+            that.getUser();
+            alert('添加用户成功！' + data);
+          },
+          error: function (data) {
+            that.getUser();
+            alert('添加用户失败！' + data);
+          }
+        });
+      },
+      clearInputData: function () {
+        this.userInput = {
+          createTime: null,
+          departmentId: null,
+          departmentName: null,
+          email: null,
+          fingerprintId: null,
+          id: null,
+          imgPath: null,
+          isAvailable: null,
+          lastLoginTime: null,
+          loginName: null,
+          name: null,
+          password: null,
+          phone: null,
+        };
+      },
+      updateUser: function () {
+        if (this.selectedUserIndex.length > 1) {
+          alert('不能同时更新多个用户！');
+        } else if (this.selectedUserIndex.length === 0) {
+          alert('请选择一个用户！');
+        } else {
+          this.userInput = this.users[this.selectedUserIndex[0]];
         }
+      }
+    }
 
-    })
+  })
 </script>
 
 </body>

@@ -113,37 +113,37 @@
 <script src="../../js/vue.js"></script>
 <script src="constant.js"></script>
 <script>
-    new Vue({
-        el: '#content_id',
-        mounted: function () {
-            this.getModule();
-        },
-        data: {
-            parentModuleAvailable: [],
-        },
-        methods: {
-            getModule: function () {
-                let that = this;
-                $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/system_module/all',
-                    type: 'GET',
-                    success: function (data) {
-                        that.parentModuleAvailable = data.result.filter(function (vaule) {
-                            if (vaule.isAvailable === 1) {
-                                let children = data.result.filter(function (item) {
-                                    if (item.parentId === vaule.id && item.isAvailable === 1) {
-                                        return item;
-                                    }
-                                });
-                                return vaule['children'] = children;
-                            }
-                        });
-                    }
+  new Vue({
+    el: '#content_id',
+    mounted: function () {
+      this.getModule();
+    },
+    data: {
+      parentModuleAvailable: [],
+    },
+    methods: {
+      getModule: function () {
+        let that = this;
+        $.ajax({
+          url: 'http://118.25.107.131:8081/bts2/system_module/all',
+          type: 'GET',
+          success: function (data) {
+            that.parentModuleAvailable = data.result.filter(function (vaule) {
+              if (vaule.isAvailable === 1) {
+                let children = data.result.filter(function (item) {
+                  if (item.parentId === vaule.id && item.isAvailable === 1) {
+                    return item;
+                  }
                 });
-            }
-        }
+                return vaule['children'] = children;
+              }
+            });
+          }
+        });
+      }
+    }
 
-    })
+  })
 </script>
 
 </body>

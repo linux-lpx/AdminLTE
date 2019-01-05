@@ -207,117 +207,117 @@
 <script src="./constant.js"></script>
 
 <script>
-    new Vue({
-        el: '#content_id',
-        mounted: function () {
-            this.getModule();
-        },
-        data: {
-            modules: [],
-            parentModuleAll: [],
-            parentModuleAvailable: [],
-            selectedModuleIndex: [],
-            moduleInput: {
-                id: null,
-                name: '',
-                description: '',
-                path: '',
-                parentId: null,
-                parentName: '',
-                imgPath: '',
-                isAvailable: 1,
-                type: 1,
-                roleId: null
-            }
-        },
-        methods: {
-            getModule: function () {
-                let that = this;
-                $.ajax({
-                    url: getIpTxy() + getPort() + '/bts2/system_module/all',
-                    type: 'GET',
-                    success: function (data) {
-                        that.modules = data.result;
-                        that.parentModuleAll = data.result.filter(function (item) {
-                            if (item.type === 0) {
-                                return item;
-                            }
-                        });
-                        that.parentModuleAvailable = data.result.filter(function (vaule) {
-                            if (vaule.isAvailable === 1) {
-                                let children = data.result.filter(function (item) {
-                                    if (item.parentId === vaule.id && item.isAvailable === 1) {
-                                        return item;
-                                    }
-                                });
-                                return vaule['children'] = children;
-                            }
-                        });
-                    }
+  new Vue({
+    el: '#content_id',
+    mounted: function () {
+      this.getModule();
+    },
+    data: {
+      modules: [],
+      parentModuleAll: [],
+      parentModuleAvailable: [],
+      selectedModuleIndex: [],
+      moduleInput: {
+        id: null,
+        name: '',
+        description: '',
+        path: '',
+        parentId: null,
+        parentName: '',
+        imgPath: '',
+        isAvailable: 1,
+        type: 1,
+        roleId: null
+      }
+    },
+    methods: {
+      getModule: function () {
+        let that = this;
+        $.ajax({
+          url: getIpTxy() + getPort() + '/bts2/system_module/all',
+          type: 'GET',
+          success: function (data) {
+            that.modules = data.result;
+            that.parentModuleAll = data.result.filter(function (item) {
+              if (item.type === 0) {
+                return item;
+              }
+            });
+            that.parentModuleAvailable = data.result.filter(function (vaule) {
+              if (vaule.isAvailable === 1) {
+                let children = data.result.filter(function (item) {
+                  if (item.parentId === vaule.id && item.isAvailable === 1) {
+                    return item;
+                  }
                 });
+                return vaule['children'] = children;
+              }
+            });
+          }
+        });
+      },
+      addModule: function () {
+        let that = this;
+        if (this.checkName()) {
+          $.ajax({
+            url: getIpTxy() + getPort() + '/bts2/system_module/add',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(that.moduleInput),
+            success: function (data) {
+              alert('操作成功');
+              that.getModule();
             },
-            addModule: function () {
-                let that = this;
-                if (this.checkName()) {
-                    $.ajax({
-                        url: getIpTxy() + getPort() + '/bts2/system_module/add',
-                        type: 'post',
-                        contentType: 'application/json',
-                        data: JSON.stringify(that.moduleInput),
-                        success: function (data) {
-                            alert('操作成功');
-                            that.getModule();
-                        },
-                        error: function (data) {
-                            alert('操作失败');
-                        }
-                    });
-                } else {
-                    alert("模块名已被使用，请重新填写！");
-                }
-            },
-            checkName: function () {
-                let that = this;
-                $.ajax({
-                    url: getIpTxy() + getPort() + '/bts2/system_module/checkName/' + that.moduleInput.name,
-                    type: 'get',
-                    success: function (data) {
-                        if (data === 'used') {
-                        } else if (data === 'unused') {
-                            return true;
-                        }
-                    }
-                });
-                return true;
-            },
-            updateModule: function () {
-                // TODO 这里的提示还要完善
-                if (this.selectedModuleIndex.length > 1) {
-                    alert('不能同时更新多个模块！');
-                } else if (this.selectedModuleIndex.length === 0) {
-                    alert('请选择一个模块！');
-                } else {
-                    this.moduleInput = this.modules[this.selectedModuleIndex[0]];
-                    this.moduleInput.parentId = null;
-                }
-            },
-            clearInputData: function () {
-                this.moduleInput = {
-                    id: null,
-                    name: '',
-                    description: '',
-                    path: '',
-                    parentId: null,
-                    parentName: '',
-                    imgPath: '',
-                    isAvailable: 1,
-                    type: 1,
-                    roleId: null
-                }
+            error: function (data) {
+              alert('操作失败');
             }
+          });
+        } else {
+          alert("模块名已被使用，请重新填写！");
         }
+      },
+      checkName: function () {
+        let that = this;
+        $.ajax({
+          url: getIpTxy() + getPort() + '/bts2/system_module/checkName/' + that.moduleInput.name,
+          type: 'get',
+          success: function (data) {
+            if (data === 'used') {
+            } else if (data === 'unused') {
+              return true;
+            }
+          }
+        });
+        return true;
+      },
+      updateModule: function () {
+        // TODO 这里的提示还要完善
+        if (this.selectedModuleIndex.length > 1) {
+          alert('不能同时更新多个模块！');
+        } else if (this.selectedModuleIndex.length === 0) {
+          alert('请选择一个模块！');
+        } else {
+          this.moduleInput = this.modules[this.selectedModuleIndex[0]];
+          this.moduleInput.parentId = null;
+        }
+      },
+      clearInputData: function () {
+        this.moduleInput = {
+          id: null,
+          name: '',
+          description: '',
+          path: '',
+          parentId: null,
+          parentName: '',
+          imgPath: '',
+          isAvailable: 1,
+          type: 1,
+          roleId: null
+        }
+      }
+    }
 
-    })
+  })
 </script>
 
 </body>

@@ -226,128 +226,128 @@
 <script src="../../js/vue.js"></script>
 <script src="constant.js"></script>
 <script>
-    new Vue({
-        el: '#content_id',
-        mounted: function () {
-            this.getModule();
-            this.getBank();
-        },
-        data: {
-            parentModuleAvailable: [],
-            banks: [],
-            selectedBankIndex: [],
-            deleteBankId: [],
-            bankInput: {
-                code: null,
-                name: null,
-                email: null,
-                contactTele: null,
-                contacts: null,
-                parentCode: null,
-                parentName: null,
-                address: null,
-                nameForShort: null,
-                createUserId: null,
-                createUserName: null,
-                createDate: null,
-                introduction: null,
-                peoplesBankCode: null,
-                treeCode: null,
-                legalPersonCode: null,
-                bankCode: null,
-                type: null,
-            }
-        },
-        methods: {
-            getModule: function () {
-                let that = this;
-                $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/system_module/all',
-                    type: 'GET',
-                    success: function (data) {
-                        that.parentModuleAvailable = data.result.filter(function (vaule) {
-                            if (vaule.isAvailable === 1) {
-                                let children = data.result.filter(function (item) {
-                                    if (item.parentId === vaule.id && item.isAvailable === 1) {
-                                        return item;
-                                    }
-                                });
-                                return vaule['children'] = children;
-                            }
-                        });
-                    }
+  new Vue({
+    el: '#content_id',
+    mounted: function () {
+      this.getModule();
+      this.getBank();
+    },
+    data: {
+      parentModuleAvailable: [],
+      banks: [],
+      selectedBankIndex: [],
+      deleteBankId: [],
+      bankInput: {
+        code: null,
+        name: null,
+        email: null,
+        contactTele: null,
+        contacts: null,
+        parentCode: null,
+        parentName: null,
+        address: null,
+        nameForShort: null,
+        createUserId: null,
+        createUserName: null,
+        createDate: null,
+        introduction: null,
+        peoplesBankCode: null,
+        treeCode: null,
+        legalPersonCode: null,
+        bankCode: null,
+        type: null,
+      }
+    },
+    methods: {
+      getModule: function () {
+        let that = this;
+        $.ajax({
+          url: 'http://118.25.107.131:8081/bts2/system_module/all',
+          type: 'GET',
+          success: function (data) {
+            that.parentModuleAvailable = data.result.filter(function (vaule) {
+              if (vaule.isAvailable === 1) {
+                let children = data.result.filter(function (item) {
+                  if (item.parentId === vaule.id && item.isAvailable === 1) {
+                    return item;
+                  }
                 });
-            },
-            getBank: function () {
-                let that = this;
-                $.ajax({
-                    url: getIpLocal() + getPort() + '/bts2/bank/all',
-                    type: 'get',
-                    success: function (data) {
-                        that.banks = data.result;
-                    }
-                });
-            },
-            addBank: function () {
-                let that = this;
-                $.ajax({
-                    url: getIpLocal() + getPort() + '/bts2/bank/add',
-                    type: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify(that.bankInput),
-                    success: function (data) {
-                        console.log(data);
-                        that.getBank();
-                    },
-                    error: function (data) {
-                        console.log(data)
-                    }
-                });
-            },
-            updateBank: function () {
-                if (this.selectedBankIndex.length > 1) {
-                    alert('不能同时更新多个机构！');
-                } else if (this.selectedBankIndex.length === 0) {
-                    alert('请选择一个机构！');
-                } else {
-                    this.bankInput = this.banks[this.selectedBankIndex[0]];
-                }
-            },
-            deleteBank: function () {
-                // TODO 删除机构
-                if (this.selectedBankIndex.length === 0) {
-                    alert("请至少选择一个机构");
-                } else {
-                    this.deleteBankId = this.selectedBankIndex.filter(function (item) {
-                        return this.banks[item].id;
-                    })
-                }
-            },
-            clearInputData: function () {
-                this.bankInput = {
-                    code: null,
-                    name: null,
-                    email: null,
-                    contactTele: null,
-                    contacts: null,
-                    parentCode: null,
-                    parentName: null,
-                    address: null,
-                    nameForShort: null,
-                    createUserId: null,
-                    createUserName: null,
-                    createDate: null,
-                    introduction: null,
-                    peoplesBankCode: null,
-                    treeCode: null,
-                    legalPersonCode: null,
-                    bankCode: null,
-                    type: null,
-                }
-            }
+                return vaule['children'] = children;
+              }
+            });
+          }
+        });
+      },
+      getBank: function () {
+        let that = this;
+        $.ajax({
+          url: getIpLocal() + getPort() + '/bts2/bank/all',
+          type: 'get',
+          success: function (data) {
+            that.banks = data.result;
+          }
+        });
+      },
+      addBank: function () {
+        let that = this;
+        $.ajax({
+          url: getIpLocal() + getPort() + '/bts2/bank/add',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(that.bankInput),
+          success: function (data) {
+            console.log(data);
+            that.getBank();
+          },
+          error: function (data) {
+            console.log(data)
+          }
+        });
+      },
+      updateBank: function () {
+        if (this.selectedBankIndex.length > 1) {
+          alert('不能同时更新多个机构！');
+        } else if (this.selectedBankIndex.length === 0) {
+          alert('请选择一个机构！');
+        } else {
+          this.bankInput = this.banks[this.selectedBankIndex[0]];
         }
+      },
+      deleteBank: function () {
+        // TODO 删除机构
+        if (this.selectedBankIndex.length === 0) {
+          alert("请至少选择一个机构");
+        } else {
+          this.deleteBankId = this.selectedBankIndex.filter(function (item) {
+            return this.banks[item].id;
+          })
+        }
+      },
+      clearInputData: function () {
+        this.bankInput = {
+          code: null,
+          name: null,
+          email: null,
+          contactTele: null,
+          contacts: null,
+          parentCode: null,
+          parentName: null,
+          address: null,
+          nameForShort: null,
+          createUserId: null,
+          createUserName: null,
+          createDate: null,
+          introduction: null,
+          peoplesBankCode: null,
+          treeCode: null,
+          legalPersonCode: null,
+          bankCode: null,
+          type: null,
+        }
+      }
+    }
 
-    })
+  })
 </script>
 
 </body>

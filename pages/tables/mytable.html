@@ -578,128 +578,128 @@
 </div>
 
 <script>
-    let app = new Vue({
-        el: '#content_id',
+  let app = new Vue({
+    el: '#content_id',
 
-        /**
-         * 以下为Vue的生命周期
-         *
-         * @author lpx
-         * @date 2018/12/13 10:27
-         */
-        beforeCreate: function () {
+    /**
+     * 以下为Vue的生命周期
+     *
+     * @author lpx
+     * @date 2018/12/13 10:27
+     */
+    beforeCreate: function () {
 
-        },
-        create: function () {
+    },
+    create: function () {
 
-        },
-        beforeMount: function () {
+    },
+    beforeMount: function () {
 
-        },
-        mounted: function () {
-            this.getIndexFilm(1, 'mid');
-        },
-        beforeUpdate: function () {
+    },
+    mounted: function () {
+      this.getIndexFilm(1, 'mid');
+    },
+    beforeUpdate: function () {
 
-        },
-        updated: function () {
+    },
+    updated: function () {
 
-        },
-        beforeDestroy: function () {
+    },
+    beforeDestroy: function () {
 
-        },
-        destroy: function () {
+    },
+    destroy: function () {
 
-        },
-        data: {
-            pageStart: 0,
-            nowPage: 1,
-            pages: [1, 2, 3, 4, 5],
-            isActive: false,
-            filmList: []
-        },
-        methods: {
-            setPage: function (page, flag) {
-                if (flag === 'next') {
-                    if (this.nowPage === this.pages[4] && this.filmList.length === 10) {
-                        this.pageStart = (page - 1) * 10;
-                        this.nowPage = page;
-                        this.pages = this.pages.map(function (i) {
-                            return ++i;
-                        });
-                        this.getIndexFilm(page);
-                    } else if (this.nowPage !== this.pages[4] && this.filmList.length === 10) {
-                        this.pageStart = (page - 1) * 10;
-                        this.nowPage = page;
-                        this.getIndexFilm(page);
-                    } else {
-                        // 最后一页了
-                    }
-                } else if (flag === 'previous') {
-                    if (this.nowPage === this.pages[0] && this.nowPage > 1) {
-                        this.pageStart = (page - 1) * 10;
-                        this.nowPage = page;
-                        this.pages = this.pages.map(function (i) {
-                            return --i;
-                        });
-                        this.getIndexFilm(page);
-                    } else if (this.nowPage !== this.pages[0]) {
-                        this.pageStart = (page - 1) * 10;
-                        this.nowPage = page;
-                        this.getIndexFilm(page);
-                    } else if (this.nowPage === this.pages[0] && this.nowPage === 1) {
-                        // 最左边了
-                    }
-                } else if (flag === 'mid') {
-                    this.pageStart = (page - 1) * 10;
-                    this.nowPage = page;
-                    this.getIndexFilm(page);
-                }
-            },
-
-            getIndexFilm: function (page) {
-                let that = this;
-                $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/f/index/' + page,
-                    type: 'GET',
-                    success: function (data) {
-                        that.filmList = data.result;
-                    },
-                    failed: function () {
-                        console.log('indexFilm请求失败了！！！');
-                    }
-                })
-            },
-            getFilmByClass: function (fc, page) {
-                let that = this;
-                $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/f/c/' + fc + '/' + page,
-                    type: 'get',
-                    success: function (data) {
-                        that.filmList = data.result;
-                    },
-                    failed: function () {
-                        console.log('filmByClass请求失败了！！！');
-                    }
-                })
-            },
-            subStringActor: function (actor) {
-                if (!actor) {
-                    return 'null';
-                }
-                return actor.length > 20 ? actor.substring(0, 20) : actor;
-            },
-            setActiveClass: function (page) {
-                return page === this.nowPage;
-            },
-            setPrevDisableClass: function () {
-                return this.nowPage === 1;
-            },
-            setNextDisableClass: function () {
-                return this.filmList.length < 10 || this.filmList === null;
-            }
+    },
+    data: {
+      pageStart: 0,
+      nowPage: 1,
+      pages: [1, 2, 3, 4, 5],
+      isActive: false,
+      filmList: []
+    },
+    methods: {
+      setPage: function (page, flag) {
+        if (flag === 'next') {
+          if (this.nowPage === this.pages[4] && this.filmList.length === 10) {
+            this.pageStart = (page - 1) * 10;
+            this.nowPage = page;
+            this.pages = this.pages.map(function (i) {
+              return ++i;
+            });
+            this.getIndexFilm(page);
+          } else if (this.nowPage !== this.pages[4] && this.filmList.length === 10) {
+            this.pageStart = (page - 1) * 10;
+            this.nowPage = page;
+            this.getIndexFilm(page);
+          } else {
+            // 最后一页了
+          }
+        } else if (flag === 'previous') {
+          if (this.nowPage === this.pages[0] && this.nowPage > 1) {
+            this.pageStart = (page - 1) * 10;
+            this.nowPage = page;
+            this.pages = this.pages.map(function (i) {
+              return --i;
+            });
+            this.getIndexFilm(page);
+          } else if (this.nowPage !== this.pages[0]) {
+            this.pageStart = (page - 1) * 10;
+            this.nowPage = page;
+            this.getIndexFilm(page);
+          } else if (this.nowPage === this.pages[0] && this.nowPage === 1) {
+            // 最左边了
+          }
+        } else if (flag === 'mid') {
+          this.pageStart = (page - 1) * 10;
+          this.nowPage = page;
+          this.getIndexFilm(page);
         }
-    })
+      },
+
+      getIndexFilm: function (page) {
+        let that = this;
+        $.ajax({
+          url: 'http://118.25.107.131:8081/bts2/f/index/' + page,
+          type: 'GET',
+          success: function (data) {
+            that.filmList = data.result;
+          },
+          failed: function () {
+            console.log('indexFilm请求失败了！！！');
+          }
+        })
+      },
+      getFilmByClass: function (fc, page) {
+        let that = this;
+        $.ajax({
+          url: 'http://118.25.107.131:8081/bts2/f/c/' + fc + '/' + page,
+          type: 'get',
+          success: function (data) {
+            that.filmList = data.result;
+          },
+          failed: function () {
+            console.log('filmByClass请求失败了！！！');
+          }
+        })
+      },
+      subStringActor: function (actor) {
+        if (!actor) {
+          return 'null';
+        }
+        return actor.length > 20 ? actor.substring(0, 20) : actor;
+      },
+      setActiveClass: function (page) {
+        return page === this.nowPage;
+      },
+      setPrevDisableClass: function () {
+        return this.nowPage === 1;
+      },
+      setNextDisableClass: function () {
+        return this.filmList.length < 10 || this.filmList === null;
+      }
+    }
+  })
 </script>
 
 </body>

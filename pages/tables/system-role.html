@@ -226,135 +226,135 @@
 <script src="../../js/vue.js"></script>
 <script src="constant.js"></script>
 <script>
-    new Vue({
-        el: '#content_id',
-        mounted: function () {
-            this.getModule();
-            this.getRole();
-        },
-        data: {
-            // 侧边栏目录模块对应的数据
-            parentModuleAvailable: [],
+  new Vue({
+    el: '#content_id',
+    mounted: function () {
+      this.getModule();
+      this.getRole();
+    },
+    data: {
+      // 侧边栏目录模块对应的数据
+      parentModuleAvailable: [],
 
-            // 角色表格中的数据
-            roles: [],
+      // 角色表格中的数据
+      roles: [],
 
-            // 左侧的复选框选中的序号
-            selectedRoleIndex: [],
+      // 左侧的复选框选中的序号
+      selectedRoleIndex: [],
 
-            // 模态框中的数据
-            roleInput: {
-                id: null,
-                name: null,
-                parentId: null,
-                parentName: null,
-                isAvailable: 1
-            },
+      // 模态框中的数据
+      roleInput: {
+        id: null,
+        name: null,
+        parentId: null,
+        parentName: null,
+        isAvailable: 1
+      },
 
-            // 是否能打开模态框
-            isCanOpenModal: false,
+      // 是否能打开模态框
+      isCanOpenModal: false,
 
-            // 目标modal
-            targetModal: '',
+      // 目标modal
+      targetModal: '',
 
-            // 文件
-            file: '',
+      // 文件
+      file: '',
 
-            // 模块（权限）选择
-            permissions: {
-                selectedRoleId: 0,
-                moduleChecked: [],
-            },
+      // 模块（权限）选择
+      permissions: {
+        selectedRoleId: 0,
+        moduleChecked: [],
+      },
 
-        },
-        methods: {
-            getModule: function () {
-                let that = this;
-                $.ajax({
-                    url: getIpTxy() + getPort() + '/bts2/system_module/all',
-                    type: 'GET',
-                    success: function (data) {
-                        that.parentModuleAvailable = data.result.filter(function (vaule) {
-                            if (vaule.isAvailable === 1) {
-                                let children = data.result.filter(function (item) {
-                                    if (item.parentId === vaule.id && item.isAvailable === 1) {
-                                        return item;
-                                    }
-                                });
-                                return vaule['children'] = children;
-                            }
-                        });
-                    }
+    },
+    methods: {
+      getModule: function () {
+        let that = this;
+        $.ajax({
+          url: getIpTxy() + getPort() + '/bts2/system_module/all',
+          type: 'GET',
+          success: function (data) {
+            that.parentModuleAvailable = data.result.filter(function (vaule) {
+              if (vaule.isAvailable === 1) {
+                let children = data.result.filter(function (item) {
+                  if (item.parentId === vaule.id && item.isAvailable === 1) {
+                    return item;
+                  }
                 });
-            },
-            getRole: function () {
-                let that = this;
-                $.ajax({
-                    url: getIpLocal() + getPort() + '/bts2/system_role/all',
-                    type: 'GET',
-                    success: function (data) {
-                        that.roles = data.result;
-                    }
-                });
-            },
-            addRole: function () {
-                let that = this;
-                $.ajax({
-                    url: 'http://localhost:8081/bts2/system_role/add',
-                    type: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify(that.roleInput),
-                    success: function (data) {
-                        that.getRole();
-                        alert('添加角色成功！');
-                    },
-                    error: function (data) {
-                        that.getRole();
-                        alert('添加角色失败！');
-                    }
-                });
-            },
-            updateRole: function () {
-                this.targetModal = this.selectedRoleIndex.length === 1 ? '#roleModal' : '';
-                if (this.selectedRoleIndex.length > 1) {
-                    alert('不能同时更新多个角色！');
-                } else if (this.selectedRoleIndex.length === 0) {
-                    alert('请选择一个角色！');
-                } else {
-                    this.roleInput = this.roles[this.selectedRoleIndex[0]];
-                }
-            },
-            fileOpearate: function () {
-                // TODO 处理文件
-            },
-            setSelectRole: function (roleId) {
-                console.log(roleId + '----lpx');
-                this.permissions.selectedRoleId = roleId;
-            },
-            addPermissions: function () {
-                let that = this;
-                $.ajax({
-                    url: 'http://localhost:8081/bts2/module_to_role/addAll',
-                    type: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify(that.permissions),
-                    success: function (data) {
-                        console.log(data);
-                    }
-                });
-            },
-            clearInputData: function () {
-                this.roleInput = {
-                    id: null,
-                    name: null,
-                    parentId: null,
-                    parentName: null,
-                    isAvailable: 1
-                }
-            }
+                return vaule['children'] = children;
+              }
+            });
+          }
+        });
+      },
+      getRole: function () {
+        let that = this;
+        $.ajax({
+          url: getIpLocal() + getPort() + '/bts2/system_role/all',
+          type: 'GET',
+          success: function (data) {
+            that.roles = data.result;
+          }
+        });
+      },
+      addRole: function () {
+        let that = this;
+        $.ajax({
+          url: 'http://localhost:8081/bts2/system_role/add',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(that.roleInput),
+          success: function (data) {
+            that.getRole();
+            alert('添加角色成功！');
+          },
+          error: function (data) {
+            that.getRole();
+            alert('添加角色失败！');
+          }
+        });
+      },
+      updateRole: function () {
+        this.targetModal = this.selectedRoleIndex.length === 1 ? '#roleModal' : '';
+        if (this.selectedRoleIndex.length > 1) {
+          alert('不能同时更新多个角色！');
+        } else if (this.selectedRoleIndex.length === 0) {
+          alert('请选择一个角色！');
+        } else {
+          this.roleInput = this.roles[this.selectedRoleIndex[0]];
         }
+      },
+      fileOpearate: function () {
+        // TODO 处理文件
+      },
+      setSelectRole: function (roleId) {
+        console.log(roleId + '----lpx');
+        this.permissions.selectedRoleId = roleId;
+      },
+      addPermissions: function () {
+        let that = this;
+        $.ajax({
+          url: 'http://localhost:8081/bts2/module_to_role/addAll',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(that.permissions),
+          success: function (data) {
+            console.log(data);
+          }
+        });
+      },
+      clearInputData: function () {
+        this.roleInput = {
+          id: null,
+          name: null,
+          parentId: null,
+          parentName: null,
+          isAvailable: 1
+        }
+      }
+    }
 
-    })
+  })
 </script>
 
 </body>

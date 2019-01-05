@@ -232,65 +232,65 @@
 <script src="./constant.js"></script>
 
 <script>
-    $('#datepicker').datepicker({
-        autoclose: true
-    });
-    new Vue({
-        el: '#content_id',
-        mounted: function () {
-            this.getModule();
-        },
-        data: {
-            parentModuleAvailable: [],
-            boxNumber: '',
-            items: [{
-                aa: '',
-                bb: '',
-                cc: '',
-                dd: ''
-            }],
-        },
-        methods: {
-            getModule: function () {
-                let that = this;
-                $.ajax({
-                    url: getIpTxy() + getPort() + '/bts2/system_module/all',
-                    type: 'GET',
-                    success: function (data) {
-                        that.modules = data.result;
-                        that.parentModuleAll = data.result.filter(function (item) {
-                            if (item.type === 0) {
-                                return item;
-                            }
-                        });
-                        that.parentModuleAvailable = data.result.filter(function (vaule) {
-                            if (vaule.isAvailable === 1) {
-                                let children = data.result.filter(function (item) {
-                                    if (item.parentId === vaule.id && item.isAvailable === 1) {
-                                        return item;
-                                    }
-                                });
-                                return vaule['children'] = children;
-                            }
-                        });
-                    }
+  $('#datepicker').datepicker({
+    autoclose: true
+  });
+  new Vue({
+    el: '#content_id',
+    mounted: function () {
+      this.getModule();
+    },
+    data: {
+      parentModuleAvailable: [],
+      boxNumber: '',
+      items: [{
+        aa: '',
+        bb: '',
+        cc: '',
+        dd: ''
+      }],
+    },
+    methods: {
+      getModule: function () {
+        let that = this;
+        $.ajax({
+          url: getIpTxy() + getPort() + '/bts2/system_module/all',
+          type: 'GET',
+          success: function (data) {
+            that.modules = data.result;
+            that.parentModuleAll = data.result.filter(function (item) {
+              if (item.type === 0) {
+                return item;
+              }
+            });
+            that.parentModuleAvailable = data.result.filter(function (vaule) {
+              if (vaule.isAvailable === 1) {
+                let children = data.result.filter(function (item) {
+                  if (item.parentId === vaule.id && item.isAvailable === 1) {
+                    return item;
+                  }
                 });
-            },
-            addItem: function () {
-                let item = {
-                    aa: '',
-                    bb: '',
-                    cc: '',
-                    dd: ''
-                };
-                this.items.push(item);
-            },
-            delItem: function () {
-                this.items.pop();
-            }
-        }
+                return vaule['children'] = children;
+              }
+            });
+          }
+        });
+      },
+      addItem: function () {
+        let item = {
+          aa: '',
+          bb: '',
+          cc: '',
+          dd: ''
+        };
+        this.items.push(item);
+      },
+      delItem: function () {
+        this.items.pop();
+      }
+    }
 
-    });
+  });
 </script>
 
 </body>

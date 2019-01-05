@@ -388,71 +388,71 @@
 </div>
 
 <script>
-    let app = new Vue({
-        el: '#content_id',
+  let app = new Vue({
+    el: '#content_id',
 
-        /**
-         * 以下为Vue的生命周期
-         *
-         * @author lpx
-         * @date 2018/12/13 10:27
-         */
-        beforeCreate: function () {
+    /**
+     * 以下为Vue的生命周期
+     *
+     * @author lpx
+     * @date 2018/12/13 10:27
+     */
+    beforeCreate: function () {
 
-        },
-        create: function () {
+    },
+    create: function () {
 
-        },
-        beforeMount: function () {
+    },
+    beforeMount: function () {
 
-        },
-        mounted: function () {
+    },
+    mounted: function () {
 
-        },
-        beforeUpdate: function () {
+    },
+    beforeUpdate: function () {
 
-        },
-        updated: function () {
+    },
+    updated: function () {
 
-        },
-        beforeDestroy: function () {
+    },
+    beforeDestroy: function () {
 
-        },
-        destroy: function () {
+    },
+    destroy: function () {
 
-        },
-        data: {
-            userName: '',
-            password: '',
-            email: '',
-            phonenumber: ''
-        },
-        methods: {
-            addUser: function () {
-                let user = {
-                    name: this.userName,
-                    password: this.password,
-                    eMail: this.email,
-                    phoneNumber: this.phonenumber
-                };
-                console.log(user);
-                $.ajax({
-                    url: 'http://118.25.107.131:8081/bts2/user/save',
-                    type: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify(user),
-                    success: function (date) {
-                        alert(JSON.stringify(date));
-                        console.log(date);
-                    },
-                    failed: function (date) {
-                        JSON.stringify(date);
-                        console.log("出错了！！！" + date.toString());
-                    }
-                })
-            }
-        }
-    })
+    },
+    data: {
+      userName: '',
+      password: '',
+      email: '',
+      phonenumber: ''
+    },
+    methods: {
+      addUser: function () {
+        let user = {
+          name: this.userName,
+          password: this.password,
+          eMail: this.email,
+          phoneNumber: this.phonenumber
+        };
+        console.log(user);
+        $.ajax({
+          url: 'http://118.25.107.131:8081/bts2/user/save',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(user),
+          success: function (date) {
+            alert(JSON.stringify(date));
+            console.log(date);
+          },
+          failed: function (date) {
+            JSON.stringify(date);
+            console.log("出错了！！！" + date.toString());
+          }
+        })
+      }
+    }
+  })
 </script>
 
 </body>
