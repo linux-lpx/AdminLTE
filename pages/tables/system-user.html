@@ -234,7 +234,7 @@
         let that = this;
         that.userSession = localStorage.getItem('user');
         $.ajax({
-          url: 'http://118.25.107.131:8081/bts2/system_module/all',
+          url: getIpTxy() + getPort() + '/bts2/system_module/all',
           type: 'GET',
           success: function (data) {
             that.parentModuleAvailable = data.result.filter(function (vaule) {
@@ -253,7 +253,7 @@
       getUser: function () {
         let that = this;
         $.ajax({
-          url: 'http://localhost:8081/bts2/system_user/all',
+          url: getIpLocal() + getPort() + '/bts2/system_user/all',
           type: 'get',
           success: function (data) {
             that.users = data.result;
@@ -263,7 +263,7 @@
       addUser: function () {
         let that = this;
         $.ajax({
-          url: 'http://localhost:8081/bts2/system_user/add',
+          url: getIpLocal() + getPort() + '/bts2/system_user/add',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(that.userInput),

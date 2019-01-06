@@ -300,7 +300,7 @@
       addRole: function () {
         let that = this;
         $.ajax({
-          url: 'http://localhost:8081/bts2/system_role/add',
+          url: getIpLocal() + getPort() + '/bts2/system_role/add',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(that.roleInput),
@@ -334,7 +334,7 @@
       addPermissions: function () {
         let that = this;
         $.ajax({
-          url: 'http://localhost:8081/bts2/module_to_role/addAll',
+          url: getIpLocal() + getPort() + '/bts2/module_to_role/addAll',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(that.permissions),
