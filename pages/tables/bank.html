@@ -314,13 +314,23 @@
         }
       },
       deleteBank: function () {
+        let that = this;
         // TODO 删除机构
         if (this.selectedBankIndex.length === 0) {
           alert("请至少选择一个机构");
         } else {
-          this.deleteBankId = this.selectedBankIndex.filter(function (item) {
-            return this.banks[item].id;
-          })
+          this.selectedBankIndex.forEach(function (item) {
+
+            if (!that.deleteBankId.includes(that.banks[item].id)) {
+              that.deleteBankId.push(that.banks[item].id);
+            }
+
+            // if (that.deleteBankId.indexOf(that.banks[item].id) === -1) {
+            //   that.deleteBankId.push(that.banks[item].id);
+            // }
+            console.log(item);
+          });
+
         }
       },
       clearInputData: function () {
