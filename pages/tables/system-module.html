@@ -84,6 +84,7 @@
           <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
                   data-toggle="modal" data-target="#modalTest" v-on:click="updateModule()">更新模块
           </button>
+          <button class="btn btn-danger btn-sm" id="btn_delete" v-on:click="deleteModule()">删除模块</button>
           <!--模态框-->
           <div class="modal fade" id="modalTest" role="dialog">
             <div style="color: #1b6d85">
@@ -217,6 +218,7 @@
       parentModuleAll: [],
       parentModuleAvailable: [],
       selectedModuleIndex: [],
+      deleteModuleId: [],
       moduleInput: {
         id: null,
         name: '',
@@ -299,6 +301,33 @@
         } else {
           this.moduleInput = this.modules[this.selectedModuleIndex[0]];
           this.moduleInput.parentId = null;
+        }
+      },
+      deleteModule: function () {
+        let that = this;
+        if (that.selectedModuleIndex.length === 0) {
+          alert("请至少选择一个模块");
+        } else {
+          that.selectedModuleIndex.forEach(function (item) {
+            if (!that.deleteModuleId.includes(that.modules[item].id)) {
+              that.deleteModuleId.push(that.modules[item].id);
+            }
+          });
+          let ids = that.deleteModuleId.toString();
+          console.log('要删除的模块的id：' + ids);
+          $.ajax({
+            url: getIpLocal() + getPort() + '/bts2/system_module/del/' + ids,
+            type: 'post',
+            success: function (data) {
+              console.log('请求成功，信息：' + data.result);
+              that.getModule();
+              that.selectedModuleIndex = [];
+              that.deleteModuleId = [];
+            },
+            error: function (data) {
+              console.log('请求失败，信息：' + data);
+            }
+          });
         }
       },
       clearInputData: function () {

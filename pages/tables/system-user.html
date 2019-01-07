@@ -93,6 +93,7 @@
             <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
                     data-toggle="modal" data-target="#userModal" v-on:click="updateUser()">更新用户
             </button>
+            <button class="btn btn-danger btn-sm" id="btn_delete" v-on:click="deleteUser()">删除用户</button>
             <div class="modal fade" style="color: #1b6d85" id="userModal" role="dialog">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -228,6 +229,7 @@
       },
       userSession: null,
       selectedUserIndex: [],
+      deleteUserId: [],
     },
     methods: {
       getModule: function () {
@@ -276,6 +278,33 @@
             alert('添加用户失败！' + data);
           }
         });
+      },
+      deleteUser: function () {
+        let that = this;
+        if (that.selectedUserIndex.length === 0) {
+          alert("请至少选择一个用户");
+        } else {
+          that.selectedUserIndex.forEach(function (item) {
+            if (!that.deleteUserId.includes(that.users[item].id)) {
+              that.deleteUserId.push(that.users[item].id);
+            }
+          });
+          let ids = that.deleteUserId.toString();
+          console.log('要删除的用户的id：' + ids);
+          $.ajax({
+            url: getIpLocal() + getPort() + '/bts2/system_user/del/' + ids,
+            type: 'post',
+            success: function (data) {
+              console.log('请求成功，信息：' + data.result);
+              that.getUser();
+              that.selectedUserIndex = [];
+              that.deleteUserId = [];
+            },
+            error: function (data) {
+              console.log('请求失败，信息：' + data);
+            }
+          });
+        }
       },
       clearInputData: function () {
         this.userInput = {

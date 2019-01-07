@@ -91,6 +91,7 @@
             <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
                     data-toggle="modal" v-bind:data-target="targetModal" v-on:click="updateRole()">更新角色
             </button>
+            <button class="btn btn-danger btn-sm" id="btn_delete" v-on:click="deleteRole()">删除角色</button>
             <!--模态框-角色编辑-->
             <div class="modal fade" style="color: #1b6d85" id="roleModal" role="dialog">
               <div class="modal-dialog">
@@ -242,6 +243,9 @@
       // 左侧的复选框选中的序号
       selectedRoleIndex: [],
 
+      // 要删除的id
+      deleteRoleId: [],
+
       // 模态框中的数据
       roleInput: {
         id: null,
@@ -322,6 +326,33 @@
           alert('请选择一个角色！');
         } else {
           this.roleInput = this.roles[this.selectedRoleIndex[0]];
+        }
+      },
+      deleteRole: function () {
+        let that = this;
+        if (that.selectedRoleIndex.length === 0) {
+          alert("请至少选择一个角色");
+        } else {
+          that.selectedRoleIndex.forEach(function (item) {
+            if (!that.deleteRoleId.includes(that.roles[item].id)) {
+              that.deleteRoleId.push(that.roles[item].id);
+            }
+          });
+          let ids = that.deleteRoleId.toString();
+          console.log('要删除的角色的id：' + ids);
+          $.ajax({
+            url: getIpLocal() + getPort() + '/bts2/system_role/del/' + ids,
+            type: 'post',
+            success: function (data) {
+              console.log('请求成功，信息：' + data.result);
+              that.getRole();
+              that.selectedRoleIndex = [];
+              that.deleteRoleId = [];
+            },
+            error: function (data) {
+              console.log('请求失败，信息：' + data);
+            }
+          });
         }
       },
       fileOpearate: function () {

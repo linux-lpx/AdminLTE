@@ -315,20 +315,34 @@
       },
       deleteBank: function () {
         let that = this;
-        // TODO 删除机构
-        if (this.selectedBankIndex.length === 0) {
+        if (that.selectedBankIndex.length === 0) {
           alert("请至少选择一个机构");
         } else {
-          this.selectedBankIndex.forEach(function (item) {
-
+          that.selectedBankIndex.forEach(function (item) {
             if (!that.deleteBankId.includes(that.banks[item].id)) {
               that.deleteBankId.push(that.banks[item].id);
             }
-
+            // 也可以用这种方式
             // if (that.deleteBankId.indexOf(that.banks[item].id) === -1) {
             //   that.deleteBankId.push(that.banks[item].id);
             // }
             console.log(item);
+          });
+          let ids = that.deleteBankId.toString();
+          console.log(ids);
+          $.ajax({
+            url: getIpLocal() + getPort() + '/bts2/bank/del/' + ids,
+            type: 'post',
+            success: function (data) {
+              console.log('请求成功，信息' + data.result);
+              that.getBank();
+              that.selectedBankIndex = [];
+              that.deleteBankId = [];
+            },
+            error: function (data) {
+              console.log(data);
+              console.log('请求失败，信息：' + data);
+            }
           });
 
         }
