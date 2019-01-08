@@ -87,13 +87,20 @@
         <div class="box-header">
           <div class="box-title">
             用户列表
-            <button class="btn btn-warning btn-sm" id="btn_dialog" tabindex="-1"
-                    data-toggle="modal" data-target="#userModal" v-on:click="clearInputData()">添加用户
+            <div class="btn-group">
+              <button class="btn btn-info btn-sm" id="btn_dialog" tabindex="-1"
+                      data-toggle="modal" data-target="#userModal" v-on:click="clearInputData()">添加用户
+              </button>
+              <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
+                      data-toggle="modal" data-target="#userModal" v-on:click="updateUser()">更新用户
+              </button>
+              <button class="btn btn-danger btn-sm" id="btn_delete" v-on:click="deleteUser()">删除用户</button>
+            </div>
+            <span>&nbsp;&nbsp;&nbsp;</span>
+            <button class="btn btn-warning btn-sm" id="btn_allot_role" tabindex="-1"
+                    data-toggle="modal" data-target="#userAllotRoleModal" v-on:click="allotRoleToUser()">分配角色
             </button>
-            <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
-                    data-toggle="modal" data-target="#userModal" v-on:click="updateUser()">更新用户
-            </button>
-            <button class="btn btn-danger btn-sm" id="btn_delete" v-on:click="deleteUser()">删除用户</button>
+            <!--用户添加更新模态框-->
             <div class="modal fade" style="color: #1b6d85" id="userModal" role="dialog">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -121,7 +128,7 @@
                         <br>
                         <div class="input-group">
                           <span class="input-group-addon">隶属机构</span>
-                          <select id="" class="form-control" title="选择隶属机构" v-model="userInput.departmentName">
+                          <select class="form-control" title="选择隶属机构" v-model="userInput.departmentName">
                             <option value="704">支行金库1</option>
                             <option value="700">支行金库2</option>
                             <option value="830">网点1</option>
@@ -145,6 +152,45 @@
                           <input type="file" class="form-control" title="请选择头像图片上传">
                         </div>
                       </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                    <button class="btn btn-primary" data-dismiss="modal" v-on:click="addUser()">确定</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--用户分配角色模态框-->
+            <div class="modal fade" style="color: #1b6d85" id="userAllotRoleModal" role="dialog">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3 style="display: inline">添加/修改用户</h3>
+                    <button class="close" data-dismiss="modal">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="input-group">
+                          <span class="input-group-addon">登录名</span>
+                          <input type="text" class="form-control" title="登录名" v-model="userInput.loginName"
+                                 disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="input-group">
+                          <span class="input-group-addon">隶属机构</span>
+                          <input type="text" class="form-control" title="隶属机构" v-model="userInput.departmentName"
+                                 disabled>
+                        </div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="list-group">
+                      <button type="button" class="list-group-item" v-for="role in roles">{{role.name}}</button>
+                      <!--<button type="button" class="list-group-item">role2</button>-->
+                      <!--<button type="button" class="list-group-item">role3</button>-->
                     </div>
                   </div>
                   <div class="modal-footer">
@@ -212,6 +258,7 @@
     data: {
       parentModuleAvailable: [],
       users: [],
+      roles: [],
       userInput: {
         createTime: null,
         departmentId: null,
@@ -249,6 +296,16 @@
                 return vaule['children'] = children;
               }
             });
+          }
+        });
+      },
+      getRole: function () {
+        let that = this;
+        $.ajax({
+          url: getIpLocal() + getPort() + '/bts2/system_role/all',
+          type: 'GET',
+          success: function (data) {
+            that.roles = data.result;
           }
         });
       },
@@ -331,6 +388,10 @@
         } else {
           this.userInput = this.users[this.selectedUserIndex[0]];
         }
+      },
+      allotRoleToUser: function () {
+        // TODO 给用户分配权限
+
       }
     }
 
