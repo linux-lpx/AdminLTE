@@ -2,7 +2,7 @@
 <html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>测试-iview-test</title>
+  <title>测试-elementUI</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
@@ -16,9 +16,8 @@
   <link rel="stylesheet" href="../../plugins/timepicker/bootstrap-timepicker.min.css">
   <link rel="stylesheet" href="../../bower_components/select2/dist/css/select2.min.css">
   <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
-  <!-- import stylesheet -->
-  <link rel="stylesheet" href="//unpkg.com/iview/dist/styles/iview.css">
-
+  <!-- element-ui：引入样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 
 <!--body里面的class一定要设置样式，不然是白色的-->
@@ -54,8 +53,10 @@
           <a href="#"><i class="fa fa-circle text-success">&numsp;</i> Online</a>
         </div>
       </div>
+
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header" style="font-size: large">主菜单</li>
+
         <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable"
             v-if="item.type === 0 || item.parentId === 1">
           <a href="#">
@@ -73,6 +74,7 @@
             </li>
           </ul>
         </li>
+
       </ul>
     </section>
   </aside>
@@ -80,17 +82,15 @@
   <!--内容-->
   <section class="content-wrapper">
     <div class="content-header">
-      <h1>iview测试</h1>
+      <h1>elementUI测试</h1>
     </div>
     <div class="content">
       <div class="box box-solid box-primary">
         <div class="box-header">
-          <div class="box-title">iview-test</div>
+          <div class="box-title">elementUI</div>
         </div>
         <div class="box-body">
-          <i-button @click="show" type="success">Click me!</i-button>
-          <Modal v-model="visible" title="Welcome">Welcome to iView</Modal>
-          <Tree :data="treeData" show-checkbox></Tree>
+          <el-button type="text" @click="open">默认按钮</el-button>
         </div>
       </div>
     </div>
@@ -114,8 +114,8 @@
 <script src="../../dist/js/demo.js"></script>
 <script src="../../js/vue.js"></script>
 <script src="constant.js"></script>
-<!-- import iView -->
-<script src="//unpkg.com/iview/dist/iview.min.js"></script>
+<!-- element-ui：引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script>
   new Vue({
     el: '#content_id',
@@ -124,8 +124,6 @@
     },
     data: {
       parentModuleAvailable: [],
-      visible: false,
-      treeData:[],
     },
     methods: {
       getModule: function () {
@@ -147,11 +145,12 @@
           }
         });
       },
-      show: function () {
-        this.visible = true;
-      },
-      setTreeData: function () {
-
+      open: function () {
+        this.$message({
+          showClose: true,
+          message: '这是一条提示',
+          type: 'error',
+        });
       }
     }
 
