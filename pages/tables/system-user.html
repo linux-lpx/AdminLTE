@@ -94,7 +94,7 @@
               <button class="btn btn-danger btn-sm" id="btn_delete" v-on:click="deleteUser()">删除用户</button>
             </div>
             <button class="btn btn-warning btn-sm" id="btn_allot_role" tabindex="-1"
-                    data-toggle="modal" data-target="#userAllotRoleModal" v-on:click="allotRoleToUser()">分配角色
+                    data-toggle="modal" data-target="#userAllotRoleModal" v-on:click="updateUser(1)">分配角色
             </button>
           </div>
           <!--用户添加更新模态框-->
@@ -162,7 +162,7 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h3 style="display: inline">添加/修改用户</h3>
+                  <h3 style="display: inline">查看/修改用户角色</h3>
                   <button class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -183,15 +183,19 @@
                     </div>
                   </div>
                   <br>
-                  <div class="list-group">
-                    <button type="button" class="list-group-item" v-for="role in roles" v-on:click="selectRole(role)"
-                            v-bind:class="{active:role.id % 2  === 0}">{{role.name}}
-                    </button>
-                  </div>
+                  <ul class="list-group">
+                    <li class="list-group-item list-group-item-info" style="font-size: 20px">
+                      角色列表
+                    </li>
+                    <li class="list-group-item" v-for="role in roles" v-on:click="selectRole(role.id)">
+                      {{role.name}}
+                      <span class="fa fa-check pull-right" v-if="selectedRoleId.includes(role.id)">&numsp;</span>
+                    </li>
+                  </ul>
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="addUser()">确定</button>
+                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="addRoleToUser()">确定</button>
                 </div>
               </div>
             </div>
@@ -378,38 +382,62 @@
           phone: null,
         };
       },
-      updateUser: function () {
-        if (this.selectedUserIndex.length > 1) {
+      updateUser: function (n) {
+        let that = this;
+        if (that.selectedUserIndex.length > 1) {
           alert('不能同时更新多个用户！');
-        } else if (this.selectedUserIndex.length === 0) {
+        } else if (that.selectedUserIndex.length === 0) {
           alert('请选择一个用户！');
         } else {
-          this.userInput = this.users[this.selectedUserIndex[0]];
+          that.userInput = that.users[that.selectedUserIndex[0]];
+          if (n === 1) {
+            that.selectedRoleId = [];
+            that.getRoleIdByUserId(that.userInput.id);
+          }
         }
       },
-      allotRoleToUser: function () {
+      getRoleIdByUserId: function (userId) {
         let that = this;
-        if (this.selectedUserIndex.length > 1) {
-          alert('不能同时给多个用户分配角色！');
-        } else if (this.selectedUserIndex.length === 0) {
-          alert('请选择一个用户！');
-        } else {
-          that.userInput = that.users[this.selectedUserIndex[0]];
-        }
+        $.ajax({
+          url: getIpLocal() + getPort() + '/bts2/role_to_user/' + userId,
+          type: 'get',
+          success: function (data) {
+            let roleToUsers;
+            roleToUsers = data.result;
+            if (roleToUsers !== null){
+              roleToUsers.forEach(function (item) {
+                that.selectedRoleId.push(item.roleId);
+              });
+            }
+          }
+        });
       },
-      selectRole: function (role) {
+      selectRole: function (id) {
         let that = this;
-        let index = that.selectedRoleId.indexOf(role.id);
+        let index = that.selectedRoleId.indexOf(id);
         if (index !== -1) {
           // 数组中存在该角色id，删除这个id
-          that.selectedRoleId.splice(index);
+          that.selectedRoleId.splice(index, 1);
         } else {
           // 数组中不存在该角色id，添加这个id
-          that.selectedRoleId.push(role.id)
+          that.selectedRoleId.push(id)
         }
+        console.log(that.selectedRoleId.toString());
       },
-      setItemActive: function () {
-
+      addRoleToUser: function () {
+        let that = this;
+        $.ajax({
+          url: getIpLocal() + getPort() + '/bts2/role_to_user/addAll/' + that.userInput.id + '/'
+            + that.selectedRoleId.toString(),
+          type: 'post',
+          success: function (data) {
+            console.log(data.result);
+            that.selectedRoleId = [];
+          },
+          error: function (data) {
+            console.log(data);
+          }
+        });
       }
     }
 
