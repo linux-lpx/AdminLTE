@@ -86,13 +86,16 @@
         <div class="box-header">
           <div class="box-title">
             机构列表
-            <button class="btn btn-warning btn-sm" id="btn_dialog" tabindex="-1"
-                    data-toggle="modal" data-target="#bankModal" v-on:click="clearInputData()">添加机构
-            </button>
-            <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
-                    data-toggle="modal" data-target="#bankModal" v-on:click="updateBank()">更新机构
-            </button>
-            <button class="btn btn-danger btn-sm" id="btn_delete" v-on:click="deleteBank()">删除机构</button>
+            <div class="btn-group">
+              <button class="btn btn-info btn-sm" id="btn_dialog" tabindex="-1"
+                      data-toggle="modal" data-target="#bankModal" v-on:click="clearInputData()">添加机构
+              </button>
+              <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
+                      data-toggle="modal" data-target="#bankModal" v-on:click="updateBank()">更新机构
+              </button>
+              <button class="btn btn-danger btn-sm" id="btn_delete" v-on:click="deleteBank()">删除机构</button>
+            </div>
+          </div>
             <!--模态框-机构编辑-->
             <div class="modal fade" style="color: #1b6d85" id="bankModal" role="dialog">
               <div class="modal-dialog">
@@ -167,7 +170,6 @@
                 </div>
               </div>
             </div>
-          </div>
         </div>
         <div class="box-body">
           <table class="table table-bordered table-striped table-hover">
@@ -262,7 +264,7 @@
       getModule: function () {
         let that = this;
         $.ajax({
-          url: 'http://118.25.107.131:8081/bts2/system_module/all',
+          url: getIpTxy() + getPort() + '/bts2/system_module/all',
           type: 'GET',
           success: function (data) {
             that.parentModuleAvailable = data.result.filter(function (vaule) {
