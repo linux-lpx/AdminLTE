@@ -125,7 +125,7 @@
                       <br>
                       <div class="input-group">
                         <span class="input-group-addon">隶属机构</span>
-                        <select class="form-control" title="选择隶属机构" v-model="userInput.departmentName">
+                        <select class="form-control" title="选择隶属机构" v-model="userInput.departmentCode">
                           <option value="704">支行金库1</option>
                           <option value="700">支行金库2</option>
                           <option value="830">网点1</option>
@@ -217,7 +217,7 @@
               <td><input type="checkbox" title="选择" v-bind:value="index" v-model="selectedUserIndex"></td>
               <td>{{user.loginName}}</td>
               <td>{{user.name}}</td>
-              <td>{{user.departmentId}}</td>
+              <td>{{user.departmentCode}}</td>
               <td>{{user.departmentName}}</td>
               <td>{{user.phone}}</td>
               <td>{{user.email}}</td>
@@ -247,13 +247,19 @@
 <script src="../../dist/js/demo.js"></script>
 <script src="../../js/vue.js"></script>
 <script src="constant.js"></script>
+<script src="bts2-system.js"></script>
 <script>
   new Vue({
     el: '#content_id',
     mounted: function () {
-      this.getModule();
+      // this.getModule();
       this.getUser();
       this.getRole();
+      let that = this;
+      getParentModuleAvailable(function (data) {
+        console.log(data);
+        that.parentModuleAvailable = data;
+      })
     },
     data: {
       parentModuleAvailable: [],
@@ -264,6 +270,7 @@
       userInput: {
         createTime: null,
         departmentId: null,
+        departmentCode: null,
         departmentName: null,
         email: null,
         fingerprintId: null,
@@ -280,27 +287,28 @@
       selectedUserIndex: [],
       deleteUserId: [],
     },
+
     methods: {
-      getModule: function () {
-        let that = this;
-        that.userSession = localStorage.getItem('user');
-        $.ajax({
-          url: getIpTxy() + getPort() + '/bts2/system_module/all',
-          type: 'GET',
-          success: function (data) {
-            that.parentModuleAvailable = data.result.filter(function (vaule) {
-              if (vaule.isAvailable === 1) {
-                let children = data.result.filter(function (item) {
-                  if (item.parentId === vaule.id && item.isAvailable === 1) {
-                    return item;
-                  }
-                });
-                return vaule['children'] = children;
-              }
-            });
-          }
-        });
-      },
+      // getModule: function () {
+      //   let that = this;
+      //   that.userSession = localStorage.getItem('user');
+      //   $.ajax({
+      //     url: getIpTxy() + getPort() + '/bts2/system_module/all',
+      //     type: 'GET',
+      //     success: function (data) {
+      //       that.parentModuleAvailable = data.result.filter(function (vaule) {
+      //         if (vaule.isAvailable === 1) {
+      //           let children = data.result.filter(function (item) {
+      //             if (item.parentId === vaule.id && item.isAvailable === 1) {
+      //               return item;
+      //             }
+      //           });
+      //           return vaule['children'] = children;
+      //         }
+      //       });
+      //     }
+      //   });
+      // },
       getRole: function () {
         let that = this;
         $.ajax({
@@ -369,6 +377,7 @@
         this.userInput = {
           createTime: null,
           departmentId: null,
+          departmentCode: null,
           departmentName: null,
           email: null,
           fingerprintId: null,
