@@ -304,7 +304,7 @@
       getRole: function () {
         let that = this;
         $.ajax({
-          url: getIpLocal() + getPort() + '/bts2/system_role/all',
+          url: getIpLocal() + getPort() + getPath() + 'system_role/all',
           type: 'GET',
           success: function (data) {
             that.roles = data.result;
@@ -314,7 +314,7 @@
       getUser: function () {
         let that = this;
         $.ajax({
-          url: getIpLocal() + getPort() + '/bts2/system_user/all',
+          url: getIpLocal() + getPort() + getPath() + 'system_user/all',
           type: 'get',
           success: function (data) {
             that.users = data.result;
@@ -324,7 +324,7 @@
       addUser: function () {
         let that = this;
         $.ajax({
-          url: getIpLocal() + getPort() + '/bts2/system_user/add',
+          url: getIpLocal() + getPort() + getPath() + 'system_user/add',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(that.userInput),
@@ -399,7 +399,7 @@
       getRoleIdByUserId: function (userId) {
         let that = this;
         $.ajax({
-          url: getIpLocal() + getPort() + '/bts2/role_to_user/' + userId,
+          url: getIpLocal() + getPort() + getPath() + 'role_to_user/' + userId,
           type: 'get',
           success: function (data) {
             let roleToUsers;
@@ -427,7 +427,7 @@
       addRoleToUser: function () {
         let that = this;
         $.ajax({
-          url: getIpLocal() + getPort() + '/bts2/role_to_user/addAll/' + that.userInput.id + '/'
+          url: getIpLocal() + getPort() + getPath()+ 'role_to_user/addAll/' + that.userInput.id + '/'
             + that.selectedRoleId.toString(),
           type: 'post',
           success: function (data) {

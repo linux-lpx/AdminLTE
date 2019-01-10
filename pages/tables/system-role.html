@@ -277,7 +277,7 @@
       getModule: function () {
         let that = this;
         $.ajax({
-          url: getIpTxy() + getPort() + '/bts2/system_module/all',
+          url: getIpTxy() + getPort() + getPath() + 'system_module/all',
           type: 'GET',
           success: function (data) {
             that.parentModuleAvailable = data.result.filter(function (vaule) {
@@ -296,7 +296,7 @@
       getRole: function () {
         let that = this;
         $.ajax({
-          url: getIpLocal() + getPort() + '/bts2/system_role/all',
+          url: getIpLocal() + getPort() + getPath() + 'system_role/all',
           type: 'GET',
           success: function (data) {
             that.roles = data.result;
@@ -306,7 +306,7 @@
       addRole: function () {
         let that = this;
         $.ajax({
-          url: getIpLocal() + getPort() + '/bts2/system_role/add',
+          url: getIpLocal() + getPort() + getPath() + 'system_role/add',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(that.roleInput),
@@ -343,7 +343,7 @@
           let ids = that.deleteRoleId.toString();
           console.log('要删除的角色的id：' + ids);
           $.ajax({
-            url: getIpLocal() + getPort() + '/bts2/system_role/del/' + ids,
+            url: getIpLocal() + getPort() + getPath() + 'system_role/del/' + ids,
             type: 'post',
             success: function (data) {
               console.log('请求成功，信息：' + data.result);
@@ -367,7 +367,7 @@
       addPermissions: function () {
         let that = this;
         $.ajax({
-          url: getIpLocal() + getPort() + '/bts2/module_to_role/addAll',
+          url: getIpLocal() + getPort() + getPath() + 'module_to_role/addAll',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(that.permissions),

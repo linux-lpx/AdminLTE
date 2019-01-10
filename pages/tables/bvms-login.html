@@ -84,7 +84,7 @@
       login: function () {
         let that = this;
         $.ajax({
-          url: getIpLocal() + getPort() + '/bts2/system/login',
+          url: getIpLocal() + getPort() + getPath() + 'system/login',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(that.inputData),

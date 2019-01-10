@@ -437,7 +437,7 @@
         };
         console.log(user);
         $.ajax({
-          url: getIpTxy() + getPort() + '/bts2/user/save',
+          url: getIpTxy() + getPort() + getPath() + 'user/save',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(user),

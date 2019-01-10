@@ -264,7 +264,7 @@
       getModule: function () {
         let that = this;
         $.ajax({
-          url: getIpTxy() + getPort() + '/bts2/system_module/all',
+          url: getIpTxy() + getPort() + getPath() + 'system_module/all',
           type: 'GET',
           success: function (data) {
             that.parentModuleAvailable = data.result.filter(function (vaule) {
@@ -283,7 +283,7 @@
       getBank: function () {
         let that = this;
         $.ajax({
-          url: getIpLocal() + getPort() + '/bts2/bank/all',
+          url: getIpLocal() + getPort() + getPath() + 'bank/all',
           type: 'get',
           success: function (data) {
             that.banks = data.result;
@@ -293,7 +293,7 @@
       addBank: function () {
         let that = this;
         $.ajax({
-          url: getIpLocal() + getPort() + '/bts2/bank/add',
+          url: getIpLocal() + getPort() + getPath() + 'bank/add',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(that.bankInput),
@@ -333,7 +333,7 @@
           let ids = that.deleteBankId.toString();
           console.log(ids);
           $.ajax({
-            url: getIpLocal() + getPort() + '/bts2/bank/del/' + ids,
+            url: getIpLocal() + getPort() + getPath() + 'bank/del/' + ids,
             type: 'post',
             success: function (data) {
               console.log('请求成功，信息' + data.result);

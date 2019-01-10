@@ -125,7 +125,7 @@
       getModule: function () {
         let that = this;
         $.ajax({
-          url: getIpTxy() + getPort() + '/bts2/system_module/all',
+          url: getIpTxy() + getPort() + getPath() + 'system_module/all',
           type: 'GET',
           success: function (data) {
             that.parentModuleAvailable = data.result.filter(function (vaule) {

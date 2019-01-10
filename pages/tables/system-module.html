@@ -239,7 +239,7 @@
       getModule: function () {
         let that = this;
         $.ajax({
-          url: getIpTxy() + getPort() + '/bts2/system_module/all',
+          url: getIpTxy() + getPort() + getPath() + 'system_module/all',
           type: 'GET',
           success: function (data) {
             that.modules = data.result;
@@ -265,7 +265,7 @@
         let that = this;
         if (this.checkName()) {
           $.ajax({
-            url: getIpTxy() + getPort() + '/bts2/system_module/add',
+            url: getIpTxy() + getPort() + getPath() + 'system_module/add',
             type: 'post',
             contentType: 'application/json',
             data: JSON.stringify(that.moduleInput),
@@ -284,7 +284,7 @@
       checkName: function () {
         let that = this;
         $.ajax({
-          url: getIpTxy() + getPort() + '/bts2/system_module/checkName/' + that.moduleInput.name,
+          url: getIpTxy() + getPort() + getPath() + 'system_module/checkName/' + that.moduleInput.name,
           type: 'get',
           success: function (data) {
             if (data === 'used') {
@@ -319,7 +319,7 @@
           let ids = that.deleteModuleId.toString();
           console.log('要删除的模块的id：' + ids);
           $.ajax({
-            url: getIpLocal() + getPort() + '/bts2/system_module/del/' + ids,
+            url: getIpLocal() + getPort() + getPath() + 'system_module/del/' + ids,
             type: 'post',
             success: function (data) {
               console.log('请求成功，信息：' + data.result);

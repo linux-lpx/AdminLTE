@@ -661,7 +661,7 @@
       getIndexFilm: function (page) {
         let that = this;
         $.ajax({
-          url: getIpTxy() + getPort() + '/bts2/f/index/' + page,
+          url: getIpTxy() + getPort() + getPath() + 'f/index/' + page,
           type: 'GET',
           success: function (data) {
             that.filmList = data.result;
@@ -674,7 +674,7 @@
       getFilmByClass: function (fc, page) {
         let that = this;
         $.ajax({
-          url: getIpTxy() + getPort() + '/bts2/f/c/' + fc + '/' + page,
+          url: getIpTxy() + getPort() + getPath() + 'f/c/' + fc + '/' + page,
           type: 'get',
           success: function (data) {
             that.filmList = data.result;
