@@ -404,7 +404,7 @@
           success: function (data) {
             let roleToUsers;
             roleToUsers = data.result;
-            if (roleToUsers !== null){
+            if (roleToUsers !== null) {
               roleToUsers.forEach(function (item) {
                 that.selectedRoleId.push(item.roleId);
               });
@@ -426,12 +426,17 @@
       },
       addRoleToUser: function () {
         let that = this;
+        let ajaxUrl = getUrlLocal() + 'role_to_user/addAll/' + that.userInput.id + '/' + that.selectedRoleId.toString();
+        let ajaxType = 'post';
+        if (that.selectedRoleId.length === 0) {
+          ajaxUrl = getUrlLocal() + 'role_to_user/del/' + that.userInput.id;
+          ajaxType = 'delete';
+        }
         $.ajax({
-          url: getIpLocal() + getPort() + getPath()+ 'role_to_user/addAll/' + that.userInput.id + '/'
-            + that.selectedRoleId.toString(),
-          type: 'post',
+          url: ajaxUrl,
+          type: ajaxType,
           success: function (data) {
-            console.log(data.result);
+            console.log(data.description + data.result);
             that.selectedRoleId = [];
           },
           error: function (data) {
