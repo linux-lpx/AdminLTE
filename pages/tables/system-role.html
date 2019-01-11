@@ -94,6 +94,9 @@
               </button>
               <button class="btn btn-danger btn-sm" id="btn_delete" v-on:click="deleteRole()">删除角色</button>
             </div>
+            <button class="btn btn-warning btn-sm" id="btn_allot_role" tabindex="-1"
+                    data-toggle="modal" data-target="#moduleToRoleModal" v-on:click="updateRole()">权限设置
+            </button>
           </div>
           <!--模态框-角色编辑-->
           <div class="modal fade" style="color: #1b6d85" id="roleModal" role="dialog">
@@ -149,7 +152,6 @@
               <th>角色名</th>
               <th>父角色名</th>
               <th>是否可用</th>
-              <th>权限</th>
             </tr>
             <tr v-for="(role, index) in roles">
               <td><input type="checkbox" title="选择" v-bind:value="index" v-model="selectedRoleIndex"></td>
@@ -157,11 +159,6 @@
               <td>{{role.name}}</td>
               <td>{{role.parentName}}</td>
               <td>{{role.isAvailable === 1 ? '可用' : '不可用'}}</td>
-              <td>
-                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#moduleToRoleModal"
-                        v-on:click="setSelectRole(role.id)">查看 / 设置
-                </button>
-              </td>
             </tr>
           </table>
           <!--模态框-权限编辑-->
@@ -328,6 +325,7 @@
           alert('请选择一个角色！');
         } else {
           this.roleInput = this.roles[this.selectedRoleIndex[0]];
+          this.permissions.selectedRoleId = this.roleInput.id;
         }
       },
       deleteRole: function () {
@@ -360,10 +358,10 @@
       fileOpearate: function () {
         // TODO 处理文件
       },
-      setSelectRole: function (roleId) {
-        console.log(roleId + '----lpx');
-        this.permissions.selectedRoleId = roleId;
-      },
+      // setSelectRole: function (roleId) {
+      //   console.log(roleId + '----lpx');
+      //   this.permissions.selectedRoleId = roleId;
+      // },
       addPermissions: function () {
         let that = this;
         $.ajax({

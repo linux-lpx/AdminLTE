@@ -125,10 +125,8 @@
                       <br>
                       <div class="input-group">
                         <span class="input-group-addon">隶属机构</span>
-                        <select class="form-control" title="选择隶属机构" v-model="userInput.departmentName">
-                          <option value="704">支行金库1</option>
-                          <option value="700">支行金库2</option>
-                          <option value="830">网点1</option>
+                        <select class="form-control" title="选择隶属机构" v-model="userInput.departmentCode">
+                          <option v-for="bank in banks" v-bind:value="bank.code">{{bank.name}}</option>
                         </select>
                       </div>
                     </div>
@@ -146,6 +144,14 @@
                       <div class="input-group">
                         <span class="input-group-addon">头像</span>
                         <input type="file" class="form-control" title="请选择头像图片上传">
+                      </div>
+                      <br>
+                      <div class="input-group">
+                        <span class="input-group-addon">是否可用</span>
+                        <select class="form-control" title="是否可用" v-model.number="userInput.isAvailable">
+                          <option value="1">可用</option>
+                          <option value="0">不可用</option>
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -177,7 +183,7 @@
                     <div class="col-md-6">
                       <div class="input-group">
                         <span class="input-group-addon">隶属机构</span>
-                        <input type="text" class="form-control" title="隶属机构" v-model="userInput.departmentName"
+                        <input type="text" class="form-control" title="隶属机构" v-model="userInput.departmentCode"
                                disabled>
                       </div>
                     </div>
@@ -208,7 +214,6 @@
               <th>用户登录名</th>
               <th>用户真实姓名</th>
               <th>隶属机构编号</th>
-              <th>隶属机构名</th>
               <th>手机号码</th>
               <th>email</th>
               <th>上次登录时间</th>
@@ -217,8 +222,7 @@
               <td><input type="checkbox" title="选择" v-bind:value="index" v-model="selectedUserIndex"></td>
               <td>{{user.loginName}}</td>
               <td>{{user.name}}</td>
-              <td>{{user.departmentId}}</td>
-              <td>{{user.departmentName}}</td>
+              <td>{{user.departmentCode}}</td>
               <td>{{user.phone}}</td>
               <td>{{user.email}}</td>
               <td>{{user.lastLoginTime}}</td>
@@ -254,22 +258,25 @@
       this.getModule();
       this.getUser();
       this.getRole();
+      this.getBank();
     },
     data: {
       parentModuleAvailable: [],
       users: [],
       roles: [],
+      banks: [],
       selectedRoleId: [],
       isActive: false,
       userInput: {
         createTime: null,
         departmentId: null,
+        departmentCode: null,
         departmentName: null,
         email: null,
         fingerprintId: null,
         id: null,
         imgPath: null,
-        isAvailable: null,
+        isAvailable: 1,
         lastLoginTime: null,
         loginName: null,
         name: null,
@@ -321,6 +328,16 @@
           }
         });
       },
+      getBank: function () {
+        let that = this;
+        $.ajax({
+          url: getIpLocal() + getPort() + getPath() + 'bank/all',
+          type: 'get',
+          success: function (data) {
+            that.banks = data.result;
+          }
+        });
+      },
       addUser: function () {
         let that = this;
         $.ajax({
@@ -369,12 +386,13 @@
         this.userInput = {
           createTime: null,
           departmentId: null,
+          departmentCode: null,
           departmentName: null,
           email: null,
           fingerprintId: null,
           id: null,
           imgPath: null,
-          isAvailable: null,
+          isAvailable: 1,
           lastLoginTime: null,
           loginName: null,
           name: null,
