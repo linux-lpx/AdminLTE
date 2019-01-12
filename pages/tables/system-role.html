@@ -95,7 +95,7 @@
               <button class="btn btn-danger btn-sm" id="btn_delete" v-on:click="deleteRole()">删除角色</button>
             </div>
             <button class="btn btn-warning btn-sm" id="btn_allot_role" tabindex="-1"
-                    data-toggle="modal" data-target="#moduleToRoleModal" v-on:click="updateRole()">权限设置
+                    data-toggle="modal" data-target="#moduleToRoleModal" v-on:click="updateRole(1)">权限设置
             </button>
           </div>
           <!--模态框-角色编辑-->
@@ -109,30 +109,33 @@
                 <div class="modal-body">
                   <div class="row">
                     <div class="col-md-6">
-                      <form role="form" class="form-group">
-                        <label for="inputRoleName" style="font-size: 14px">角色名</label>
+                      <div class="input-group">
+                        <span class="input-group-addon">角色名</span>
                         <input type="text" class="form-control" id="inputRoleName" placeholder="请输入角色名"
                                v-model="roleInput.name">
-                        <br>
-                        <label for="selectRoleIsAvailable" style="font-size: 14px">是否可用</label>
-                        <select id="selectRoleIsAvailable" class="form-control"
-                                v-model.number="roleInput.isAvailable">
+                      </div>
+                      <br>
+                      <div class="input-group">
+                        <span class="input-group-addon">是否可用</span>
+                        <select id="selectRoleIsAvailable" class="form-control" v-model.number="roleInput.isAvailable"
+                                title="是否可用">
                           <option value="1">可用</option>
                           <option value="0">不可用</option>
                         </select>
-                      </form>
+                      </div>
                     </div>
                     <div class="col-md-6">
-                      <form role="form" class="form-group">
-                        <label for="selectRoleParentId" style="font-size: 14px">父角色</label>
-                        <select id="selectRoleParentId" class="form-control" v-model="roleInput.parentName">
+                      <div class="input-group">
+                        <span class="input-group-addon">父角色</span>
+                        <select class="form-control" v-model="roleInput.parentName" title="父角色">
                           <option v-for="role in roles">{{role.name}}</option>
                         </select>
-                        <br>
-                        <label for="inputFile" style="font-size: 14px">文件上传</label>
-                        <input type="file" title="文件上传" id="inputFile" class="form-control"
-                               v-on:change="fileOpearate()">
-                      </form>
+                      </div>
+                      <br>
+                      <div class="input-group">
+                        <span class="input-group-addon">文件上传</span>
+                        <input type="file" title="文件上传" class="form-control" v-on:change="fileOpearate()">
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -165,38 +168,27 @@
           <div class="modal fade" style="color: #1b6d85" role="dialog" id="moduleToRoleModal">
             <div class="modal-dialog">
               <div class="modal-content">
-                <div class="modal-header" style="background: #1a2226">
+                <div class="modal-header">
                   <h3 style="display: inline">查看/修改角色权限</h3>
-                  <button class="close" data-dismiss="modal" style="color: white">&times;</button>
+                  <button class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <div class="modal-body" style="background: #222d32">
-                  <!--类似左侧边栏的权限配置框-->
-                  <ul class="sidebar-menu" data-widget="tree">
-                    <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable"
-                        v-if="item.type === 0 || item.parentId === 1">
-                      <a href="#">
-                        <i class="fa fa-folder" v-bind:class="{'fa-file-text-o' : item.type === 1}">&numsp;</i>
-                        <span>{{item.name}}</span>
-                        <span class="pull-right-container">
-                          <i class="fa pull-right" v-bind:class="{'fa-angle-left':item.children.length > 0}">&numsp;</i>
-                        </span>
-                      </a>
-                      <ul class="treeview-menu" style="width: 90%; margin: 0 auto">
-                        <li v-for="child in item.children">
-                          <a href="#">
-                            <input type="checkbox" title="选中" v-model="permissions.moduleChecked"
-                                   v-bind:value="child.parentId + '-' + child.id">
-                            <span>&nbsp;</span>
-                            {{child.name}}
-                          </a>
-                        </li>
-                      </ul>
+                <div class="modal-body">
+                  <div class="input-group">
+                    <span class="input-group-addon">角色名</span>
+                    <input type="text" class="form-control" v-model="roleInput.name" title="角色名" disabled>
+                  </div>
+                  <br>
+                  <ul class="list-group">
+                    <li class="list-group-item list-group-item-info" style="font-size: 20px">模块列表</li>
+                    <li class="list-group-item" v-for="module in modules" v-on:click="selectModule(module.id)"
+                        v-bind:style="setFloderStyle(module.type)">{{module.name}}
+                      <span class="fa fa-check pull-right" v-if="selectedModuleId.includes(module.id)">&numsp;</span>
                     </li>
                   </ul>
                 </div>
-                <div class="modal-footer" style="background: #3c4b4f">
+                <div class="modal-footer">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="addPermissions()">确定</button>
+                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="addModuleToRole()">确定</button>
                 </div>
               </div>
             </div>
@@ -236,6 +228,9 @@
       // 侧边栏目录模块对应的数据
       parentModuleAvailable: [],
 
+      // 所有模块
+      modules: [],
+
       // 角色表格中的数据
       roles: [],
 
@@ -254,6 +249,9 @@
         isAvailable: 1
       },
 
+      // 角色对应的模块id
+      selectedModuleId: [],
+
       // 是否能打开模态框
       isCanOpenModal: false,
 
@@ -262,13 +260,6 @@
 
       // 文件
       file: '',
-
-      // 模块（权限）选择
-      permissions: {
-        selectedRoleId: 0,
-        moduleChecked: [],
-      },
-
     },
     methods: {
       getModule: function () {
@@ -277,6 +268,7 @@
           url: getIpTxy() + getPort() + getPath() + 'system_module/all',
           type: 'GET',
           success: function (data) {
+            that.modules = data.result;
             that.parentModuleAvailable = data.result.filter(function (vaule) {
               if (vaule.isAvailable === 1) {
                 let children = data.result.filter(function (item) {
@@ -317,16 +309,37 @@
           }
         });
       },
-      updateRole: function () {
-        this.targetModal = this.selectedRoleIndex.length === 1 ? '#roleModal' : '';
-        if (this.selectedRoleIndex.length > 1) {
+      updateRole: function (n) {
+        let that = this;
+        that.targetModal = that.selectedRoleIndex.length === 1 ? '#roleModal' : '';
+        if (that.selectedRoleIndex.length > 1) {
           alert('不能同时更新多个角色！');
-        } else if (this.selectedRoleIndex.length === 0) {
+        } else if (that.selectedRoleIndex.length === 0) {
           alert('请选择一个角色！');
         } else {
-          this.roleInput = this.roles[this.selectedRoleIndex[0]];
-          this.permissions.selectedRoleId = this.roleInput.id;
+          that.roleInput = that.roles[that.selectedRoleIndex[0]];
+          if (n === 1) {
+            that.selectedModuleId = [];
+            that.getModuleIdByRoleId(that.roleInput.id);
+          }
         }
+      },
+      getModuleIdByRoleId: function (roleId) {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'module_to_role/' + roleId + '/all',
+          type: 'get',
+          success: function (data) {
+            let moduleToRoles;
+            moduleToRoles = data.result || [];
+            moduleToRoles.forEach(function (moduleToRole) {
+              that.selectedModuleId.push(moduleToRole.moduleId)
+            });
+          },
+          error: function (data) {
+            console.log(data);
+          }
+        });
       },
       deleteRole: function () {
         let that = this;
@@ -358,21 +371,38 @@
       fileOpearate: function () {
         // TODO 处理文件
       },
-      // setSelectRole: function (roleId) {
-      //   console.log(roleId + '----lpx');
-      //   this.permissions.selectedRoleId = roleId;
-      // },
-      addPermissions: function () {
+      addModuleToRole: function () {
         let that = this;
+        let ajaxUrl = getUrlLocal() + 'module_to_role/addAll/' + that.roleInput.id + '/'
+          + that.selectedModuleId.toString();
+        let ajaxType = 'post';
+        if (that.selectedModuleId.length === 0) {
+          ajaxUrl = getUrlLocal() + 'module_to_role/del/role/' + that.roleInput.id;
+          ajaxType = 'delete';
+        }
         $.ajax({
-          url: getIpLocal() + getPort() + getPath() + 'module_to_role/addAll',
-          type: 'post',
-          contentType: 'application/json',
-          data: JSON.stringify(that.permissions),
+          url: ajaxUrl,
+          type: ajaxType,
           success: function (data) {
+            console.log(data.description + data.result);
+            that.selectedModuleId = [];
+          },
+          error: function (data) {
             console.log(data);
           }
         });
+      },
+      selectModule: function (id) {
+        let that = this;
+        let index = that.selectedModuleId.indexOf(id);
+        if (index !== -1) {
+          // 数组中存在该模块id，删除这个id
+          that.selectedModuleId.splice(index, 1);
+        } else {
+          // 数组中不存在该模块id，添加这个id
+          that.selectedModuleId.push(id)
+        }
+        console.log(that.selectedModuleId.toString());
       },
       clearInputData: function () {
         this.roleInput = {
@@ -381,6 +411,11 @@
           parentId: null,
           parentName: null,
           isAvailable: 1
+        }
+      },
+      setFloderStyle: function (type) {
+        if (type === 0) {
+          return 'background: lightgrey';
         }
       }
     }
