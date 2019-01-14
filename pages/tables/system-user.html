@@ -322,9 +322,9 @@
         $.ajax({
           url: getIpLocal() + getPort() + getPath() + 'system_user/all',
           type: 'get',
-          crossDomain: true,
+          // crossDomain: true,
           xhrFields: {
-            withCredentials: true
+            withCredentials: true,
           },
           success: function (data) {
             that.users = data.result;
