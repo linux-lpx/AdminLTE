@@ -88,6 +88,10 @@
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(that.inputData),
+          crossDomain: true,
+          xhrFields: {
+            withCredentials: true
+          },
           success: function (data) {
             console.log(data);
             if (data.result === '登录成功！') {

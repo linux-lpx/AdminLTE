@@ -289,6 +289,7 @@
       getModule: function () {
         let that = this;
         that.userSession = localStorage.getItem('user');
+        console.log(localStorage.getItem("vaule"));
         $.ajax({
           url: getIpTxy() + getPort() + '/bts2/system_module/all',
           type: 'GET',
@@ -321,6 +322,10 @@
         $.ajax({
           url: getIpLocal() + getPort() + getPath() + 'system_user/all',
           type: 'get',
+          crossDomain: true,
+          xhrFields: {
+            withCredentials: true
+          },
           success: function (data) {
             that.users = data.result;
           }
