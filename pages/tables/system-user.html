@@ -257,6 +257,9 @@
       this.getUser();
       this.getRole();
       this.getBank();
+      console.log(localStorage.key(0));
+      console.log(localStorage.getItem(""));
+      console.log(document.cookie);
     },
     data: {
       parentModuleAvailable: [],
@@ -281,15 +284,12 @@
         password: null,
         phone: null,
       },
-      userSession: null,
       selectedUserIndex: [],
       deleteUserId: [],
     },
     methods: {
       getModule: function () {
         let that = this;
-        that.userSession = localStorage.getItem('user');
-        console.log(localStorage.getItem("vaule"));
         $.ajax({
           url: getIpTxy() + getPort() + '/bts2/system_module/all',
           type: 'GET',
@@ -322,7 +322,7 @@
         $.ajax({
           url: getIpLocal() + getPort() + getPath() + 'system_user/all',
           type: 'get',
-          // crossDomain: true,
+          crossDomain: true,
           xhrFields: {
             withCredentials: true,
           },

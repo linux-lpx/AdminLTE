@@ -71,7 +71,13 @@
   new Vue({
     el: '#content_id',
     mounted: function () {
-
+      $(function () {
+        $('input').iCheck({
+          checkboxClass: 'icheckbox_square-blue',
+          radioClass: 'iradio_square-blue',
+          increaseArea: '20%' /* optional */
+        });
+      });
     },
     data: {
       inputData: {
@@ -88,7 +94,7 @@
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(that.inputData),
-          // crossDomain: true,
+          crossDomain: true,
           xhrFields: {
             withCredentials: true,
           },
@@ -97,6 +103,9 @@
             if (data.result === '登录成功！') {
               // TODO 跳转到主页面
               alert(data.result);
+              document.cookie = 'isLogin=' + "true";
+              document.cookie = 'user=' + that.inputData.loginName;
+              document.cookie = 'expires=60';
               window.location.href = './system-user.html';
             } else if (data.result === '用户名或密码错误！') {
               alert(data.result);
@@ -109,14 +118,6 @@
       }
     }
 
-  });
-
-  $(function () {
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
-      increaseArea: '20%' /* optional */
-    });
   });
 
 </script>
