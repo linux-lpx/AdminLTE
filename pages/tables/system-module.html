@@ -276,10 +276,10 @@
             contentType: 'application/json',
             data: JSON.stringify(that.moduleInput),
             success: function (data) {
-              alert('操作成功');
+              alert('操作成功' + data.result.name);
               that.getModule();
             },
-            error: function (data) {
+            error: function () {
               alert('操作失败');
             }
           });
