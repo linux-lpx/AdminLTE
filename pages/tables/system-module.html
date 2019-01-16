@@ -80,13 +80,13 @@
           <div class="box-title">
             模块列表
             <div class="btn-group">
-              <button class="btn btn-info btn-sm" id="btn_dialog" tabindex="-1"
+              <button class="btn btn-info btn-sm" tabindex="-1"
                       data-toggle="modal" data-target="#modalTest" v-on:click="clearInputData()">添加模块
               </button>
-              <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
+              <button class="btn btn-warning btn-sm" tabindex="-1"
                       data-toggle="modal" data-target="#modalTest" v-on:click="updateModule()">更新模块
               </button>
-              <button class="btn btn-danger btn-sm" id="btn_delete" v-on:click="deleteModule()">删除模块</button>
+              <button class="btn btn-danger btn-sm" v-on:click="deleteModule()">删除模块</button>
             </div>
           </div>
           <!--模态框-->
@@ -101,49 +101,54 @@
                   <div class="modal-body">
                     <div class="row">
                       <div class="col-md-6">
-                        <form role="form" class="form-group">
-                          <label for="moduleName">模块名称</label>
-                          <input id="moduleName" type="text" class="form-control" v-model="moduleInput.name">
-                          <br>
-                          <label for="moduleImgPath">图标路径</label>
-                          <input id="moduleImgPath" type="text" class="form-control" v-model="moduleInput.imgPath">
-                          <br>
-                          <label for="moduleIsAvailable">是否可用</label>
-                          <select name="moduleIsAvailable" id="moduleIsAvailable" class="form-control"
-                                  v-model.number="moduleInput.isAvailable">
+                        <div class="input-group">
+                          <span class="input-group-addon">模块名称</span>
+                          <input title="模块名称" type="text" class="form-control" v-model="moduleInput.name">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">图标路径</span>
+                          <input title="图标路径" type="text" class="form-control" v-model="moduleInput.imgPath">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">是否可用</span>
+                          <select title="是否可用" class="form-control" v-model.number="moduleInput.isAvailable">
                             <option value="1">可用</option>
                             <option value="0">不可用</option>
                           </select>
-                        </form>
+                        </div>
                       </div>
                       <div class="col-md-6">
-                        <form role="form" class="form-group">
-                          <label for="modulePath">模块路径</label>
-                          <input id="modulePath" type="text" class="form-control" v-model="moduleInput.path">
-                          <br>
-                          <label for="moduleParentName">父模块名称</label>
-                          <select name="moduleParentName" id="moduleParentName" class="form-control"
-                                  v-model="moduleInput.parentName">
+                        <div class="input-group">
+                          <span class="input-group-addon">模块路径</span>
+                          <input title="模块路径" type="text" class="form-control" v-model="moduleInput.path">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">父模块名称</span>
+                          <select title="父模块名称" class="form-control" v-model="moduleInput.parentName">
                             <option v-for="module in parentModuleAll" v-bind:value="module.name">
                               {{module.name}}
                             </option>
                           </select>
-                          <br>
-                          <label for="moduleType">模块类别</label>
-                          <select name="moduleType" id="moduleType" class="form-control" style="width: 100%;"
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">模块类别</span>
+                          <select title="模块类别" class="form-control" style="width: 100%;"
                                   v-model.number="moduleInput.type">
                             <option value="1">模块</option>
                             <option value="0">目录</option>
                           </select>
-                        </form>
+                        </div>
+                        <br>
                       </div>
                     </div>
-                    <div>
-                      <form role="form" class="form-group">
-                        <label for="moduleDescription">模块说明</label>
-                        <input type="text" class="form-control" id="moduleDescription"
-                               placeholder="请说明模块作用（至多120个字符）" v-model="moduleInput.description">
-                      </form>
+                    <div class="input-group">
+                      <span class="input-group-addon">模块说明</span>
+                      <input title="模块说明" class="form-control" placeholder="请说明模块作用（至多120个字符）"
+                             v-model="moduleInput.description">
                     </div>
                   </div>
                   <div class="modal-footer">
@@ -350,10 +355,8 @@
         }
       }
     }
-
   })
 </script>
-
 </body>
 </html>
 

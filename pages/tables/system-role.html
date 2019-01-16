@@ -86,15 +86,15 @@
           <div class="box-title">
             角色列表
             <div class="btn-group">
-              <button class="btn btn-info btn-sm" id="btn_dialog" tabindex="-1"
+              <button class="btn btn-info btn-sm" tabindex="-1"
                       data-toggle="modal" data-target="#roleModal" v-on:click="clearInputData()">添加角色
               </button>
-              <button class="btn btn-warning btn-sm" id="btn_update" tabindex="-1"
+              <button class="btn btn-warning btn-sm" tabindex="-1"
                       data-toggle="modal" v-bind:data-target="targetModal" v-on:click="updateRole()">更新角色
               </button>
-              <button class="btn btn-danger btn-sm" id="btn_delete" v-on:click="deleteRole()">删除角色</button>
+              <button class="btn btn-danger btn-sm" v-on:click="deleteRole()">删除角色</button>
             </div>
-            <button class="btn btn-warning btn-sm" id="btn_allot_role" tabindex="-1"
+            <button class="btn btn-warning btn-sm" tabindex="-1"
                     data-toggle="modal" data-target="#moduleToRoleModal" v-on:click="updateRole(1)">权限设置
             </button>
           </div>
@@ -111,7 +111,7 @@
                     <div class="col-md-6">
                       <div class="input-group">
                         <span class="input-group-addon">角色名</span>
-                        <input type="text" class="form-control" id="inputRoleName" placeholder="请输入角色名"
+                        <input type="text" class="form-control" placeholder="请输入角色名"
                                v-model="roleInput.name">
                       </div>
                       <br>
