@@ -88,25 +88,60 @@
           <div class="box-title">钞箱信息</div>
         </div>
         <div class="box-body">
-          <div class="box box-info box-solid">
+          <div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="input-group">
+                  <span class="input-group-addon">是否清点成功</span>
+                  <select class="form-control" title="是否清点成功" v-model="data.success" disabled>
+                    <option value="false">否</option>
+                    <option value="true">是</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="input-group">
+                  <span class="input-group-addon">清点类型</span>
+                  <input type="text" class="form-control" placeholder="清点类型" v-model.number="data.handoverType"
+                         disabled>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="input-group">
+                  <span class="input-group-addon">locatorCoder</span>
+                  <input type="text" class="form-control" placeholder="locatorCoder" v-model.number="data.locatorCoder"
+                         disabled>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="input-group">
+                  <span class="input-group-addon">是否有异常</span>
+                  <select class="form-control" title="是否有异常" v-model="data.hasException" disabled>
+                    <option value="false">否</option>
+                    <option value="true">是</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <!--清点出来的钞箱列表-->
+          <div class="box box-info box-solid" v-for="box in data.data.boxes">
             <div class="box-header">
-              <!--<div class="box-title">钞箱XXX</div>-->
+              <div class="box-title">钞箱{{box.code}}</div>
             </div>
             <div class="box-body">
-
-              <div></div>
-
               <div class="row">
                 <div class="col-md-3">
                   <div class="input-group">
                     <span class="input-group-addon">编号</span>
-                    <input type="text" class="form-control" placeholder="" disabled>
+                    <input type="text" class="form-control" placeholder="" v-model.number="box.code" disabled>
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="input-group">
                     <span class="input-group-addon">是否有异常</span>
-                    <select class="form-control" title="是否有异常" disabled>
+                    <select class="form-control" title="是否有异常" v-model="box.hasException" disabled>
                       <option value="false">否</option>
                       <option value="true">是</option>
                     </select>
@@ -115,25 +150,26 @@
                 <div class="col-md-3">
                   <div class="input-group">
                     <span class="input-group-addon">异常类型</span>
-                    <input type="number" class="form-control" placeholder="异常类型" disabled>
+                    <input type="number" class="form-control" placeholder="异常类型" v-model.number="box.exceptionType"
+                           disabled>
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="input-group">
                     <span class="input-group-addon">操作记录数</span>
-                    <input type="number" class="form-control" placeholder="操作记录数" disabled>
+                    <input type="number" class="form-control" placeholder="操作记录数" v-model.number="box.recordCount"
+                           disabled>
                   </div>
                 </div>
               </div>
               <br>
               <div class="input-group">
                 <span class="input-group-addon">信息</span>
-                <input type="text" class="form-control" placeholder="信息" disabled>
+                <input type="text" class="form-control" placeholder="" v-model="box.memo" disabled>
               </div>
             </div>
 
           </div>
-
         </div>
       </div>
     </div>
@@ -162,38 +198,32 @@
     el: '#content_id',
     mounted: function () {
       this.getModule();
-      // this.getBoxInfo()
+      this.checkBox(1, 4)
     },
     data: {
       parentModuleAvailable: [],
       code: '',
       data: {
+        success: false,
+        message: null,
         code: null,
-        site: null,
-        voltage: null,
-        hardVersion: null,
-        softversion: null,
-        isClosed: null,
-        isLocked: null,
-        isOpened: null,
-        isLowPower: null,
-        isMoved: null,
-        isUnSealed: null,
-        isBroken: null,
-        isMonitor: null,
-        isLockCore2Close: null,
-        isLockCore1Close: null,
-        isLockRing2Close: null,
-        isLockRing1Close: null,
-        isCover2Close: null,
-        isCover1Close: null,
-        isCharge: null,
-        hasException: null,
+        total: null,
+        data: {
+          boxes: [
+            {
+              code: null,
+              hasException: null,
+              exceptionType: null,
+              memo: null,
+              recordCount: null,
+            }
+          ]
+        },
+        handoverType: null,
+        locatorCoder: null,
         memo: null,
-        recordCount: null,
-        records: []
+        hasException: null,
       },
-      boxes: []
     },
     methods: {
       getModule: function () {
@@ -215,15 +245,17 @@
           }
         });
       },
-      getBoxInfo: function () {
+      checkBox: function (handoverType, code) {
         let that = this;
         $.ajax({
-          url: getUrlLocal() + 'box/info/' + that.code,
+          url: getUrlLocal() + 'box/check/' + handoverType + '/' + code,
           type: 'get',
           success: function (result) {
             console.log(result);
-            that.data = JSON.parse(result).data;
-            that.records = JSON.parse(result).data.records;
+            that.data = JSON.parse(result);
+          },
+          error: function () {
+            alert('清点钞箱失败，请重试！');
           }
         });
       }
