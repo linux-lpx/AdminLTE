@@ -272,32 +272,6 @@
           type: 'GET',
           success: function (data) {
             that.modules = data.result;
-
-            // 这是数组指定位置添加数组，第二个参数需要设置为0
-            // that.modules.splice(2, 0, "0");
-
-
-            for (let i = 0; i < 10; i++) {
-              that.modules.forEach(function (item) {
-                if (i === module.tier) {
-                  that.modules2.splice();
-                }
-              });
-            }
-            // TODO 将modules继续处理一下
-            that.modules.forEach(function (module) {
-              for (let i = 0; i < 10; i++) {
-                if (module.tier === i) {
-                  // that.modules2.push(that.modules.indexOf(module));
-                  that.modules2.push(module.name);
-                }
-              }
-            });
-
-
-
-
-
             that.parentModuleAvailable = data.result.filter(function (vaule) {
               if (vaule.isAvailable === 1) {
                 let children = data.result.filter(function (item) {

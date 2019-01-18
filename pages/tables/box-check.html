@@ -143,9 +143,9 @@
             </div>
           </div>
           <br>
-          <!--清点出来的钞箱列表-->
+          <!--清点出来的钞箱列表 分成两列：左边的正常，右边的不正常-->
           <div class="row">
-            <!--无异常的钞箱-->
+            <!--正常的钞箱-->
             <div class="col-md-6">
               <div class="box box-info box-solid" v-for="box in boxesOK">
                 <div class="box-header">
@@ -186,7 +186,7 @@
 
               </div>
             </div>
-            <!--有异常的钞箱-->
+            <!--异常的钞箱-->
             <div class="col-md-6">
               <div class="box box-danger box-solid" v-for="box in boxesNotOK">
                 <div class="box-header">
