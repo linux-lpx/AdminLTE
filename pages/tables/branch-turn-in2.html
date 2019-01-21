@@ -113,35 +113,31 @@
             <div class="col-md-3">
               <div class="input-group">
                 <span class="input-group-addon">上缴金库</span>
-                <select name="msg" class="form-control" style="width: 100%" title="选择上缴金库">
-                  <option value="123456">发的发达</option>
-                  <option value="123456">123456</option>
-                  <option value="123456">123456</option>
+                <select name="msg" class="form-control" title="选择上缴金库" v-model="turnInTaskBox.targetVaultCode">
+                  <option v-for="vault in vaults" v-bind:value="vault.code">{{vault.name}}</option>
                 </select>
               </div>
               <br>
               <div class="input-group">
                 <span class="input-group-addon">物品类别</span>
-                <select name="msg" class="form-control" style="width: 100%" title="选择物品类别">
-                  <option value="123456">123456</option>
-                  <option value="123456">123456</option>
-                  <option value="123456">123456</option>
+                <select name="msg" class="form-control" title="选择物品类别" v-model="turnInTaskBox.itemsType">
+                  <option value="1">现金</option>
+                  <option value="0">非现金</option>
                 </select>
               </div>
             </div>
             <div class="col-md-3">
               <div class="input-group">
                 <span class="input-group-addon">箱包类别</span>
-                <select name="msg" class="form-control" style="width: 100%" title="选择箱包类别">
-                  <option value="123456">发的发达</option>
-                  <option value="123456">123456</option>
-                  <option value="123456">123456</option>
+                <select name="msg" class="form-control" title="选择箱包类别" v-model="turnInTaskBox.boxType">
+                  <option value="1">箱</option>
+                  <option value="0">包</option>
                 </select>
               </div>
               <br>
               <div class="input-group">
                 <span class="input-group-addon">尾箱编号</span>
-                <select name="msg" class="form-control" style="width: 100%" title="选择尾箱编号">
+                <select name="msg" class="form-control" title="选择尾箱编号" v-model="turnInTaskBox.boxCode">
                   <option value="123456">123456</option>
                   <option value="123456">123456</option>
                   <option value="123456">123456</option>
@@ -150,32 +146,30 @@
             </div>
             <div class="col-md-3">
               <div class="input-group">
-                <span class="input-group-addon">款箱类别</span>
-                <select name="msg" class="form-control" style="width: 100%" title="选择款箱类别">
-                  <option value="123456">发的发达</option>
-                  <option value="123456">123456</option>
-                  <option value="123456">123456</option>
+                <span class="input-group-addon">任务类别</span>
+                <select name="msg" class="form-control" title="选择任务类别" v-model="turnInTaskBox.taskType">
+                  <option value="1">上缴</option>
+                  <option value="0">寄存</option>
                 </select>
               </div>
               <br>
               <div class="input-group">
                 <span class="input-group-addon">尾箱状态</span>
-                <select name="msg" class="form-control" style="width: 100%" title="选择尾箱状态">
-                  <option value="123456">123456</option>
-                  <option value="123456">123456</option>
-                  <option value="123456">123456</option>
+                <select name="msg" class="form-control" title="选择尾箱状态" v-model="turnInTaskBox.boxIsNormal">
+                  <option value="1">正常</option>
+                  <option value="0">异常</option>
                 </select>
               </div>
             </div>
             <div class="col-md-3">
               <div class="input-group">
                 <span class="input-group-addon">上缴日期</span>
-                <input type="date" class="form-control" title="请选择上缴日期">
+                <input type="date" class="form-control" title="选择上缴日期" v-model="turnInTaskBox.turnInDate">
               </div>
               <br>
               <div class="input-group">
                 <span class="input-group-addon">解领日期</span>
-                <input type="date" class="form-control" title="选择解领日期">
+                <input type="date" class="form-control" title="选择解领日期" v-model="turnInTaskBox.turnBackDate">
               </div>
             </div>
           </div>
@@ -190,19 +184,52 @@
               </div>
             </div>
             <div class="box-body">
-              <div class="row" v-for="item in items">
-                <div class="col-md-3">
-                  <input type="text" class="form-control" v-model="item.aa" placeholder="请填写信息">
+              <div v-for="item in turnInTaskBox.items">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="input-group">
+                      <span class="input-group-addon">币种</span>
+                      <select class="form-control" title="币种" v-model.number="item.currency">
+                        <option value="1">人民币</option>
+                        <option value="2">美元</option>
+                        <option value="3">欧元</option>
+                        <option value="4">英镑</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="input-group">
+                      <span class="input-group-addon">面额</span>
+                      <select class="form-control" title="面额" v-model.number="item.denomination">
+                        <option value="100">100</option>
+                        <option value="50">50</option>
+                        <option value="20">20</option>
+                        <option value="10">10</option>
+                        <option value="5">5</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="input-group">
+                      <span class="input-group-addon">数量（把）</span>
+                      <select class="input-group-addon" title="现金单位" style="display: none">
+                        <option value="0">张</option>
+                        <option value="1">把</option>
+                      </select>
+                      <input type="number" class="form-control" v-model.number="item.amount"
+                             style="display: inline" placeholder="请输入把数信息">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="input-group">
+                      <span class="input-group-addon">总额</span>
+                      <input type="text" class="form-control" title="总额" v-model="item.sum" disabled>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-md-3">
-                  <input type="text" class="form-control" v-model="item.bb" placeholder="请填写信息">
-                </div>
-                <div class="col-md-3">
-                  <input type="text" class="form-control" v-model="item.cc" placeholder="请填写信息">
-                </div>
-                <div class="col-md-3">
-                  <input type="text" class="form-control" v-model="item.dd" placeholder="请填写信息">
-                </div>
+                <br>
               </div>
             </div>
           </div>
@@ -239,16 +266,40 @@
     el: '#content_id',
     mounted: function () {
       this.getModule();
+      this.getVault();
     },
     data: {
       parentModuleAvailable: [],
       boxNumber: '',
-      items: [{
-        aa: '',
-        bb: '',
-        cc: '',
-        dd: ''
+      turnInTaskBoxes: [{
+        targetVaultCode: null,  // 目标金库
+        boxType: 1,  // 箱包类别
+        taskType: 1,  // 任务类别
+        turnInDate: null,  // 上缴日期
+        itemsType: 1,  // 物品类别
+        boxCode: '',  // 尾箱编号
+        boxIsNormal: 1,  // 尾箱状态
+        turnBackDate: null,  // 解领日期
+        items: []  // 箱子中的物品
       }],
+      turnInTaskBox: {
+        targetVaultCode: null,  // 目标金库
+        boxType: 1,  // 箱包类别
+        taskType: 1,  // 任务类别
+        turnInDate: null,  // 上缴日期
+        itemsType: 1,  // 物品类别
+        boxCode: null,  // 尾箱编号
+        boxIsNormal: 1,  // 尾箱状态
+        turnBackDate: null,  // 解领日期
+        items: [{
+          currency: 1,
+          denomination: 100,
+          amount: 0,
+          sum: null,
+        }]  // 箱子中的物品
+      },
+      vaults: [],
+      bankCode: '',
     },
     methods: {
       getModule: function () {
@@ -276,18 +327,29 @@
           }
         });
       },
+      getVault: function () {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'bank/all/type/0',
+          type: 'get',
+          success: function (data) {
+            that.vaults = data.result;
+          }
+        });
+      },
       addItem: function () {
         let item = {
-          aa: '',
-          bb: '',
-          cc: '',
-          dd: ''
+          currency: 1,
+          denomination: 100,
+          amount: 0,
+          sum: null,
         };
-        this.items.push(item);
+        this.turnInTaskBox.items.push(item);
       },
       delItem: function () {
-        this.items.pop();
-      }
+        this.turnInTaskBox.items.pop();
+      },
+
     }
 
   });
