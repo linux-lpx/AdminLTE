@@ -4,7 +4,7 @@ const ip_loc = 'http://localhost';
 // const ip_txy = 'http://118.25.107.131';
 const ip_txy = 'http://localhost';
 const port = ':8081';
-const path = '/bts2/';
+const path = '/bvms/';
 
 function getIpLocal() {
   return ip_loc;

@@ -91,12 +91,15 @@
               <option value="3">离开网点</option>
               <option value="4">进入网点</option>
             </select>
-            <!--<input type="number" class="form-control" placeholder="请输入清点类型"-->
-                   <!--v-model.number="handoverType">-->
             <span class="input-group-btn">
-          <button class="btn btn-primary btn-flat" v-on:click="checkBox(4)">清点</button>
-        </span>
+              <button class="btn btn-primary btn-flat" v-on:click="checkBox(4)">清点开始</button>
+            </span>
           </div>
+        </div>
+        <div class="col-md-3">
+           <span class="input-group-btn">
+              <button class="btn btn-primary btn-flat" v-on:click="checkBoxOver(4)">清点结束</button>
+            </span>
         </div>
       </div>
     </div>
@@ -324,6 +327,19 @@
         }
 
       },
+      checkBoxOver: function (code) {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'box/checkOver/' + that.handoverType + '/' + code,
+          type: 'get',
+          success: function (result) {
+            alert('清点结束');
+          },
+          error: function () {
+            alert('清点结束');
+          }
+        });
+      },
       setBoxes: function (data) {
         let that = this;
         that.boxesNotOK = data.data.boxes.filter(function (box) {
@@ -344,50 +360,6 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

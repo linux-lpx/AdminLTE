@@ -291,7 +291,7 @@
       getModule: function () {
         let that = this;
         $.ajax({
-          url: getIpTxy() + getPort() + '/bts2/system_module/all',
+          url: getUrlLocal() + 'system_module/all',
           type: 'GET',
           success: function (data) {
             that.parentModuleAvailable = data.result.filter(function (vaule) {
@@ -322,10 +322,6 @@
         $.ajax({
           url: getIpLocal() + getPort() + getPath() + 'system_user/all',
           type: 'get',
-          crossDomain: true,
-          xhrFields: {
-            withCredentials: true,
-          },
           success: function (data) {
             that.users = data.result;
           }
