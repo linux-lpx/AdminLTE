@@ -113,14 +113,14 @@
             <div class="col-md-3">
               <div class="input-group">
                 <span class="input-group-addon">上缴金库</span>
-                <select name="msg" class="form-control" title="选择上缴金库" v-model="turnInTaskBox.targetVaultCode">
+                <select class="form-control" title="选择上缴金库" v-model="turnInTaskBox.targetVaultCode">
                   <option v-for="vault in vaults" v-bind:value="vault.code">{{vault.name}}</option>
                 </select>
               </div>
               <br>
               <div class="input-group">
                 <span class="input-group-addon">物品类别</span>
-                <select name="msg" class="form-control" title="选择物品类别" v-model="turnInTaskBox.itemsType">
+                <select class="form-control" title="选择物品类别" v-model="turnInTaskBox.itemsType">
                   <option value="1">现金</option>
                   <option value="0">非现金</option>
                 </select>
@@ -129,7 +129,7 @@
             <div class="col-md-3">
               <div class="input-group">
                 <span class="input-group-addon">箱包类别</span>
-                <select name="msg" class="form-control" title="选择箱包类别" v-model="turnInTaskBox.boxType">
+                <select class="form-control" title="选择箱包类别" v-model="turnInTaskBox.boxType">
                   <option value="1">箱</option>
                   <option value="0">包</option>
                 </select>
@@ -137,17 +137,15 @@
               <br>
               <div class="input-group">
                 <span class="input-group-addon">尾箱编号</span>
-                <select name="msg" class="form-control" title="选择尾箱编号" v-model="turnInTaskBox.boxCode">
-                  <option value="123456">123456</option>
-                  <option value="123456">123456</option>
-                  <option value="123456">123456</option>
+                <select class="form-control" title="选择尾箱编号" v-model="turnInTaskBox.boxCode">
+                  <option v-for="box in boxes" v-bind:value="box.outerCode">{{box.outerCode}}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-3">
               <div class="input-group">
                 <span class="input-group-addon">任务类别</span>
-                <select name="msg" class="form-control" title="选择任务类别" v-model="turnInTaskBox.taskType">
+                <select class="form-control" title="选择任务类别" v-model="turnInTaskBox.taskType">
                   <option value="1">上缴</option>
                   <option value="0">寄存</option>
                 </select>
@@ -155,7 +153,7 @@
               <br>
               <div class="input-group">
                 <span class="input-group-addon">尾箱状态</span>
-                <select name="msg" class="form-control" title="选择尾箱状态" v-model="turnInTaskBox.boxIsNormal">
+                <select class="form-control" title="选择尾箱状态" v-model="turnInTaskBox.boxIsNormal">
                   <option value="1">正常</option>
                   <option value="0">异常</option>
                 </select>
@@ -267,6 +265,7 @@
     mounted: function () {
       this.getModule();
       this.getVault();
+      this.getBox();
     },
     data: {
       parentModuleAvailable: [],
@@ -299,6 +298,7 @@
         }]  // 箱子中的物品
       },
       vaults: [],
+      boxes: [],
       bankCode: '',
     },
     methods: {
@@ -334,6 +334,19 @@
           type: 'get',
           success: function (data) {
             that.vaults = data.result;
+          }
+        });
+      },
+      getBox: function () {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'box/all',
+          type: 'GET',
+          success: function (data) {
+            that.boxes = data.result;
+          },
+          error: function () {
+            console.log('获取尾箱列表失败');
           }
         });
       },
