@@ -113,25 +113,25 @@
                       </div>
                       <div class="col-md-6">
                         <div class="input-group">
-                          <span class="input-group-addon">模块路径</span>
-                          <input title="模块路径" type="text" class="form-control" v-model="moduleInput.path">
-                        </div>
-                        <br>
-                        <div class="input-group">
-                          <span class="input-group-addon">父模块名称</span>
-                          <select title="父模块名称" class="form-control" v-model="moduleInput.parentName">
-                            <option v-for="module in parentModuleAll" v-bind:value="module.name">
-                              {{module.name}}
-                            </option>
-                          </select>
-                        </div>
-                        <br>
-                        <div class="input-group">
                           <span class="input-group-addon">模块类别</span>
                           <select title="模块类别" class="form-control" style="width: 100%;"
                                   v-model.number="moduleInput.type">
                             <option value="1">模块</option>
                             <option value="0">目录</option>
+                          </select>
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">模块路径</span>
+                          <input title="模块路径" type="text" class="form-control" v-model="moduleInput.path" disabled>
+                        </div>
+                        <br>
+                        <div class="input-group">
+                          <span class="input-group-addon">父模块</span>
+                          <select title="父模块名称" class="form-control" v-model="moduleInput.parentName">
+                            <option v-for="module in parentModuleAll" v-bind:value="module.name">
+                              {{module.name}}
+                            </option>
                           </select>
                         </div>
                         <br>
@@ -300,21 +300,33 @@
               that.deleteModuleId.push(that.modules[item].id);
             }
           });
-          let ids = that.deleteModuleId.toString();
-          console.log('要删除的模块的id：' + ids);
-          $.ajax({
-            url: getIpLocal() + getPort() + getPath() + 'system_module/del/' + ids,
-            type: 'post',
-            success: function (data) {
-              console.log('请求成功，信息：' + data.result);
-              that.getModule();
-              that.selectedModuleIndex = [];
-              that.deleteModuleId = [];
-            },
-            error: function (data) {
-              console.log('请求失败，信息：' + data);
-            }
+          let allowDel = true;
+          that.deleteModuleId.map(function (id) {
+            that.modules.map(function (module) {
+              if (module.parentId === id) {
+                allowDel = false;
+              }
+            });
           });
+          if (allowDel) {
+            let ids = that.deleteModuleId.toString();
+            console.log('要删除的模块的id：' + ids);
+            $.ajax({
+              url: getIpLocal() + getPort() + getPath() + 'system_module/del/' + ids,
+              type: 'post',
+              success: function (data) {
+                console.log('请求成功，信息：' + data.result);
+                that.getModule();
+                that.selectedModuleIndex = [];
+                that.deleteModuleId = [];
+              },
+              error: function (data) {
+                console.log('请求失败，信息：' + data);
+              }
+            });
+          } else {
+            alert('待删除的模块中包含了子模块，禁止删除！')
+          }
         }
       },
       clearInputData: function () {
