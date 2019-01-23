@@ -153,9 +153,16 @@
                   <br>
                   <ul class="list-group">
                     <li class="list-group-item list-group-item-info" style="font-size: 20px">模块列表</li>
-                    <li class="list-group-item" v-for="module in modules"
-                        v-on:click="selectModule(module.type, module.id)" v-bind:style="setFloderStyle(module.type)"
-                        v-show="setItemVisable(module.parentId)">{{module.name}}
+                    <li class="list-group-item"
+                        v-for="module in modules2"
+                        v-on:click="clickModule(module.type, module.id)"
+                        v-bind:style="setFloderStyle(module.type)"
+                        v-show="module.isVisible">
+                      <span class="fa"
+                            v-bind:class="{'fa-folder' : module.type === 0, 'fa-file-text-o' : module.type === 1}">
+                        &numsp;
+                      </span>
+                      &nbsp;&nbsp;{{module.name}}
                       <span class="fa fa-check pull-right" v-if="selectedModuleId.includes(module.id)">&numsp;</span>
                     </li>
                   </ul>
@@ -214,6 +221,9 @@
       // 处理后的模块集合，用于分配权限
       modules2: [],
 
+      // 点击的目录的id
+      clickFolderId: null,
+
       // 角色表格中的数据
       roles: [],
 
@@ -252,6 +262,11 @@
           type: 'GET',
           success: function (data) {
             that.modules = data.result;
+            that.modules.map(function (module) {
+              if (module.tier > 0) {
+                that.modules2.push(Object.assign({}, module, {isVisible: true}));
+              }
+            });
             that.parentModuleAvailable = data.result.filter(function (vaule) {
               if (vaule.isAvailable === 1) {
                 let children = data.result.filter(function (item) {
@@ -265,6 +280,7 @@
           }
         });
       },
+
       getRole: function () {
         let that = this;
         $.ajax({
@@ -275,6 +291,7 @@
           }
         });
       },
+
       addRole: function () {
         let that = this;
         $.ajax({
@@ -292,6 +309,7 @@
           }
         });
       },
+
       updateRole: function (n) {
         let that = this;
         that.targetModal = that.selectedRoleIndex.length === 1 ? '#roleModal' : '';
@@ -302,11 +320,18 @@
         } else {
           that.roleInput = that.roles[that.selectedRoleIndex[0]];
           if (n === 1) {
+            // 先将选择的模块id的数组置为空
             that.selectedModuleId = [];
+            // 再请求该角色拥有的模块权限
             that.getModuleIdByRoleId(that.roleInput.id);
+            // 将所有的模块设置为可视，方便第一眼查看
+            that.modules2.map(function (module) {
+              module.isVisible = true;
+            })
           }
         }
       },
+
       getModuleIdByRoleId: function (roleId) {
         let that = this;
         $.ajax({
@@ -324,6 +349,7 @@
           }
         });
       },
+
       deleteRole: function () {
         let that = this;
         if (that.selectedRoleIndex.length === 0) {
@@ -351,9 +377,11 @@
           });
         }
       },
+
       fileOpearate: function () {
         // TODO 处理文件
       },
+
       addModuleToRole: function () {
         let that = this;
         let ajaxUrl = getUrlLocal() + 'module_to_role/addAll/' + that.roleInput.id + '/'
@@ -375,11 +403,17 @@
           }
         });
       },
-      selectModule: function (type, id) {
+
+      clickModule: function (type, id) {
         let that = this;
         if (type === 0) {
           // 点击的是目录
           console.log('点击的是目录');
+          that.modules2.map(function (module) {
+            if (module.parentId === id) {
+              module.isVisible = !module.isVisible;
+            }
+          });
         } else {
           // 点击的是模块
           let index = that.selectedModuleId.indexOf(id);
@@ -393,6 +427,7 @@
           console.log('已选择的模块：' + that.selectedModuleId.toString());
         }
       },
+
       clearInputData: function () {
         this.roleInput = {
           id: null,
@@ -402,14 +437,12 @@
           isAvailable: 1
         }
       },
+
       setFloderStyle: function (type) {
         if (type === 0) {
           return 'background: lightgrey';
         }
       },
-      setItemVisable: function (parentId) {
-        return true;
-      }
     }
 
   })
