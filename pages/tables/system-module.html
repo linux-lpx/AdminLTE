@@ -228,22 +228,29 @@
           url: getIpTxy() + getPort() + getPath() + 'system_module/all',
           type: 'GET',
           success: function (data) {
-            that.modules = data.result;
-            that.parentModuleAll = data.result.filter(function (item) {
-              if (item.type === 0) {
-                return item;
-              }
-            });
-            that.parentModuleAvailable = data.result.filter(function (vaule) {
-              if (vaule.isAvailable === 1) {
-                let children = data.result.filter(function (item) {
-                  if (item.parentId === vaule.id && item.isAvailable === 1) {
-                    return item;
-                  }
-                });
-                return vaule['children'] = children;
-              }
-            });
+            if (data.isSuccess) {
+              that.modules = data.result;
+              that.parentModuleAll = data.result.filter(function (item) {
+                if (item.type === 0) {
+                  return item;
+                }
+              });
+              that.parentModuleAvailable = data.result.filter(function (vaule) {
+                if (vaule.isAvailable === 1) {
+                  let children = data.result.filter(function (item) {
+                    if (item.parentId === vaule.id && item.isAvailable === 1) {
+                      return item;
+                    }
+                  });
+                  return vaule['children'] = children;
+                }
+              });
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+
           }
         });
       },
@@ -256,11 +263,14 @@
             contentType: 'application/json',
             data: JSON.stringify(that.moduleInput),
             success: function (data) {
-              alert('操作成功' + data.result);
-              that.getModule();
+              if (data.isSuccess) {
+                that.getModule();
+              } else {
+                alert(data.result);
+              }
             },
             error: function () {
-              alert('操作失败');
+              alert('与服务器通信失败，请联系管理员');
             }
           });
         } else {
@@ -273,10 +283,17 @@
           url: getIpTxy() + getPort() + getPath() + 'system_module/checkName/' + that.moduleInput.name,
           type: 'get',
           success: function (data) {
-            if (data === 'used') {
-            } else if (data === 'unused') {
-              return true;
+            if (data.isSuccess) {
+              if (data.result === 'used') {
+              } else if (data.result === 'unused') {
+                return true;
+              }
+            } else {
+              alert(data.result);
             }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
         return true;
@@ -318,13 +335,17 @@
               url: getIpLocal() + getPort() + getPath() + 'system_module/del/' + ids,
               type: 'post',
               success: function (data) {
-                console.log('请求成功，信息：' + data.result);
-                that.getModule();
-                that.selectedModuleIndex = [];
-                that.deleteModuleId = [];
+                if (data.isSuccess) {
+                  console.log('请求成功，信息：' + data.result);
+                  that.getModule();
+                  that.selectedModuleIndex = [];
+                  that.deleteModuleId = [];
+                } else {
+                  alert(data.result);
+                }
               },
-              error: function (data) {
-                console.log('请求失败，信息：' + data);
+              error: function () {
+                alert('与服务器通信失败，请联系管理员');
               }
             });
           } else {

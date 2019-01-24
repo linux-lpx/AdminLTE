@@ -292,16 +292,23 @@
           url: getIpTxy() + getPort() + getPath() + 'system_module/all',
           type: 'GET',
           success: function (data) {
-            that.parentModuleAvailable = data.result.filter(function (vaule) {
-              if (vaule.isAvailable === 1) {
-                let children = data.result.filter(function (item) {
-                  if (item.parentId === vaule.id && item.isAvailable === 1) {
-                    return item;
-                  }
-                });
-                return vaule['children'] = children;
-              }
-            });
+            if (data.isSuccess) {
+              that.parentModuleAvailable = data.result.filter(function (vaule) {
+                if (vaule.isAvailable === 1) {
+                  let children = data.result.filter(function (item) {
+                    if (item.parentId === vaule.id && item.isAvailable === 1) {
+                      return item;
+                    }
+                  });
+                  return vaule['children'] = children;
+                }
+              });
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
@@ -311,6 +318,7 @@
           url: getUrlLocal() + 'box/info/' + that.code,
           type: 'get',
           success: function (result) {
+            // TODO 这里的result还没有用新的返回格式
             console.log(result);
             that.data = JSON.parse(result).data;
             that.records = JSON.parse(result).data.records;

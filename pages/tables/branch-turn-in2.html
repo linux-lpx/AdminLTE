@@ -282,22 +282,29 @@
           url: getIpTxy() + getPort() + getPath() + 'system_module/all',
           type: 'GET',
           success: function (data) {
-            that.modules = data.result;
-            that.parentModuleAll = data.result.filter(function (item) {
-              if (item.type === 0) {
-                return item;
-              }
-            });
-            that.parentModuleAvailable = data.result.filter(function (vaule) {
-              if (vaule.isAvailable === 1) {
-                let children = data.result.filter(function (item) {
-                  if (item.parentId === vaule.id && item.isAvailable === 1) {
-                    return item;
-                  }
-                });
-                return vaule['children'] = children;
-              }
-            });
+            if (data.isSuccess) {
+              that.modules = data.result;
+              that.parentModuleAll = data.result.filter(function (item) {
+                if (item.type === 0) {
+                  return item;
+                }
+              });
+              that.parentModuleAvailable = data.result.filter(function (vaule) {
+                if (vaule.isAvailable === 1) {
+                  let children = data.result.filter(function (item) {
+                    if (item.parentId === vaule.id && item.isAvailable === 1) {
+                      return item;
+                    }
+                  });
+                  return vaule['children'] = children;
+                }
+              });
+            } else {
+              alert(data.result);
+            }
+          },
+          error:function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
@@ -307,7 +314,14 @@
           url: getUrlLocal() + 'bank/all/type/0',
           type: 'get',
           success: function (data) {
-            that.vaults = data.result;
+            if (data.isSuccess) {
+              that.vaults = data.result;
+            } else {
+              alert(data.result);
+            }
+          },
+          error:function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
@@ -317,10 +331,14 @@
           url: getUrlLocal() + 'box/all',
           type: 'GET',
           success: function (data) {
-            that.boxes = data.result;
+            if (data.isSuccess) {
+              that.boxes = data.result;
+            } else {
+              alert(data.result);
+            }
           },
           error: function () {
-            console.log('获取尾箱列表失败');
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },

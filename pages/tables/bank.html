@@ -247,16 +247,23 @@
           url: getIpTxy() + getPort() + getPath() + 'system_module/all',
           type: 'GET',
           success: function (data) {
-            that.parentModuleAvailable = data.result.filter(function (vaule) {
-              if (vaule.isAvailable === 1) {
-                let children = data.result.filter(function (item) {
-                  if (item.parentId === vaule.id && item.isAvailable === 1) {
-                    return item;
-                  }
-                });
-                return vaule['children'] = children;
-              }
-            });
+            if (data.isSuccess) {
+              that.parentModuleAvailable = data.result.filter(function (vaule) {
+                if (vaule.isAvailable === 1) {
+                  let children = data.result.filter(function (item) {
+                    if (item.parentId === vaule.id && item.isAvailable === 1) {
+                      return item;
+                    }
+                  });
+                  return vaule['children'] = children;
+                }
+              });
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
@@ -266,7 +273,14 @@
           url: getIpLocal() + getPort() + getPath() + 'bank/all',
           type: 'get',
           success: function (data) {
-            that.banks = data.result;
+            if (data.isSuccess) {
+              that.banks = data.result;
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
@@ -278,11 +292,15 @@
           contentType: 'application/json',
           data: JSON.stringify(that.bankInput),
           success: function (data) {
-            console.log(data);
-            that.getBank();
+            if (data.isSuccess) {
+              console.log(data);
+              that.getBank();
+            } else {
+              alert(data.result);
+            }
           },
-          error: function (data) {
-            console.log(data)
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
@@ -304,10 +322,6 @@
             if (!that.deleteBankId.includes(that.banks[item].id)) {
               that.deleteBankId.push(that.banks[item].id);
             }
-            // 也可以用这种方式
-            // if (that.deleteBankId.indexOf(that.banks[item].id) === -1) {
-            //   that.deleteBankId.push(that.banks[item].id);
-            // }
             console.log(item);
           });
           let ids = that.deleteBankId.toString();
@@ -316,14 +330,17 @@
             url: getIpLocal() + getPort() + getPath() + 'bank/del/' + ids,
             type: 'post',
             success: function (data) {
-              console.log('请求成功，信息' + data.result);
-              that.getBank();
-              that.selectedBankIndex = [];
-              that.deleteBankId = [];
+              if (data.isSuccess) {
+                console.log('请求成功，信息' + data.result);
+                that.getBank();
+                that.selectedBankIndex = [];
+                that.deleteBankId = [];
+              } else {
+                alert(data.result);
+              }
             },
-            error: function (data) {
-              console.log(data);
-              console.log('请求失败，信息：' + data);
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
             }
           });
 

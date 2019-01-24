@@ -239,16 +239,23 @@
           url: getIpTxy() + getPort() + getPath() + 'system_module/all',
           type: 'GET',
           success: function (data) {
-            that.parentModuleAvailable = data.result.filter(function (vaule) {
-              if (vaule.isAvailable === 1) {
-                let children = data.result.filter(function (item) {
-                  if (item.parentId === vaule.id && item.isAvailable === 1) {
-                    return item;
-                  }
-                });
-                return vaule['children'] = children;
-              }
-            });
+            if (data.isSuccess) {
+              that.parentModuleAvailable = data.result.filter(function (vaule) {
+                if (vaule.isAvailable === 1) {
+                  let children = data.result.filter(function (item) {
+                    if (item.parentId === vaule.id && item.isAvailable === 1) {
+                      return item;
+                    }
+                  });
+                  return vaule['children'] = children;
+                }
+              });
+            } else {
+              alert(data.result);
+            }
+          },
+          error:function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
@@ -258,10 +265,14 @@
           url: getUrlLocal() + 'box/all',
           type: 'GET',
           success: function (data) {
-            that.boxes = data.result;
+            if (data.isSuccess) {
+              that.boxes = data.result;
+            } else {
+              alert(data.result);
+            }
           },
           error: function () {
-            console.log('获取尾箱列表失败');
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
@@ -273,11 +284,15 @@
           contentType: 'application/json',
           data: JSON.stringify(that.boxInput),
           success: function (data) {
-            console.log('尾箱添加成功：' + data.result.toString());
-            that.getBox();
+            if (data.isSuccess) {
+              console.log('尾箱添加成功：' + data.result.toString());
+              that.getBox();
+            } else {
+              alert(data.result);
+            }
           },
           error: function () {
-            console.log('添加尾箱失败！')
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
@@ -307,13 +322,17 @@
             url: getUrlLocal() + 'box/del/' + ids,
             type: 'post',
             success: function (data) {
-              console.log('请求成功，信息：' + data.result);
-              that.getBox();
-              that.selectedBoxIndex = [];
-              that.deleteBoxId = [];
+              if (data.isSuccess) {
+                console.log('请求成功，信息：' + data.result);
+                that.getBox();
+                that.selectedBoxIndex = [];
+                that.deleteBoxId = [];
+              } else {
+                alert(data.result);
+              }
             },
-            error: function (data) {
-              console.log('请求失败，信息：' + data);
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
             }
           });
         }

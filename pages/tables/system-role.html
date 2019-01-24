@@ -192,7 +192,6 @@
               <td>{{role.isAvailable === 1 ? '可用' : '不可用'}}</td>
             </tr>
           </table>
-
         </div>
       </div>
     </div>
@@ -261,22 +260,29 @@
           url: getIpTxy() + getPort() + getPath() + 'system_module/all',
           type: 'GET',
           success: function (data) {
-            that.modules = data.result;
-            that.modules.map(function (module) {
-              if (module.tier > 0) {
-                that.modules2.push(Object.assign({}, module, {isVisible: true}));
-              }
-            });
-            that.parentModuleAvailable = data.result.filter(function (vaule) {
-              if (vaule.isAvailable === 1) {
-                let children = data.result.filter(function (item) {
-                  if (item.parentId === vaule.id && item.isAvailable === 1) {
-                    return item;
-                  }
-                });
-                return vaule['children'] = children;
-              }
-            });
+            if (data.isSuccess) {
+              that.modules = data.result;
+              that.modules.map(function (module) {
+                if (module.tier > 0) {
+                  that.modules2.push(Object.assign({}, module, {isVisible: true}));
+                }
+              });
+              that.parentModuleAvailable = data.result.filter(function (vaule) {
+                if (vaule.isAvailable === 1) {
+                  let children = data.result.filter(function (item) {
+                    if (item.parentId === vaule.id && item.isAvailable === 1) {
+                      return item;
+                    }
+                  });
+                  return vaule['children'] = children;
+                }
+              });
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
@@ -287,7 +293,14 @@
           url: getIpLocal() + getPort() + getPath() + 'system_role/all',
           type: 'GET',
           success: function (data) {
-            that.roles = data.result;
+            if (data.isSuccess) {
+              that.roles = data.result;
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
@@ -300,12 +313,14 @@
           contentType: 'application/json',
           data: JSON.stringify(that.roleInput),
           success: function (data) {
-            that.getRole();
-            alert('添加角色成功！');
+            if (data.isSuccess) {
+              that.getRole();
+            } else {
+              alert(data.result);
+            }
           },
-          error: function (data) {
-            that.getRole();
-            alert('添加角色失败！');
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
@@ -338,14 +353,19 @@
           url: getUrlLocal() + 'module_to_role/' + roleId + '/all',
           type: 'get',
           success: function (data) {
-            let moduleToRoles;
-            moduleToRoles = data.result || [];
-            moduleToRoles.forEach(function (moduleToRole) {
-              that.selectedModuleId.push(moduleToRole.moduleId)
-            });
+            if (data.isSuccess) {
+              let moduleToRoles;
+              moduleToRoles = data.result || [];
+              moduleToRoles.forEach(function (moduleToRole) {
+                that.selectedModuleId.push(moduleToRole.moduleId)
+              });
+            } else {
+              alert(data.result);
+            }
+
           },
-          error: function (data) {
-            console.log(data);
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
@@ -366,13 +386,17 @@
             url: getIpLocal() + getPort() + getPath() + 'system_role/del/' + ids,
             type: 'post',
             success: function (data) {
-              console.log('请求成功，信息：' + data.result);
-              that.getRole();
-              that.selectedRoleIndex = [];
-              that.deleteRoleId = [];
+              if (data.isSuccess) {
+                console.log('请求成功，信息：' + data.result);
+                that.getRole();
+                that.selectedRoleIndex = [];
+                that.deleteRoleId = [];
+              } else {
+                alert(data.result);
+              }
             },
-            error: function (data) {
-              console.log('请求失败，信息：' + data);
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
             }
           });
         }
@@ -395,11 +419,15 @@
           url: ajaxUrl,
           type: ajaxType,
           success: function (data) {
-            console.log(data.description + data.result);
-            that.selectedModuleId = [];
+            if (data.isSuccess) {
+              console.log(data.description + data.result);
+              that.selectedModuleId = [];
+            } else {
+              alert(data.result);
+            }
           },
-          error: function (data) {
-            console.log(data);
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       },
