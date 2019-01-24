@@ -114,7 +114,7 @@
                       <div class="col-md-6">
                         <div class="input-group">
                           <span class="input-group-addon">模块类别</span>
-                          <select title="模块类别" class="form-control" style="width: 100%;"
+                          <select title="模块类别" class="form-control" style="width: 100%;" v-on:change="setDisabled()"
                                   v-model.number="moduleInput.type">
                             <option value="1">模块</option>
                             <option value="0">目录</option>
@@ -123,7 +123,8 @@
                         <br>
                         <div class="input-group">
                           <span class="input-group-addon">模块路径</span>
-                          <input title="模块路径" type="text" class="form-control" v-model="moduleInput.path" disabled>
+                          <input title="模块路径" type="text" class="form-control" v-model="moduleInput.path"
+                                 v-bind:disabled="isDisabled">
                         </div>
                         <br>
                         <div class="input-group">
@@ -205,15 +206,16 @@
       parentModuleAvailable: [],
       selectedModuleIndex: [],
       deleteModuleId: [],
+      isDisabled: false,
       moduleInput: {
         id: null,
-        name: '',
-        description: '',
-        path: '',
+        name: null,
+        description: null,
+        path: null,
         parentId: null,
-        parentName: '',
+        parentName: null,
         tier: null,
-        imgPath: '',
+        imgPath: null,
         isAvailable: 1,
         type: 1,
         roleId: null
@@ -254,7 +256,7 @@
             contentType: 'application/json',
             data: JSON.stringify(that.moduleInput),
             success: function (data) {
-              alert('操作成功' + data.result.name);
+              alert('操作成功' + data.result);
               that.getModule();
             },
             error: function () {
@@ -287,6 +289,7 @@
           alert('请选择一个模块！');
         } else {
           this.moduleInput = this.modules[this.selectedModuleIndex[0]];
+          // 这里置为null的原因是：已经获取到了parentName，在后台可以根据parentName获取到parentID，因此不需要parentID。
           this.moduleInput.parentId = null;
         }
       },
@@ -332,16 +335,25 @@
       clearInputData: function () {
         this.moduleInput = {
           id: null,
-          name: '',
-          description: '',
-          path: '',
+          name: null,
+          description: null,
+          path: null,
           parentId: null,
-          parentName: '',
+          parentName: null,
           tier: null,
-          imgPath: '',
+          imgPath: null,
           isAvailable: 1,
           type: 1,
           roleId: null
+        }
+      },
+      setDisabled: function () {
+        if (this.moduleInput.type === 0) {
+          // 当类型为目录的时候，清除模块路径，并设置为不可编辑
+          this.moduleInput.path = null;
+          this.isDisabled = true;
+        } else {
+          this.isDisabled = false;
         }
       }
     }
