@@ -133,13 +133,11 @@
                     <option value="true">是</option>
                     <option value="false">否</option>
                   </select>
-                  <!--<input type="text" placeholder="是否关闭" class="form-control" v-model="data.isClosed">-->
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="input-group">
                   <span class="input-group-addon">是否上锁</span>
-                  <!--<input type="text" placeholder="是否上锁" class="form-control" v-model="data.isLocked">-->
                   <select v-model="data.isLocked" class="form-control" title="是否上锁" disabled>
                     <option value="true">是</option>
                     <option value="false">否</option>
@@ -149,7 +147,6 @@
               <div class="col-md-3">
                 <div class="input-group">
                   <span class="input-group-addon">是否低电量</span>
-                  <!--<input type="text" placeholder="是否低电量" class="form-control" v-model="data.isLowPower">-->
                   <select v-model="data.isLowPower" class="form-control" title="是否低电量" disabled>
                     <option value="true">是</option>
                     <option value="false">否</option>
@@ -162,7 +159,6 @@
               <div class="col-md-3">
                 <div class="input-group">
                   <span class="input-group-addon">是否移动</span>
-                  <!--<input type="text" placeholder="是否移动" class="form-control" v-model="data.isMoved">-->
                   <select v-model="data.isMoved" class="form-control" title="是否移动" disabled>
                     <option value="true">是</option>
                     <option value="false">否</option>
@@ -172,7 +168,6 @@
               <div class="col-md-3">
                 <div class="input-group">
                   <span class="input-group-addon">是否损坏</span>
-                  <!--<input type="text" placeholder="是否损坏" class="form-control" v-model="data.isBroken">-->
                   <select v-model="data.isBroken" class="form-control" title="是否损坏" disabled>
                     <option value="true">是</option>
                     <option value="false">否</option>
@@ -182,7 +177,6 @@
               <div class="col-md-3">
                 <div class="input-group">
                   <span class="input-group-addon">是否监控</span>
-                  <!--<input type="text" placeholder="是否监控" class="form-control" v-model="data.isMonitor">-->
                   <select v-model="data.isMonitor" class="form-control" title="是否监控" disabled>
                     <option value="true">是</option>
                     <option value="false">否</option>
@@ -192,7 +186,6 @@
               <div class="col-md-3">
                 <div class="input-group">
                   <span class="input-group-addon">是否异常</span>
-                  <!--<input type="text" placeholder="是否异常" class="form-control" v-model="data.hasException">-->
                   <select v-model="data.hasException" class="form-control" title="是否异常" disabled>
                     <option value="true">是</option>
                     <option value="false">否</option>
@@ -260,7 +253,6 @@
     el: '#content_id',
     mounted: function () {
       this.getModule();
-      // this.getBoxInfo()
     },
     data: {
       parentModuleAvailable: [],
