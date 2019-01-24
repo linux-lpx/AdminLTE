@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <title>测试-XXXX管理</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
+</head>
+
+<!--body里面的class一定要设置样式，不然是白色的-->
+<body class="hold-transition skin-blue sidebar-mini">
+<div id="content_id" class="wrapper">
+
+  <!--顶部导航栏-->
+  <header class="main-header">
+    <a href="../../index2.html" class="logo">
+      <span class="logo-mini">BVMS</span>
+      <span class="logo-lg"><b>金库管理系统</b></span>
+    </a>
+    <nav class="navbar navbar-static-top">
+      <!--切换按钮（左侧的菜单栏的收缩与展开）-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <li><a href="#" data-toggle="control-sidebar"><i class="fa fa-gears">&numsp;</i></a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!--左边的菜单栏-->
+  <aside class="main-sidebar">
+    <section class="sidebar">
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+          <p>支行金库1管理员</p>
+          <a href="#"><i class="fa fa-circle text-success">&numsp;</i> Online</a>
+        </div>
+      </div>
+
+      <ul class="sidebar-menu" data-widget="tree">
+        <li class="header" style="font-size: large">主菜单</li>
+
+        <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable"
+            v-if="item.type === 0 || item.parentId === 1">
+          <a href="#">
+            <i class="fa fa-folder" v-bind:class="{'fa-file-text-o' : item.type === 1}">&numsp;</i>
+            <span>{{item.name}}</span>
+            <span class="pull-right-container">
+              <i class="fa pull-right" v-bind:class="{'fa-angle-left':item.children.length > 0}">&numsp;</i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li v-for="child in item.children">
+              <a v-bind:href="child.path">
+                <i class="fa fa-file-text-o">&numsp;</i>{{child.name}}
+              </a>
+            </li>
+          </ul>
+        </li>
+
+      </ul>
+    </section>
+  </aside>
+
+  <!--内容-->
+  <section class="content-wrapper">
+    <div class="content-header">
+      <h1>XXXX管理</h1>
+    </div>
+    <div class="content">
+      <div class="box box-solid box-primary">
+        <div class="box-header">
+          <div class="box-title">XXXX管理</div>
+        </div>
+        <div class="box-body">
+          <div id="mapTest" style="overflow: hidden; width: 100%; height: 100%;margin: 0"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../../dist/js/adminlte.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="constant.js"></script>
+<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=0bMgGrEuYIiMFWgQu21gVShV1wP2YpDY"></script>-->
+<script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=0bMgGrEuYIiMFWgQu21gVShV1wP2YpDY&services=&t=15483889"></script>
+<script>
+  new Vue({
+    el: '#content_id',
+    mounted: function () {
+      this.getModule();
+      // 百度地图API功能
+      var map = new BMap.Map("mapTest");    // 创建Map实例
+      map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);  // 初始化地图,设置中心点坐标和地图级别
+      //添加地图类型控件
+      map.addControl(new BMap.MapTypeControl({
+        mapTypes: [
+          BMAP_NORMAL_MAP,
+          BMAP_HYBRID_MAP
+        ]
+      }));
+      map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
+      map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+    },
+    data: {
+      parentModuleAvailable: [],
+    },
+    methods: {
+      getModule: function () {
+        let that = this;
+        $.ajax({
+          url: getIpTxy() + getPort() + getPath() + 'system_module/all',
+          type: 'GET',
+          success: function (data) {
+            if (data.isSuccess) {
+              that.parentModuleAvailable = data.result.filter(function (vaule) {
+                if (vaule.isAvailable === 1) {
+                  let children = data.result.filter(function (item) {
+                    if (item.parentId === vaule.id && item.isAvailable === 1) {
+                      return item;
+                    }
+                  });
+                  return vaule['children'] = children;
+                }
+              });
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      }
+    }
+
+  });
+  // // 百度地图API功能
+  // var map = new BMap.Map("mapTest");    // 创建Map实例
+  // map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);  // 初始化地图,设置中心点坐标和地图级别
+  // //添加地图类型控件
+  // map.addControl(new BMap.MapTypeControl({
+  //   mapTypes: [
+  //     BMAP_NORMAL_MAP,
+  //     BMAP_HYBRID_MAP
+  //   ]
+  // }));
+  // map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
+  // map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
