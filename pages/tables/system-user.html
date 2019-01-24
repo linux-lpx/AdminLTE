@@ -377,7 +377,7 @@
           let ids = that.deleteUserId.toString();
           console.log('要删除的用户的id：' + ids);
           $.ajax({
-            url: getIpLocal() + getPort() + '/bts2/system_user/del/' + ids,
+            url: getUrlLocal() + 'system_user/del/' + ids,
             type: 'post',
             success: function (data) {
               if (data.isSuccess) {
