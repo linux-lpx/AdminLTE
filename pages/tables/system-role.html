@@ -163,7 +163,7 @@
                         &numsp;
                       </span>
                       &nbsp;&nbsp;{{module.name}}
-                      <span class="fa fa-check pull-right" v-if="selectedModuleId.includes(module.id)">&numsp;</span>
+                      <span class="fa fa-check pull-right" v-if="setCheckIconShow(module.type, module.id)">&numsp;</span>
                     </li>
                   </ul>
                 </div>
@@ -471,6 +471,10 @@
           return 'background: lightgrey';
         }
       },
+
+      setCheckIconShow: function (type, id) {
+        return type === 1 && this.selectedModuleId.includes(id);
+      }
     }
 
   })
