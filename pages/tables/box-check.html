@@ -320,8 +320,8 @@
         $.ajax({
           url: getUrlLocal() + 'box/checkOver/' + that.handoverType + '/' + code,
           type: 'get',
-          success: function (result) {
-            alert('清点结束');
+          success: function (data) {
+            alert('清点结束' + data.result);
           },
           error: function () {
             alert('与服务器通信失败，请联系管理员');
