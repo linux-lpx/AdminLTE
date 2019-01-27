@@ -309,6 +309,7 @@
           this.moduleInput = this.modules[this.selectedModuleIndex[0]];
           // 这里置为null的原因是：已经获取到了parentName，在后台可以根据parentName获取到parentID，因此不需要parentID。
           this.moduleInput.parentId = null;
+          this.setDisabled();
         }
       },
       deleteModule: function () {
