@@ -73,16 +73,17 @@
             模块列表
             <div class="btn-group">
               <button class="btn btn-success btn-sm" tabindex="-1"
-                      data-toggle="modal" data-target="#modalTest" v-on:click="clearInputData()">添加模块
+                      data-toggle="modal" data-target="#modalModule" v-on:click="clearInputData()">添加模块
               </button>
               <button class="btn btn-info btn-sm" tabindex="-1"
-                      data-toggle="modal" data-target="#modalTest" v-on:click="updateModule()">更新模块
+                      data-toggle="modal" data-target="#modalModule" v-on:click="updateModule()">更新模块
               </button>
               <button class="btn btn-danger btn-sm" v-on:click="deleteModule()">删除模块</button>
             </div>
+            <button class="btn btn-warning btn-sm" v-on:click="exportExcel()">导出为xlsx</button>
           </div>
           <!--模态框-->
-          <div class="modal fade" id="modalTest" role="dialog">
+          <div class="modal fade" id="modalModule" role="dialog">
             <div style="color: #1b6d85">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -352,6 +353,9 @@
             alert('待删除的模块中包含了子模块，禁止删除！')
           }
         }
+      },
+      exportExcel: function () {
+        window.location.href = getUrlLocal() + 'system_module/excel_for_modules'
       },
       clearInputData: function () {
         this.moduleInput = {
