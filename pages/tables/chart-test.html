@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <title>测试-图标测试</title>
@@ -72,19 +72,57 @@
   <!--内容-->
   <section class="content-wrapper">
     <div class="content-header">
-      <h1>XXXX管理</h1>
+      <h1>图表测试</h1>
     </div>
     <div class="content">
-      <div class="box box-solid box-primary">
-        <div class="box-header">
-          <div class="box-title">图表测试</div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="box box-danger">
+            <div class="box-header with-border">
+              <div class="box-title">柱状图</div>
+              <button class="btn btn-box-tool pull-right" v-on:click="loadChart1()">
+                <i class="fa fa-refresh"></i>
+              </button>
+            </div>
+            <div class="box-body">
+              <div class="chart">
+                <canvas id="chart1"></canvas>
+              </div>
+            </div>
+            <div class="box-footer">底部</div>
+          </div>
         </div>
-        <div class="box-body">
-          <div class="chart">
-
+        <div class="col-md-6">
+          <div class="box box-danger">
+            <div class="box-header with-border">
+              <div class="box-title">圆饼图</div>
+              <button class="btn btn-box-tool pull-right" v-on:click="loadChart2()">
+                <i class="fa fa-refresh"></i>
+              </button>
+            </div>
+            <div class="box-body">
+              <div class="chart">
+                <canvas id="chart2"></canvas>
+              </div>
+            </div>
+            <div class="box-footer">底部</div>
           </div>
         </div>
       </div>
+      <div class="box box-danger">
+      <div class="box-header with-border">
+        <h3 class="box-title">曲线图</h3>
+        <button class="btn btn-box-tool pull-right" v-on:click="loadChart3()">
+          <i class="fa fa-refresh"></i>
+        </button>
+      </div>
+      <div class="box-body">
+        <div class="chart">
+          <canvas id="chart3"></canvas>
+        </div>
+      </div>
+      <div class="box-footer">底部</div>
+    </div>
     </div>
   </section>
 </div>
@@ -92,6 +130,10 @@
 <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
 <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../../dist/js/adminlte.min.js"></script>
+<!-- ChartJS -->
+<script src="../../bower_components/chart.js/dist/Chart.min.js"></script>
+<!-- FastClick -->
+<script src="../../bower_components/fastclick/lib/fastclick.js"></script>
 <script src="../../js/vue.js"></script>
 <script src="constant.js"></script>
 <script>
@@ -99,6 +141,9 @@
     el: '#content_id',
     mounted: function () {
       this.getModule();
+      this.loadChart1();
+      this.loadChart2();
+      this.loadChart3();
     },
     data: {
       parentModuleAvailable: [],
@@ -129,6 +174,101 @@
             alert('与服务器通信失败，请联系管理员');
           }
         });
+      },
+      loadChart1: function () {
+        let ctx = document.getElementById("chart1").getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            datasets: [{
+              label: '柱状图',
+              data: [12, 19, 3, 5, 2, 3],
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1,
+            }],
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+        })
+      },
+      loadChart2: function () {
+        let ctx = $("#chart2").get(0).getContext('2d');
+        let content = {
+          type: '',
+          data: {
+            type: 'pie',
+            data: {
+              labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周天'],
+              datasets: [{
+                label: '圆饼图',
+                data: [10, 20, 30, 40, 50, 60, 70],
+                backgroundColor: ['#ff1234', '#551234', '#88ff99', '#ff44bb', '#93fff7', '#002266', '#335588'],
+                borderColor: ['#ff123411', '#55123411', '#88ff9911', '#ff44bb11', '#93fff711', '#00226611', '#33558811'],
+                hoverBackgroundColor: ['#ff1234', '#551234', '#88ff99', '#ff44bb', '#93fff7', '#002266', '#335588'],
+                hoverBorderColor: ['#ff123411', '#55123411', '#88ff9911', '#ff44bb11', '#93fff711', '#00226611', '#33558811'],
+                borderWidth: 1,
+                hoverBorderWidth: 1,
+              }],
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }]
+              }
+            }
+          }
+        };
+        new Chart(ctx, content);
+      },
+      loadChart3: function () {
+        let ctx = $("#chart3").get(0).getContext('2d');
+        let content = {
+          type: 'line',
+          data: {
+            labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周天'],
+            datasets: [{
+              label: '曲线图',
+              data: [10, 20, 30, 40, 50, 80, 70],
+              backgroundColor: '#0000ff11',
+              borderColor: '#0000ff',
+              borderWidth: 1,
+            }],
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                stacked: true,
+              }]
+            }
+          }
+        };
+        new Chart(ctx, content);
       }
     }
 
