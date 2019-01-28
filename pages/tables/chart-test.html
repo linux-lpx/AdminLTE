@@ -79,10 +79,13 @@
         <div class="col-md-6">
           <div class="box box-danger">
             <div class="box-header with-border">
-              <div class="box-title">柱状图</div>
-              <button class="btn btn-box-tool pull-right" v-on:click="loadChart1()">
-                <i class="fa fa-refresh"></i>
-              </button>
+              <div class="box-title">混合图</div>
+              <div class="box-tools pull-right">
+                <button class="btn btn-box-tool" v-on:click="loadChart1()">
+                  <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+              </div>
             </div>
             <div class="box-body">
               <div class="chart">
@@ -96,9 +99,12 @@
           <div class="box box-danger">
             <div class="box-header with-border">
               <div class="box-title">圆饼图</div>
-              <button class="btn btn-box-tool pull-right" v-on:click="loadChart2()">
-                <i class="fa fa-refresh"></i>
-              </button>
+              <div class="box-tools pull-right">
+                <button class="btn btn-box-tool" v-on:click="loadChart2()">
+                  <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+              </div>
             </div>
             <div class="box-body">
               <div class="chart">
@@ -109,20 +115,126 @@
           </div>
         </div>
       </div>
-      <div class="box box-danger">
-      <div class="box-header with-border">
-        <h3 class="box-title">曲线图</h3>
-        <button class="btn btn-box-tool pull-right" v-on:click="loadChart3()">
-          <i class="fa fa-refresh"></i>
-        </button>
-      </div>
-      <div class="box-body">
-        <div class="chart">
-          <canvas id="chart3"></canvas>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="box box-danger">
+            <div class="box-header with-border">
+              <h3 class="box-title">曲线图</h3>
+              <div class="box-tools pull-right">
+                <button class="btn btn-box-tool" v-on:click="loadChart3()">
+                  <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="box-body">
+              <div class="chart">
+                <canvas id="chart3"></canvas>
+              </div>
+            </div>
+            <div class="box-footer">底部</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="box box-danger">
+            <div class="box-header with-border">
+              <h3 class="box-title">雷达图</h3>
+              <div class="box-tools pull-right">
+                <button class="btn btn-box-tool" v-on:click="loadChart4()">
+                  <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="box-body">
+              <div class="chart">
+                <canvas id="chart4"></canvas>
+              </div>
+            </div>
+            <div class="box-footer">底部</div>
+          </div>
         </div>
       </div>
-      <div class="box-footer">底部</div>
-    </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="box box-danger">
+            <div class="box-header with-border">
+              <h3 class="box-title">极区表</h3>
+              <div class="box-tools pull-right">
+                <button class="btn btn-box-tool" v-on:click="loadChart5()">
+                  <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="box-body">
+              <div class="chart">
+                <canvas id="chart5"></canvas>
+              </div>
+            </div>
+            <div class="box-footer">底部</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="box box-danger">
+            <div class="box-header with-border">
+              <h3 class="box-title">泡泡图</h3>
+              <div class="box-tools pull-right">
+                <button class="btn btn-box-tool" v-on:click="loadChart6()">
+                  <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="box-body">
+              <div class="chart">
+                <canvas id="chart6"></canvas>
+              </div>
+            </div>
+            <div class="box-footer">底部</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="box box-danger">
+            <div class="box-header with-border">
+              <h3 class="box-title">散列图</h3>
+              <div class="box-tools pull-right">
+                <button class="btn btn-box-tool" v-on:click="loadChart7()">
+                  <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="box-body">
+              <div class="chart">
+                <canvas id="chart7"></canvas>
+              </div>
+            </div>
+            <div class="box-footer">底部</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="box box-danger">
+            <div class="box-header with-border">
+              <h3 class="box-title">。。。</h3>
+              <div class="box-tools pull-right">
+                <button class="btn btn-box-tool" v-on:click="loadChart8()">
+                  <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="box-body">
+              <div class="chart">
+                <canvas id="chart8"></canvas>
+              </div>
+            </div>
+            <div class="box-footer">底部</div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </div>
@@ -144,9 +256,35 @@
       this.loadChart1();
       this.loadChart2();
       this.loadChart3();
+      this.loadChart4();
+      this.loadChart5();
+      this.loadChart6();
+      this.loadChart7();
+      this.loadChart8();
     },
     data: {
       parentModuleAvailable: [],
+      labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周天'],
+      data: [10, 20, 30, 40, 50, 80, 70],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(255, 159, 255, 0.2)'
+      ],
+      borderColor: [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(255, 159, 255, 1)',
+      ],
+      borderWidth: 1,
     },
     methods: {
       getModule: function () {
@@ -177,31 +315,44 @@
       },
       loadChart1: function () {
         let ctx = document.getElementById("chart1").getContext('2d');
-        new Chart(ctx, {
+        let content = {
           type: 'bar',
           data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-              label: '柱状图',
-              data: [12, 19, 3, 5, 2, 3],
-              backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-              ],
-              borderWidth: 1,
-            }],
+            labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周天'],
+            datasets: [
+              {
+                label: '柱状图',
+                type: 'bar',
+                data: [10, 20, 30, 40, 50, 80, 70],
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 159, 255, 0.2)'
+                ],
+                borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)',
+                  'rgba(255, 159, 255, 1)',
+                ],
+                borderWidth: 1,
+              },
+              {
+                type: 'line',
+                label: '曲线图',
+                data: [10, 20, 30, 40, 50, 80, 70],
+                backgroundColor: '#0000ff00',
+                borderColor: '#0000ff',
+                borderWidth: 1,
+              }
+            ],
           },
           options: {
             scales: {
@@ -212,37 +363,38 @@
               }]
             }
           }
-        })
+        };
+        new Chart(ctx, content);
       },
       loadChart2: function () {
         let ctx = $("#chart2").get(0).getContext('2d');
         let content = {
-          type: '',
+          type: 'doughnut',
           data: {
-            type: 'pie',
-            data: {
-              labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周天'],
-              datasets: [{
-                label: '圆饼图',
-                data: [10, 20, 30, 40, 50, 60, 70],
-                backgroundColor: ['#ff1234', '#551234', '#88ff99', '#ff44bb', '#93fff7', '#002266', '#335588'],
-                borderColor: ['#ff123411', '#55123411', '#88ff9911', '#ff44bb11', '#93fff711', '#00226611', '#33558811'],
-                hoverBackgroundColor: ['#ff1234', '#551234', '#88ff99', '#ff44bb', '#93fff7', '#002266', '#335588'],
-                hoverBorderColor: ['#ff123411', '#55123411', '#88ff9911', '#ff44bb11', '#93fff711', '#00226611', '#33558811'],
-                borderWidth: 1,
-                hoverBorderWidth: 1,
-              }],
-            },
-            options: {
-              scales: {
-                yAxes: [{
-                  ticks: {
-                    beginAtZero: true
-                  }
-                }]
-              }
+            labels: this.labels,
+            datasets: [{
+              label: '圆饼图',
+              data: [10, 20, 30, 40, 50, 80, 70],
+              backgroundColor: this.backgroundColor,
+              borderColor: this.borderColor,
+              hoverBackgroundColor: this.borderColor,
+              hoverBorderColor: this.borderColor,
+              borderWidth: 1,
+              hoverBorderWidth: 1,
+            }],
+          },
+          option: {
+            scales: {
+              display: false,
+              yAxes: [{
+                stacked: true,
+              }, {
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
             }
-          }
+          },
         };
         new Chart(ctx, content);
       },
@@ -269,7 +421,172 @@
           }
         };
         new Chart(ctx, content);
-      }
+      },
+      loadChart4: function () {
+        let ctx = $("#chart4").get(0).getContext('2d');
+        let content = {
+          type: 'radar',
+          data: {
+            labels: this.labels,
+            datasets: [
+              {
+                label: '雷达图1',
+                type: 'radar',
+                data: this.data,
+                backgroundColor: '#0000ff11',
+                borderColor: '#0000ff',
+                borderWidth: 1,
+                fill: true,
+              },
+              {
+                label: '雷达图2',
+                type: 'radar',
+                data: [3, 90, 30, 40, 40, 80, 80],
+                backgroundColor: '#ff000011',
+                borderColor: '#ff0000',
+                borderWidth: 1,
+                fill: true,
+              }
+            ]
+
+          },
+          option: {
+            scales: {
+              display: false,
+              yAxes: [{
+                stacked: true,
+              }, {
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          },
+        };
+        new Chart(ctx, content);
+      },
+      loadChart5: function () {
+        let ctx = $("#chart5").get(0).getContext('2d');
+        let content = {
+          type: 'polarArea',
+          data: {
+            labels: this.labels,
+            datasets: [
+              {
+                label: '极区图',
+                type: 'polarArea',
+                data: this.data,
+                backgroundColor: this.backgroundColor,
+                borderColor: this.borderColor,
+                borderWidth: [1, 1, 1, 1, 1, 1, 1],
+              },
+            ]
+          },
+          option: {},
+        };
+        new Chart(ctx, content);
+      },
+      loadChart6: function () {
+        let ctx = $("#chart6").get(0).getContext('2d');
+        let content = {
+          type: 'bubble',
+          data: {
+            labels: this.labels,
+            datasets: [
+              {
+                label: '泡泡图',
+                type: 'bubble',
+                data: [{
+                  x: this.data[1],
+                  y: this.data[2],
+                  r: 20,
+                }, {
+                  x: this.data[3],
+                  y: this.data[3],
+                  r: 5,
+                }, {
+                  x: this.data[4],
+                  y: this.data[5],
+                  r: 20,
+                }, {
+                  x: this.data[6],
+                  y: this.data[5],
+                  r: 16,
+                }, {
+                  x: this.data[3],
+                  y: this.data[6],
+                  r: 18,
+                }, {
+                  x: this.data[0],
+                  y: this.data[2],
+                  r: 30,
+                }, {
+                  x: this.data[6],
+                  y: this.data[0],
+                  r: 40,
+                },],
+                backgroundColor: 'rgba(255, 159, 255, 0.2)',
+                borderColor: 'rgba(255, 159, 255, 1)',
+                borderWidth: 1,
+                radius: 10,
+              },
+            ]
+          },
+          option: {},
+        };
+        new Chart(ctx, content);
+      },
+      loadChart7: function () {
+        let ctx = $("#chart7").get(0).getContext('2d');
+        let content = {
+          type: 'scatter',
+          data: {
+            labels: this.labels,
+            datasets: [
+              {
+                label: '散列图',
+                type: 'scatter',
+                data: [{
+                  x: this.data[1],
+                  y: this.data[2],
+                }, {
+                  x: this.data[3],
+                  y: this.data[3],
+                }, {
+                  x: this.data[4],
+                  y: this.data[5],
+                }, {
+                  x: this.data[6],
+                  y: this.data[5],
+                }, {
+                  x: this.data[3],
+                  y: this.data[6],
+                }, {
+                  x: this.data[0],
+                  y: this.data[2],
+                }, {
+                  x: this.data[6],
+                  y: this.data[0],
+                },],
+                backgroundColor: 'rgba(0, 109, 255, 0.2)',
+                borderColor: 'rgba(0, 109, 255, 1)',
+                borderWidth: 1,
+              },
+            ]
+          },
+          option: {},
+        };
+        new Chart(ctx, content);
+      },
+      loadChart8: function () {
+        let ctx = $("#chart8").get(0).getContext('2d');
+        let content = {
+          type: '',
+          data: {},
+          option: {},
+        };
+        new Chart(ctx, content);
+      },
     }
 
   })
