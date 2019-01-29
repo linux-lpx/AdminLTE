@@ -91,7 +91,7 @@
           <button class="btn btn-success btn-flat" style="width: 100%" v-on:click="addTurnInTaskBox()">添加尾箱</button>
         </div>
         <div class="col-md-3">
-          <button class="btn btn-success btn-flat" style="width: 100%" v-on:click="submitTask()">添加尾箱</button>
+          <button class="btn btn-primary btn-flat" style="width: 100%" v-on:click="submitTask()">确认申请</button>
         </div>
       </div>
       <br>
@@ -216,7 +216,8 @@
               <div class="col-md-2">
                 <div class="input-group">
                   <span class="input-group-addon">总额</span>
-                  <input type="text" class="form-control" title="总额" v-model="item.sum" disabled>
+                  <input type="text" class="form-control" title="总额"
+                         v-bind:value="(item.amount * 100 * item.denomination)" disabled>
                 </div>
               </div>
               <div class="col-md-1">
@@ -267,7 +268,7 @@
               amount: 0,
               sum: null,
             }
-          ]  // 箱子中的物品
+          ]
         }
       ],
       vaults: [],
@@ -343,15 +344,15 @@
       },
       addTurnInTaskBox: function () {
         let turnInTaskBox = {
-          targetVaultCode: null,  // 目标金库
-          boxType: 1,  // 箱包类别
-          taskType: 1,  // 任务类别
-          turnInDate: null,  // 上缴日期
-          itemsType: 1,  // 物品类别
-          boxCode: null,  // 尾箱编号
-          boxIsNormal: 1,  // 尾箱状态
-          turnBackDate: null,  // 解领日期
-          contentDesc: null,  // 物品说明
+          targetVaultCode: null,
+          boxType: 1,
+          taskType: 1,
+          turnInDate: null,
+          itemsType: 1,
+          boxCode: null,
+          boxIsNormal: 1,
+          turnBackDate: null,
+          contentDesc: null,
           items: [
             {
               currency: 1,
@@ -387,9 +388,9 @@
           data: JSON.stringify(that.turnInTaskBoxes),
           success: function (data) {
             if (data.isSuccess) {
-              // TODO 成功创建任务申请
+              console.log(data.result);
             } else {
-              // TODO 创建失败
+              console.log(data.result);
             }
           },
           error: function () {
