@@ -2,7 +2,7 @@
 <html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>测试-图标测试</title>
+  <title>测试-图表测试</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
@@ -199,7 +199,7 @@
         <div class="col-md-6">
           <div class="box box-danger">
             <div class="box-header with-border">
-              <h3 class="box-title">散列图</h3>
+              <h3 class="box-title">散点图</h3>
               <div class="box-tools pull-right">
                 <button class="btn btn-box-tool" v-on:click="loadChart7()">
                   <i class="fa fa-refresh"></i>
@@ -237,15 +237,21 @@
       </div>
     </div>
   </section>
+
+  <!-- /.content-wrapper -->
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 2.4.0
+    </div>
+    <strong>Copyright &copy; 1996-2019 <a href="http://www.gooao.cn/">古鳌电子科技股份有限公司</a>.</strong> All rights
+    reserved.
+  </footer>
 </div>
 
 <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
 <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../../dist/js/adminlte.min.js"></script>
-<!-- ChartJS -->
 <script src="../../bower_components/chart.js/dist/Chart.min.js"></script>
-<!-- FastClick -->
-<script src="../../bower_components/fastclick/lib/fastclick.js"></script>
 <script src="../../js/vue.js"></script>
 <script src="constant.js"></script>
 <script>
@@ -318,39 +324,23 @@
         let content = {
           type: 'bar',
           data: {
-            labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周天'],
+            labels: this.labels,
             datasets: [
               {
                 label: '柱状图',
                 type: 'bar',
-                data: [10, 20, 30, 40, 50, 80, 70],
-                backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)',
-                  'rgba(255, 159, 255, 0.2)'
-                ],
-                borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)',
-                  'rgba(255, 159, 255, 1)',
-                ],
-                borderWidth: 1,
+                data: this.data,
+                backgroundColor: this.backgroundColor,
+                borderColor: this.borderColor,
+                borderWidth: this.borderWidth,
               },
               {
                 type: 'line',
                 label: '曲线图',
-                data: [10, 20, 30, 40, 50, 80, 70],
+                data: this.data,
                 backgroundColor: '#0000ff00',
                 borderColor: '#0000ff',
-                borderWidth: 1,
+                borderWidth: this.borderWidth,
               }
             ],
           },
@@ -374,7 +364,7 @@
             labels: this.labels,
             datasets: [{
               label: '圆饼图',
-              data: [10, 20, 30, 40, 50, 80, 70],
+              data: this.data,
               backgroundColor: this.backgroundColor,
               borderColor: this.borderColor,
               hoverBackgroundColor: this.borderColor,
@@ -403,10 +393,10 @@
         let content = {
           type: 'line',
           data: {
-            labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周天'],
+            labels: this.labels,
             datasets: [{
               label: '曲线图',
-              data: [10, 20, 30, 40, 50, 80, 70],
+              data: this.data,
               backgroundColor: '#0000ff11',
               borderColor: '#0000ff',
               borderWidth: 1,
@@ -544,7 +534,7 @@
             labels: this.labels,
             datasets: [
               {
-                label: '散列图',
+                label: '散点图',
                 type: 'scatter',
                 data: [{
                   x: this.data[1],
@@ -588,7 +578,6 @@
         new Chart(ctx, content);
       },
     }
-
   })
 </script>
 
