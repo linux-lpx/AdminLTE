@@ -317,11 +317,17 @@
         $.ajax({
           url: getUrlLocal() + 'box/info/' + that.code,
           type: 'get',
-          success: function (result) {
-            // TODO 这里的result还没有用新的返回格式
-            console.log(result);
-            that.data = JSON.parse(result).data;
-            that.records = JSON.parse(result).data.records;
+          success: function (data) {
+            if (data.isSuccess) {
+              console.log(data.result);
+              that.data = JSON.parse(data.result).data;
+              that.records = JSON.parse(data.result).data.records;
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
           }
         });
       }

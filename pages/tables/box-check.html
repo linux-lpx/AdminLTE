@@ -302,11 +302,14 @@
           $.ajax({
             url: getUrlLocal() + 'box/check/' + that.handoverType + '/' + code,
             type: 'get',
-            success: function (result) {
-              // TODO 这里的result还没有用新的返回格式
-              console.log(result);
-              that.data = JSON.parse(result);
-              that.setBoxes(that.data)
+            success: function (data) {
+              if (data.isSuccess) {
+                console.log(data.result);
+                that.data = JSON.parse(data.result);
+                that.setBoxes(that.data)
+              } else {
+                alert(data.result);
+              }
             },
             error: function () {
               alert('与服务器通信失败，请联系管理员');
@@ -321,7 +324,11 @@
           url: getUrlLocal() + 'box/checkOver/' + that.handoverType + '/' + code,
           type: 'get',
           success: function (data) {
-            alert('清点结束' + data.result);
+            if (data.isSuccess) {
+              alert('清点结束' + data.result);
+            } else {
+              alert(data.result);
+            }
           },
           error: function () {
             alert('与服务器通信失败，请联系管理员');
