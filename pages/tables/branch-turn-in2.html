@@ -408,7 +408,7 @@
       submitTask: function () {
         let that = this;
         $.ajax({
-          url: getUrlLocal() + 'task/turnInTask',
+          url: getUrlLocal() + 'task/branchTurnInApply',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(that.turnInTaskBoxes),

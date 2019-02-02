@@ -70,24 +70,37 @@
   <section class="content-wrapper">
     <div class="content-header">
       <h1>角色管理</h1>
+      <br>
+      <div class="btn-group">
+        <button class="btn btn-success btn-flat" tabindex="-1"
+                data-toggle="modal" data-target="#roleModal" v-on:click="clearInputData()">添加角色
+        </button>
+        <button class="btn btn-info btn-flat" tabindex="-1"
+                data-toggle="modal" v-bind:data-target="targetModal" v-on:click="updateRole()">更新角色
+        </button>
+        <button class="btn btn-danger btn-flat" v-on:click="deleteRole()">删除角色</button>
+      </div>
+      <button class="btn btn-warning btn-flat" tabindex="-1"
+              data-toggle="modal" data-target="#moduleToRoleModal" v-on:click="updateRole(1)">权限设置
+      </button>
     </div>
     <div class="content">
       <div class="box box-solid box-primary">
         <div class="box-header">
           <div class="box-title">
             角色列表
-            <div class="btn-group">
-              <button class="btn btn-success btn-sm" tabindex="-1"
-                      data-toggle="modal" data-target="#roleModal" v-on:click="clearInputData()">添加角色
-              </button>
-              <button class="btn btn-info btn-sm" tabindex="-1"
-                      data-toggle="modal" v-bind:data-target="targetModal" v-on:click="updateRole()">更新角色
-              </button>
-              <button class="btn btn-danger btn-sm" v-on:click="deleteRole()">删除角色</button>
-            </div>
-            <button class="btn btn-warning btn-sm" tabindex="-1"
-                    data-toggle="modal" data-target="#moduleToRoleModal" v-on:click="updateRole(1)">权限设置
-            </button>
+            <!--<div class="btn-group">-->
+              <!--<button class="btn btn-success btn-sm" tabindex="-1"-->
+                      <!--data-toggle="modal" data-target="#roleModal" v-on:click="clearInputData()">添加角色-->
+              <!--</button>-->
+              <!--<button class="btn btn-info btn-sm" tabindex="-1"-->
+                      <!--data-toggle="modal" v-bind:data-target="targetModal" v-on:click="updateRole()">更新角色-->
+              <!--</button>-->
+              <!--<button class="btn btn-danger btn-sm" v-on:click="deleteRole()">删除角色</button>-->
+            <!--</div>-->
+            <!--<button class="btn btn-warning btn-sm" tabindex="-1"-->
+                    <!--data-toggle="modal" data-target="#moduleToRoleModal" v-on:click="updateRole(1)">权限设置-->
+            <!--</button>-->
           </div>
           <!--模态框-角色编辑-->
           <div class="modal fade" style="color: #1b6d85" id="roleModal" role="dialog">
