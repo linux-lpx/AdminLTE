@@ -97,17 +97,8 @@
           // xhrFields: {withCredentials: true},
           success: function (data) {
             if (data.isSuccess) {
-              console.log(data);
-              if (data.result === '登录成功！') {
-                // TODO 跳转到主页面
-                alert(data.result);
-                document.cookie = 'isLogin=' + "true";
-                document.cookie = 'user=' + that.inputData.loginName;
-                document.cookie = 'expires=60';
-                window.location.href = './system-user.html';
-              } else if (data.result === '用户名或密码错误！') {
-                alert(data.result);
-              }
+              sessionStorage.setItem('loginUser', data.result);
+              window.location.href = './system-user.html';
             } else {
               alert(data.result);
             }
@@ -118,7 +109,6 @@
         });
       }
     }
-
   });
 
 </script>

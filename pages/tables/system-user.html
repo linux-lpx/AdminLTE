@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">
   <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../../dist/css/bvms.css">
 </head>
 
 <!--body里面的class一定要设置样式，不然是白色的-->
@@ -70,24 +71,25 @@
   <section class="content-wrapper">
     <div class="content-header">
       <h1>用户管理</h1>
+      <br>
+      <div class="btn-group">
+        <button class="btn btn-success btn-flat" tabindex="-1"
+                data-toggle="modal" data-target="#userModal" v-on:click="clearInputData()">添加用户
+        </button>
+        <button class="btn btn-info btn-flat" tabindex="-1"
+                data-toggle="modal" data-target="#userModal" v-on:click="updateUser()">更新用户
+        </button>
+        <button class="btn btn-danger btn-flat" v-on:click="deleteUser()">删除用户</button>
+      </div>
+      <button class="btn btn-warning btn-flat" tabindex="-1"
+              data-toggle="modal" data-target="#userAllotRoleModal" v-on:click="updateUser(1)">分配角色
+      </button>
     </div>
     <div class="content">
-      <div class="box box-solid box-primary">
+      <div class="box box-solid box-primary box-flat">
         <div class="box-header">
           <div class="box-title">
             用户列表
-            <div class="btn-group">
-              <button class="btn btn-success btn-sm" tabindex="-1"
-                      data-toggle="modal" data-target="#userModal" v-on:click="clearInputData()">添加用户
-              </button>
-              <button class="btn btn-info btn-sm" tabindex="-1"
-                      data-toggle="modal" data-target="#userModal" v-on:click="updateUser()">更新用户
-              </button>
-              <button class="btn btn-danger btn-sm" v-on:click="deleteUser()">删除用户</button>
-            </div>
-            <button class="btn btn-warning btn-sm" tabindex="-1"
-                    data-toggle="modal" data-target="#userAllotRoleModal" v-on:click="updateUser(1)">分配角色
-            </button>
           </div>
           <!--用户添加更新模态框-->
           <div class="modal fade" style="color: #1b6d85" id="userModal" role="dialog">
@@ -233,15 +235,17 @@
   new Vue({
     el: '#content_id',
     mounted: function () {
+      if (this.loginUser === null) {
+        window.location.href = './bvms-login.html';
+      }
       this.getModule();
       this.getUser();
       this.getRole();
       this.getBank();
-      console.log(localStorage.key(0));
-      console.log(localStorage.getItem(""));
-      console.log(document.cookie);
     },
     data: {
+      loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
+      sessionStorageValue: '',
       parentModuleAvailable: [],
       users: [],
       roles: [],
@@ -271,7 +275,7 @@
       getModule: function () {
         let that = this;
         $.ajax({
-          url: getUrlLocal() + 'system_module/all',
+          url: getUrlLocal() + 'system_module/all' + '?loginName=' + that.loginUser.loginName,
           type: 'GET',
           success: function (data) {
             if (data.isSuccess) {
@@ -314,7 +318,7 @@
       getUser: function () {
         let that = this;
         $.ajax({
-          url: getIpLocal() + getPort() + getPath() + 'system_user/all',
+          url: getUrlLocal() + 'system_user/all',
           type: 'get',
           // xhrFields: {withCredentials: true},
           success: function (data) {

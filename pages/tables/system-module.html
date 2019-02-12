@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">
   <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../../dist/css/bvms.css">
 </head>
 
 <!--body里面的class一定要设置样式，不然是白色的-->
@@ -254,38 +255,14 @@
       },
       addModule: function () {
         let that = this;
-        if (this.checkName()) {
-          $.ajax({
-            url: getIpTxy() + getPort() + getPath() + 'system_module/add',
-            type: 'post',
-            contentType: 'application/json',
-            data: JSON.stringify(that.moduleInput),
-            success: function (data) {
-              if (data.isSuccess) {
-                that.getModule();
-              } else {
-                alert(data.result);
-              }
-            },
-            error: function () {
-              alert('与服务器通信失败，请联系管理员');
-            }
-          });
-        } else {
-          alert("模块名已被使用，请重新填写！");
-        }
-      },
-      checkName: function () {
-        let that = this;
         $.ajax({
-          url: getIpTxy() + getPort() + getPath() + 'system_module/checkName/' + that.moduleInput.name,
-          type: 'get',
+          url: getIpTxy() + getPort() + getPath() + 'system_module/add',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(that.moduleInput),
           success: function (data) {
             if (data.isSuccess) {
-              if (data.result === 'used') {
-              } else if (data.result === 'unused') {
-                return true;
-              }
+              that.getModule();
             } else {
               alert(data.result);
             }
@@ -294,7 +271,6 @@
             alert('与服务器通信失败，请联系管理员');
           }
         });
-        return true;
       },
       updateModule: function () {
         // TODO 这里的提示还要完善
