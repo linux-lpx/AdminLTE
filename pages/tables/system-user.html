@@ -316,6 +316,7 @@
         $.ajax({
           url: getIpLocal() + getPort() + getPath() + 'system_user/all',
           type: 'get',
+          // xhrFields: {withCredentials: true},
           success: function (data) {
             if (data.isSuccess) {
               that.users = data.result;

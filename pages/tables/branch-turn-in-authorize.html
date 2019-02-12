@@ -158,10 +158,6 @@
                               v-model="turnInTaskBoxes[boxIndex].items[0].itemDesc" disabled></textarea>
                   </div>
                 </div>
-                <!--<div class="modal-footer">-->
-                <!--<button class="btn btn-danger" data-dismiss="modal">取消</button>-->
-                <!--<button class="btn btn-primary" data-dismiss="modal">确定</button>-->
-                <!--</div>-->
               </div>
             </div>
           </div>
@@ -254,25 +250,7 @@
         return currencyDesc;
       },
       showCashItemSum: function (currency, denomination, amount) {
-        let currencyDetail;
-        switch (currency) {
-          case 1:
-            currencyDetail = '人民币';
-            break;
-          case 2:
-            currencyDetail = '美元';
-            break;
-          case 3:
-            currencyDetail = '欧元';
-            break;
-          case 4:
-            currencyDetail = '英镑';
-            break;
-          default:
-            currencyDetail = '人民币';
-            break;
-        }
-        return (amount * denomination * 100) + currencyDetail;
+        return (amount * denomination * 100) + this.showCurrency(currency);
       },
     }
 

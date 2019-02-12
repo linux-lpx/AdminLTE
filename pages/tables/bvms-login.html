@@ -94,6 +94,7 @@
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(that.inputData),
+          // xhrFields: {withCredentials: true},
           success: function (data) {
             if (data.isSuccess) {
               console.log(data);
