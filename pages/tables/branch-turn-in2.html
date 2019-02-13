@@ -35,7 +35,8 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a></li>
+          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -101,7 +102,7 @@
         </div>
       </div>
       <br>
-      <div class="box box-primary box-solid" v-for="(turnInTaskBox, boxIndex) in turnInTaskBoxes">
+      <div class="box box-primary box-solid box-flat" v-for="(turnInTaskBox, boxIndex) in turnInTaskBoxes">
         <div class="box-header">
           <div class="box-title">款箱：{{turnInTaskBox.boxCode}}</div>
           <div class="box-tools pull-right">
@@ -362,6 +363,9 @@
           return;
         }
         let turnInTaskBox = {
+          applyBankCode: this.loginUser.departmentCode, // 申请机构
+          applyUserId: this.loginUser.id, // 申请人id
+          applyUserLoginName: this.loginUser.loginName, // 申请人登录名
           targetVaultCode: null,
           boxType: 1,
           taskType: 1,
@@ -420,6 +424,11 @@
       },
       submitTask: function () {
         let that = this;
+        that.turnInTaskBoxes.forEach(function (turnInTaskBoxe) {
+          turnInTaskBoxe.applyBankCode = that.loginUser.departmentCode;
+          turnInTaskBoxe.applyUserId = that.loginUser.id; // 申请人id
+          turnInTaskBoxe.applyUserLoginName = that.loginUser.loginName; // 申请人登录名
+        });
         $.ajax({
           url: getUrlLocal() + 'task/branchTurnInApply',
           type: 'post',

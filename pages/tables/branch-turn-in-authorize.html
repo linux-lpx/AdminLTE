@@ -107,9 +107,9 @@
             </tr>
             <tr v-for="(box, index) in turnInTaskBoxes">
               <td><input type="checkbox" title="选择"></td>
-              <td></td>
+              <td>{{box.applyBankCode}}</td>
               <td>{{box.targetBankCode}}</td>
-              <td></td>
+              <td>{{box.applyUserLoginName}}</td>
               <td>{{box.createTime}}</td>
               <td>{{box.items[0].boxOuterCode}}</td>
               <td></td>
