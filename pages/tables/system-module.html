@@ -71,22 +71,23 @@
   <section class="content-wrapper">
     <div class="content-header">
       <h1>系统模块管理</h1>
+      <br>
+      <div class="btn-group">
+        <button class="btn btn-success btn-flat" tabindex="-1"
+                data-toggle="modal" data-target="#modalModule" v-on:click="clearInputData()">添加模块
+        </button>
+        <button class="btn btn-info btn-flat" tabindex="-1"
+                data-toggle="modal" data-target="#modalModule" v-on:click="updateModule()">更新模块
+        </button>
+        <button class="btn btn-danger btn-flat" v-on:click="deleteModule()">删除模块</button>
+      </div>
+      <button class="btn btn-warning btn-flat" v-on:click="exportExcel()">导出为xlsx</button>
     </div>
     <div class="content">
       <div class="box box-solid box-primary">
         <div class="box-header">
           <div class="box-title">
             模块列表
-            <div class="btn-group">
-              <button class="btn btn-success btn-sm" tabindex="-1"
-                      data-toggle="modal" data-target="#modalModule" v-on:click="clearInputData()">添加模块
-              </button>
-              <button class="btn btn-info btn-sm" tabindex="-1"
-                      data-toggle="modal" data-target="#modalModule" v-on:click="updateModule()">更新模块
-              </button>
-              <button class="btn btn-danger btn-sm" v-on:click="deleteModule()">删除模块</button>
-            </div>
-            <button class="btn btn-warning btn-sm" v-on:click="exportExcel()">导出为xlsx</button>
           </div>
           <!--模态框-->
           <div class="modal fade" id="modalModule" role="dialog">
@@ -203,9 +204,13 @@
   new Vue({
     el: '#content_id',
     mounted: function () {
+      if (this.loginUser === null) {
+        window.location.href = './bvms-login.html';
+      }
       this.getModule();
     },
     data: {
+      loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
       modules: [],
       parentModuleAll: [],
       parentModuleAvailable: [],
@@ -229,8 +234,13 @@
     methods: {
       getModule: function () {
         let that = this;
+        let url = getUrlLocal() + 'system_module/all' + '?loginName=' + that.loginUser.loginName + '&id=' +
+          that.loginUser.id;
+        if (that.loginUser.loginName === 'system') {
+          url = getUrlLocal() + 'system_module/allModule';
+        }
         $.ajax({
-          url: getIpTxy() + getPort() + getPath() + 'system_module/all',
+          url: url,
           type: 'GET',
           success: function (data) {
             if (data.isSuccess) {

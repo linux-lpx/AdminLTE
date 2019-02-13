@@ -187,10 +187,14 @@
   new Vue({
     el: '#content_id',
     mounted: function () {
+      if (this.loginUser === null) {
+        window.location.href = './bvms-login.html';
+      }
       this.getModule();
       this.getBox();
     },
     data: {
+      loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
       parentModuleAvailable: [],
       boxes: [],
       boxInput: {
@@ -238,7 +242,9 @@
       getModule: function () {
         let that = this;
         $.ajax({
-          url: getIpTxy() + getPort() + getPath() + 'system_module/all',
+          url: getUrlLocal() + 'system_module/all' + '?loginName=' + that.loginUser.loginName + '&id=' +
+            that.loginUser.id,
+          // url: getUrlLocal() + 'system_module/all',
           type: 'GET',
           success: function (data) {
             if (data.isSuccess) {

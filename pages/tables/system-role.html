@@ -90,18 +90,6 @@
         <div class="box-header">
           <div class="box-title">
             角色列表
-            <!--<div class="btn-group">-->
-              <!--<button class="btn btn-success btn-sm" tabindex="-1"-->
-                      <!--data-toggle="modal" data-target="#roleModal" v-on:click="clearInputData()">添加角色-->
-              <!--</button>-->
-              <!--<button class="btn btn-info btn-sm" tabindex="-1"-->
-                      <!--data-toggle="modal" v-bind:data-target="targetModal" v-on:click="updateRole()">更新角色-->
-              <!--</button>-->
-              <!--<button class="btn btn-danger btn-sm" v-on:click="deleteRole()">删除角色</button>-->
-            <!--</div>-->
-            <!--<button class="btn btn-warning btn-sm" tabindex="-1"-->
-                    <!--data-toggle="modal" data-target="#moduleToRoleModal" v-on:click="updateRole(1)">权限设置-->
-            <!--</button>-->
           </div>
           <!--模态框-角色编辑-->
           <div class="modal fade" style="color: #1b6d85" id="roleModal" role="dialog">
@@ -222,10 +210,15 @@
   new Vue({
     el: '#content_id',
     mounted: function () {
+      if (this.loginUser === null) {
+        window.location.href = './bvms-login.html';
+      }
       this.getModule();
       this.getRole();
     },
     data: {
+      loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
+
       // 侧边栏目录模块对应的数据
       parentModuleAvailable: [],
 
@@ -271,8 +264,13 @@
     methods: {
       getModule: function () {
         let that = this;
+        let url = getUrlLocal() + 'system_module/all' + '?loginName=' + that.loginUser.loginName + '&id=' +
+          that.loginUser.id;
+        if (that.loginUser.loginName === 'system') {
+          url = getUrlLocal() + 'system_module/allModule';
+        }
         $.ajax({
-          url: getIpTxy() + getPort() + getPath() + 'system_module/all',
+          url: url,
           type: 'GET',
           success: function (data) {
             if (data.isSuccess) {
