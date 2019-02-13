@@ -26,7 +26,7 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="#" data-toggle="control-sidebar"><i class="fa fa-gears">&numsp;</i></a></li>
+          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a></li>
         </ul>
       </div>
     </nav>
@@ -230,7 +230,8 @@
 <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../../dist/js/adminlte.min.js"></script>
 <script src="../../js/vue.js"></script>
-<script src="../../dist/js/pages/constant.js"></script>
+<script src="../../dist/js/pages/bvms-constant.js"></script>
+<script src="../../dist/js/pages/bvms-system.js"></script>
 <script>
   new Vue({
     el: '#content_id',
@@ -490,6 +491,10 @@
             alert('与服务器通信失败，请联系管理员');
           }
         });
+      },
+      logout: function () {
+        sessionStorage.clear();
+        window.location.href = './bvms-login.html';
       }
     }
   })
