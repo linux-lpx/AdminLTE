@@ -77,10 +77,10 @@
       <br>
       <div class="row">
         <div class="col-md-2">
-          <button class="btn btn-success btn-flat" style="width: 100%;">授权</button>
+          <button class="btn btn-success btn-flat" style="width: 100%;" v-on:click="authorizeApplyAll(2)">批量授权</button>
         </div>
         <div class="col-md-2">
-          <button class="btn btn-danger btn-flat" style="width: 100%">拒绝</button>
+          <button class="btn btn-danger btn-flat" style="width: 100%" v-on:click="authorizeApplyAll(3)">批量拒绝</button>
         </div>
       </div>
     </div>
@@ -108,7 +108,7 @@
               <th>详情</th>
             </tr>
             <tr v-for="(box, index) in turnInTaskBoxes">
-              <td><input type="checkbox" title="选择" v-model="selectTaskBoxIndex"></td>
+              <td><input type="checkbox" title="选择" v-bind:value="index" v-model="selectTaskBoxIndex"></td>
               <td>{{box.applyBankCode}}</td>
               <td>{{box.targetBankCode}}</td>
               <td>{{box.applyUserLoginName}}</td>
@@ -235,6 +235,12 @@
           success: function (data) {
             if (data.isSuccess) {
               that.turnInTaskBoxes = JSON.parse(data.result);
+              // 先清空复选框勾选
+              that.selectTaskBoxIndex = [];
+              for (let i = 0; i < that.turnInTaskBoxes.length; i++) {
+                // 再依次勾选
+                that.selectTaskBoxIndex.push(i);
+              }
             } else {
               console.log(data.result);
             }
@@ -278,6 +284,41 @@
         };
         $.ajax({
           url: getUrlLocal() + 'task/branchTurnInAuthorize',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(info),
+          success: function (data) {
+            if (data.isSuccess) {
+              alert(data.result);
+              that.getTurnInTaskBoxes();
+            } else {
+              alert(data.result);
+              that.getTurnInTaskBoxes();
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
+      authorizeApplyAll: function (authorizeType) {
+        let that = this;
+        if (that.selectTaskBoxIndex.length === 0) {
+          alert('未选择任何任务箱！');
+          return;
+        }
+        let taskCodes = that.selectTaskBoxIndex.map(function (value, index, array) {
+          return that.turnInTaskBoxes[value].code;
+        });
+        console.log(taskCodes);
+        let info = {
+          loginName: that.loginUser.loginName,
+          id: that.loginUser.id,
+          taskCodes: taskCodes.toString(),
+          authorizeType: authorizeType,
+        };
+        $.ajax({
+          url: getUrlLocal() + 'task/branchTurnInAuthorizeAll',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(info),
