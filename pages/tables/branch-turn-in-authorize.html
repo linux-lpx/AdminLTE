@@ -97,7 +97,8 @@
               <th>申请人</th>
               <th>申请时间</th>
               <th>尾箱编号</th>
-              <th>尾箱类别</th>
+              <th>箱包类别</th>
+              <th>尾箱任务类别</th>
               <th>尾箱状态</th>
               <th>物品类别</th>
               <th>调拨时间</th>
@@ -112,7 +113,8 @@
               <td>{{box.applyUserLoginName}}</td>
               <td>{{box.createTime}}</td>
               <td>{{box.items[0].boxOuterCode}}</td>
-              <td></td>
+              <td>{{box.items[0].boxType === 1 ? '箱' : '包'}}</td>
+              <td>{{box.items[0].boxTaskType === 1 ? '上缴' : '寄存'}}</td>
               <td>正常</td>
               <td>{{box.items[0].type === 1 ? '现金' : '非现金'}}</td>
               <td></td>

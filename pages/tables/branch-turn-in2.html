@@ -149,7 +149,7 @@
             <div class="col-md-3">
               <div class="input-group">
                 <span class="input-group-addon">任务类别</span>
-                <select class="form-control" title="选择任务类别" v-model.number="turnInTaskBox.taskType">
+                <select class="form-control" title="选择任务类别" v-model.number="turnInTaskBox.boxTaskType">
                   <option value="1">上缴</option>
                   <option value="0">寄存</option>
                 </select>
@@ -266,12 +266,12 @@
       turnInTaskBoxes: [
         {
           targetVaultCode: null,  // 目标金库
-          boxType: 1,  // 箱包类别
-          taskType: 1,  // 任务类别
+          boxType: 1,  // 箱包类别 【1-箱】，【0-包】
+          boxTaskType: 1,  // 任务类别 【1-上缴】，【0-寄存】
           turnInDate: null,  // 上缴日期
-          itemsType: 1,  // 物品类别
+          itemsType: 1,  // 物品类别 【1-现金】，【0-非现金】
           boxCode: null,  // 尾箱编号
-          boxIsNormal: 1,  // 尾箱状态
+          boxIsNormal: 1,  // 尾箱状态 【1-正常】，【0-非正常】
           turnBackDate: null,  // 解领日期
           contentDesc: null,  // 物品说明
           items: [
@@ -368,7 +368,7 @@
           applyUserLoginName: this.loginUser.loginName, // 申请人登录名
           targetVaultCode: null,
           boxType: 1,
-          taskType: 1,
+          boxTaskType: 1,
           turnInDate: null,
           itemsType: 1,
           boxCode: null,
@@ -442,7 +442,7 @@
                 {
                   targetVaultCode: null,
                   boxType: 1,
-                  taskType: 1,
+                  boxTaskType: 1,
                   turnInDate: null,
                   itemsType: 1,
                   boxCode: null,
