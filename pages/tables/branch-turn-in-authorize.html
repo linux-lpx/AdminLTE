@@ -307,7 +307,7 @@
           alert('未选择任何任务箱！');
           return;
         }
-        let taskCodes = that.selectTaskBoxIndex.map(function (value, index, array) {
+        let taskCodes = that.selectTaskBoxIndex.map(function (value) {
           return that.turnInTaskBoxes[value].code;
         });
         console.log(taskCodes);
