@@ -26,7 +26,8 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a></li>
+          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -84,7 +85,7 @@
       </div>
     </div>
     <div class="content">
-      <div class="box box-solid box-primary">
+      <div class="box box-solid box-primary box-flat">
         <div class="box-header">
           <div class="box-title">网点上缴授权</div>
         </div>
@@ -101,13 +102,13 @@
               <th>尾箱任务类别</th>
               <th>尾箱状态</th>
               <th>物品类别</th>
-              <th>调拨时间</th>
+              <th>解领时间</th>
               <th>授权</th>
               <th>拒绝</th>
               <th>详情</th>
             </tr>
             <tr v-for="(box, index) in turnInTaskBoxes">
-              <td><input type="checkbox" title="选择"></td>
+              <td><input type="checkbox" title="选择" v-model="selectTaskBoxIndex"></td>
               <td>{{box.applyBankCode}}</td>
               <td>{{box.targetBankCode}}</td>
               <td>{{box.applyUserLoginName}}</td>
@@ -117,12 +118,16 @@
               <td>{{box.items[0].boxTaskType === 1 ? '上缴' : '寄存'}}</td>
               <td>正常</td>
               <td>{{box.items[0].type === 1 ? '现金' : '非现金'}}</td>
-              <td></td>
+              <td>time</td>
               <td>
-                <button class="btn btn-success btn-sm btn-flat">授权</button>
+                <button class="btn btn-success btn-sm btn-flat"
+                        v-on:click="authorizeApply(box.code, 2)">授权
+                </button>
               </td>
               <td>
-                <button class="btn btn-danger btn-sm btn-flat">拒绝</button>
+                <button class="btn btn-danger btn-sm btn-flat"
+                        v-on:click="authorizeApply(box.code, 3)">拒绝
+                </button>
               </td>
               <td>
                 <button class="btn btn-primary btn-sm btn-flat" data-toggle="modal" data-target="#itemsModal"
@@ -132,7 +137,7 @@
             </tr>
           </table>
           <!--任务箱中内容的模态框-->
-          <div class="modal fade" style="color: #1b6d85" id="itemsModal" role="dialog">
+          <div class="modal fade" style="color: #1b6d85" id="itemsModal" role="dialog" v-if="turnInTaskBoxes.length > 0">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -191,6 +196,7 @@
       parentModuleAvailable: [],
       turnInTaskBoxes: [],
       boxIndex: 0,
+      selectTaskBoxIndex: [],
     },
     methods: {
       getModule: function () {
@@ -224,7 +230,7 @@
       getTurnInTaskBoxes: function () {
         let that = this;
         $.ajax({
-          url: getUrlLocal() + 'task/branchTurnInAuthorize',
+          url: getUrlLocal() + 'task/branchTurnInApplyInfo' + '?departmentCode=' + that.loginUser.departmentCode,
           type: 'get',
           success: function (data) {
             if (data.isSuccess) {
@@ -262,9 +268,35 @@
       showCashItemSum: function (currency, denomination, amount) {
         return (amount * denomination * 100) + this.showCurrency(currency);
       },
+      authorizeApply: function (code, authorizeType) {
+        let that = this;
+        let info = {
+          loginName: that.loginUser.loginName,
+          id: that.loginUser.id,
+          taskCode: code,
+          authorizeType: authorizeType,
+        };
+        $.ajax({
+          url: getUrlLocal() + 'task/branchTurnInAuthorize',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(info),
+          success: function (data) {
+            if (data.isSuccess) {
+              alert(data.result);
+              that.getTurnInTaskBoxes();
+            } else {
+              alert(data.result);
+              that.getTurnInTaskBoxes();
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
     }
-
-  })
+  });
 </script>
 
 </body>
