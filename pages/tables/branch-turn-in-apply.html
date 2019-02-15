@@ -52,8 +52,8 @@
           <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>支行金库1管理员</p>
-          <a href="#"><i class="fa fa-circle text-success">&numsp;</i> Online</a>
+          <p>{{loginUser.loginName}}</p>
+          <a href="#"><i class="fa fa-circle text-success">&numsp;</i>{{loginUser.name}}</a>
         </div>
       </div>
 
@@ -115,8 +115,9 @@
         <div class="box-body">
           <div class="row">
             <div class="col-md-3">
-              <div class="input-group">
-                <span class="input-group-addon">上缴金库</span>
+              <div class="input-group" v-bind:class="{'has-error' : turnInTaskBox.targetVaultCode === null}">
+                <span class="input-group-addon"
+                      v-bind:class="{'input-error' : turnInTaskBox.targetVaultCode === null}">上缴金库</span>
                 <select class="form-control" title="选择上缴金库" v-model="turnInTaskBox.targetVaultCode">
                   <option v-for="vault in vaults" v-bind:value="vault.code">{{vault.name}}</option>
                 </select>
@@ -139,8 +140,9 @@
                 </select>
               </div>
               <br>
-              <div class="input-group">
-                <span class="input-group-addon">尾箱编号</span>
+              <div class="input-group"  v-bind:class="{'has-error' : turnInTaskBox.boxCode === null}">
+                <span class="input-group-addon"
+                      v-bind:class="{'input-error' : turnInTaskBox.boxCode === null}">尾箱编号</span>
                 <select class="form-control" title="选择尾箱编号" v-model="turnInTaskBox.boxCode">
                   <option v-for="box in boxes" v-bind:value="box.outerCode">{{box.outerCode}}</option>
                 </select>
@@ -164,13 +166,17 @@
               </div>
             </div>
             <div class="col-md-3">
-              <div class="input-group">
-                <span class="input-group-addon">上缴日期</span>
+              <div class="input-group"
+                   v-bind:class="{'has-error' : turnInTaskBox.turnInDate === null || turnInTaskBox.turnInDate === ''}">
+                <span class="input-group-addon"
+                      v-bind:class="{'input-error' : turnInTaskBox.turnInDate === null || turnInTaskBox.turnInDate === ''}">上缴日期</span>
                 <input type="date" class="form-control" title="选择上缴日期" v-model="turnInTaskBox.turnInDate">
               </div>
               <br>
-              <div class="input-group">
-                <span class="input-group-addon">解领日期</span>
+              <div class="input-group"
+                   v-bind:class="{'has-error' : turnInTaskBox.turnBackDate === null || turnInTaskBox.turnBackDate === ''}">
+                <span class="input-group-addon"
+                      v-bind:class="{'input-error' : turnInTaskBox.turnBackDate === null || turnInTaskBox.turnBackDate === ''}">解领日期</span>
                 <input type="date" class="form-control" title="选择解领日期" v-model="turnInTaskBox.turnBackDate">
               </div>
             </div>
@@ -215,8 +221,9 @@
                 </div>
               </div>
               <div class="col-md-3">
-                <div class="input-group">
-                  <span class="input-group-addon" title="每把包含纸币100张">数量（把）</span>
+                <div class="input-group"  v-bind:class="{'has-error' : item.amount < 1}">
+                  <span class="input-group-addon" title="每把包含纸币100张"
+                        v-bind:class="{'input-error' : item.amount < 1}">数量（把）</span>
                   <input type="number" class="form-control" v-model.number="item.amount" placeholder="请输入把数信息">
                 </div>
               </div>
@@ -291,10 +298,13 @@
     methods: {
       getModule: function () {
         let that = this;
+        let url = getUrlLocal() + 'system_module/all' + '?loginName=' + that.loginUser.loginName + '&id=' +
+          that.loginUser.id;
+        if (that.loginUser.loginName === 'system') {
+          url = getUrlLocal() + 'system_module/allModule';
+        }
         $.ajax({
-          url: getUrlLocal() + 'system_module/all' + '?loginName=' + that.loginUser.loginName + '&id=' +
-            that.loginUser.id,
-          // url: getUrlLocal() + 'system_module/all',
+          url: url,
           type: 'GET',
           success: function (data) {
             if (data.isSuccess) {
@@ -424,6 +434,12 @@
       },
       submitTask: function () {
         let that = this;
+        console.log(Object.values(that.turnInTaskBoxes[0]));
+        if (that.turnInTaskBoxes.length < 1) {
+          alert('没有要上缴的箱子，请重新申请！');
+          return;
+        }
+        // TODO 控件校验完成一半（现在是空的控件会有红色提示，但是仍然可以提交，下一步实现不可以提交）
         that.turnInTaskBoxes.forEach(function (turnInTaskBoxe) {
           turnInTaskBoxe.applyBankCode = that.loginUser.departmentCode;
           turnInTaskBoxe.applyUserId = that.loginUser.id; // 申请人id

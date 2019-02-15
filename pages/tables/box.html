@@ -241,10 +241,13 @@
     methods: {
       getModule: function () {
         let that = this;
+        let url = getUrlLocal() + 'system_module/all' + '?loginName=' + that.loginUser.loginName + '&id=' +
+          that.loginUser.id;
+        if (that.loginUser.loginName === 'system') {
+          url = getUrlLocal() + 'system_module/allModule';
+        }
         $.ajax({
-          url: getUrlLocal() + 'system_module/all' + '?loginName=' + that.loginUser.loginName + '&id=' +
-            that.loginUser.id,
-          // url: getUrlLocal() + 'system_module/all',
+          url: url,
           type: 'GET',
           success: function (data) {
             if (data.isSuccess) {
