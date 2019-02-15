@@ -235,7 +235,10 @@
       getTurnInTaskBoxes: function () {
         let that = this;
         $.ajax({
-          url: getUrlLocal() + 'task/branchTurnInApplyInfo' + '?departmentCode=' + that.loginUser.departmentCode,
+          url: getUrlLocal() + 'task/branchTurnInApplyInfo' +
+            '?departmentCode=' + that.loginUser.departmentCode +
+            '&taskType=' + '1' +
+            '&process=' + '1',
           type: 'get',
           success: function (data) {
             if (data.isSuccess) {

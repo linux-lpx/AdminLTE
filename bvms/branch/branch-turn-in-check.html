@@ -75,10 +75,10 @@
       <br>
       <div class="row">
         <div class="col-md-2">
-          <button class="btn btn-success btn-flat" style="width: 100%;" v-on:click="authorizeApplyAll(2)">批量审核</button>
+          <button class="btn btn-success btn-flat" style="width: 100%;" v-on:click="checkApplyAll(4)">批量审核</button>
         </div>
         <div class="col-md-2">
-          <button class="btn btn-danger btn-flat" style="width: 100%" v-on:click="authorizeApplyAll(3)">批量拒绝</button>
+          <button class="btn btn-danger btn-flat" style="width: 100%" v-on:click="checkApplyAll(5)">批量拒绝</button>
         </div>
       </div>
     </div>
@@ -102,7 +102,7 @@
               <th>尾箱任务类别</th>
               <!--<th>尾箱状态</th>-->
               <th>物品类别</th>
-              <th>授权</th>
+              <th>审核</th>
               <th>拒绝</th>
               <th>详情</th>
             </tr>
@@ -121,12 +121,12 @@
               <td>{{box.items[0].type === 1 ? '现金' : '非现金'}}</td>
               <td>
                 <button class="btn btn-success btn-sm btn-flat"
-                        v-on:click="authorizeApply(box.code, 2)">授权
+                        v-on:click="checkApply(box.code, 4)">审核
                 </button>
               </td>
               <td>
                 <button class="btn btn-danger btn-sm btn-flat"
-                        v-on:click="authorizeApply(box.code, 3)">拒绝
+                        v-on:click="checkApply(box.code, 5)">拒绝
                 </button>
               </td>
               <td>
@@ -233,7 +233,10 @@
       getTurnInTaskBoxes: function () {
         let that = this;
         $.ajax({
-          url: getUrlLocal() + 'task/branchTurnInApplyInfo' + '?departmentCode=' + that.loginUser.departmentCode,
+          url: getUrlLocal() + 'task/branchTurnInApplyInfo' +
+            '?departmentCode=' + that.loginUser.departmentCode +
+            '&taskType=' + '1' +
+            '&process=' + '2',
           type: 'get',
           success: function (data) {
             if (data.isSuccess) {
@@ -277,16 +280,16 @@
       showCashItemSum: function (currency, denomination, amount) {
         return (amount * denomination * 100) + this.showCurrency(currency);
       },
-      authorizeApply: function (code, authorizeType) {
+      checkApply: function (code, checkType) {
         let that = this;
         let info = {
           loginName: that.loginUser.loginName,
           id: that.loginUser.id,
           taskCode: code,
-          authorizeType: authorizeType,
+          checkType: checkType,
         };
         $.ajax({
-          url: getUrlLocal() + 'task/branchTurnInAuthorize',
+          url: getUrlLocal() + 'task/branchTurnInCheck',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(info),
@@ -304,7 +307,7 @@
           }
         });
       },
-      authorizeApplyAll: function (authorizeType) {
+      checkApplyAll: function (checkType) {
         let that = this;
         if (that.selectTaskBoxIndex.length === 0) {
           alert('未选择任何任务箱！');
@@ -318,10 +321,10 @@
           loginName: that.loginUser.loginName,
           id: that.loginUser.id,
           taskCodes: taskCodes.toString(),
-          authorizeType: authorizeType,
+          checkType: checkType,
         };
         $.ajax({
-          url: getUrlLocal() + 'task/branchTurnInAuthorizeAll',
+          url: getUrlLocal() + 'task/branchTurnInCheckAll',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(info),
