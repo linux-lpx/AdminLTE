@@ -1,4 +1,4 @@
 function logout() {
   sessionStorage.clear();
-  window.location.href = './bvms-login.html';
+  window.location.href = '../system/bvms-login.html';
 }
