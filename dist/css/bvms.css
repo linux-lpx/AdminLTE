@@ -1,7 +1,13 @@
-.box-flat{
+.box-flat {
   border-radius: 0;
 }
 
-.input-group-addon.input-error{
+.input-group-addon.input-error {
   border-color: #a94442;
+}
+
+.breadcrumb >.breadcrumb-active {
+  font-weight: bold;
+  color: #777;
+  font-size: 16px;
 }

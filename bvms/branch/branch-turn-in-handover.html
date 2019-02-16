@@ -13,7 +13,7 @@
 
 <!--body里面的class一定要设置样式，不然是白色的-->
 <body class="hold-transition skin-blue sidebar-mini">
-<div id="content_id" class="wrapper">
+<div id="app" class="wrapper">
 
   <!--顶部导航栏-->
   <header class="main-header">
@@ -26,7 +26,8 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a></li>
+          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -73,14 +74,122 @@
       <h1>网点上缴交接</h1>
     </div>
     <div class="content">
-      <div class="box box-solid box-primary box-flat">
-        <div class="box-header">
-          <div class="box-title">网点上缴交接</div>
+      <ol class="breadcrumb" style="border-radius: 0;">
+        <li v-bind:class="{'breadcrumb-active':part1}">
+          <a href="javascript:void(0)" v-on:click="showPart(1)">押运员验证</a>
+        </li>
+        <li v-bind:class="{'breadcrumb-active':part2}">
+          <a href="javascript:void(0)" v-on:click="showPart(2)">尾箱清点/交接</a>
+        </li>
+        <li v-bind:class="{'breadcrumb-active':part3}">
+          <a href="javascript:void(0)" v-on:click="showPart(3)">交接完成</a>
+        </li>
+      </ol>
+      <div title="押运员验证界面" v-show="part1">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="box box-default box-flat">
+              <div class="box-header with-border">
+                <div class="box-title">指纹验证</div>
+              </div>
+              <div class="box-body">
+                <div>
+                  <button class="btn btn-default btn-flat" style="width: 100%">点击验证</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="box box-default box-flat">
+              <div class="box-header with-border">
+                <div class="box-title">密码验证</div>
+              </div>
+              <div class="box-body">
+                <div>
+                  <div class="input-group">
+                    <input class="form-control" type="password" placeholder="请输入密码">
+                    <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-flat">验证</button>
+                  </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="box-body">
-          <div></div>
+        <div class="box box-success box-solid box-flat">
+          <div class="box-header">
+            <div class="box-title">押运员：</div>
+          </div>
+          <div class="box-body">
+            <div class="row">
+              <div class="col-md-4">
+                <a href="#" class="thumbnail">
+                  <img src="../../dist/img/user2-160x160.jpg" alt="押运员-头像">
+                </a>
+                <div class="caption">
+                  <div class="text-muted" style="text-align: center">押运员姓名</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-success btn-flat btn-block">获取任务列表</button>
+      </div>
+      <div title="任务界面" v-show="part2">
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-primary btn-flat btn-block">清点尾箱</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-success btn-flat btn-block">确认交接</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-primary btn-flat btn-block">按钮</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-primary btn-flat btn-block">按钮</button>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="box box-solid box-primary box-flat">
+              <div class="box-header">
+                <div class="box-title">待押运尾箱列表</div>
+              </div>
+              <div class="box-body">
+                <table class="table table-bordered table-striped table-striped table-hover">
+                  <tr>
+                    <th>序号</th>
+                    <th>尾箱编号</th>
+                    <th>申请机构</th>
+                    <th>目标机构</th>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="box box-solid box-primary box-flat">
+              <div class="box-header">
+                <div class="box-title">交接区已清点出的尾箱列表</div>
+              </div>
+              <div class="box-body">
+                <table class="table table-bordered table-striped table-striped table-hover">
+                  <tr>
+                    <th>序号</th>
+                    <th>尾箱编号</th>
+                    <th>申请机构</th>
+                    <th>目标机构</th>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      <div title="结果界面" v-show="part3">界面-结果界面</div>
     </div>
   </section>
 </div>
@@ -93,7 +202,7 @@
 <script src="../../dist/js/pages/bvms-system.js"></script>
 <script>
   new Vue({
-    el: '#content_id',
+    el: '#app',
     mounted: function () {
       if (this.loginUser === null) {
         window.location.href = '../system/bvms-login.html';
@@ -103,6 +212,9 @@
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
       parentModuleAvailable: [],
+      part1: false,
+      part2: true,
+      part3: false,
     },
     methods: {
       getModule: function () {
@@ -135,7 +247,28 @@
             alert('与服务器通信失败，请联系管理员');
           }
         });
-      }
+      },
+      showPart: function (part) {
+        switch (part) {
+          case 1:
+            this.part1 = true;
+            this.part2 = false;
+            this.part3 = false;
+            break;
+          case 2:
+            this.part1 = false;
+            this.part2 = true;
+            this.part3 = false;
+            break;
+          case 3:
+            this.part1 = false;
+            this.part2 = false;
+            this.part3 = true;
+            break;
+          default:
+            break
+        }
+      },
     }
 
   })

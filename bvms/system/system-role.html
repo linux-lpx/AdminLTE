@@ -13,7 +13,7 @@
 
 <!--body里面的class一定要设置样式，不然是白色的-->
 <body class="hold-transition skin-blue sidebar-mini">
-<div id="content_id" class="wrapper">
+<div id="app" class="wrapper">
 
   <!--顶部导航栏-->
   <header class="main-header">
@@ -208,7 +208,7 @@
 <script src="../../dist/js/pages/bvms-system.js"></script>
 <script>
   new Vue({
-    el: '#content_id',
+    el: '#app',
     mounted: function () {
       if (this.loginUser === null) {
         window.location.href = 'bvms-login.html';
