@@ -2,7 +2,7 @@
 <html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>主页</title>
+  <title>网点上缴交接</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
@@ -44,10 +44,8 @@
           <a href="#"><i class="fa fa-circle text-success">&numsp;</i>{{loginUser.name}}</a>
         </div>
       </div>
-
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header" style="font-size: large">主菜单</li>
-
         <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable"
             v-if="item.type === 0 || item.parentId === 1">
           <a href="#">
@@ -72,10 +70,17 @@
   <!--内容-->
   <section class="content-wrapper">
     <div class="content-header">
-      <h1>初始化页面</h1>
+      <h1>网点上缴交接</h1>
     </div>
     <div class="content">
-      <span style="font-size: 100px">欢迎您，{{loginUser.loginName}}</span>
+      <div class="box box-solid box-primary box-flat">
+        <div class="box-header">
+          <div class="box-title">网点上缴交接</div>
+        </div>
+        <div class="box-body">
+          <div></div>
+        </div>
+      </div>
     </div>
   </section>
 </div>
