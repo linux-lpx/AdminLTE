@@ -26,7 +26,8 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a></li>
+          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -71,6 +72,19 @@
   <section class="content-wrapper">
     <div class="content-header">
       <h1>基站管理</h1>
+      <br>
+      <div class="btn-group">
+        <button class="btn btn-success btn-flat" tabindex="-1"
+                data-toggle="modal" data-target="#baseStationModal" v-on:click="clearInputData()">添加基站
+        </button>
+        <button class="btn btn-info btn-flat" tabindex="-1"
+                data-toggle="modal" data-target="#baseStationModal" v-on:click="updateBaseStation()">更新基站
+        </button>
+        <button class="btn btn-danger btn-flat" v-on:click="deleteBaseStation()">删除基站</button>
+      </div>
+      <!--<button class="btn btn-warning btn-flat" tabindex="-1"-->
+              <!--data-toggle="modal" data-target="#userAllotRoleModal" v-on:click="">XXXX-->
+      <!--</button>-->
     </div>
     <div class="content">
       <div class="box box-solid box-primary box-flat">
@@ -80,18 +94,63 @@
         <div class="box-body">
           <table class="table table-hover table-striped table-bordered">
             <tr>
+              <th>选择</th>
               <th>基站编号</th>
               <th>IP</th>
               <th>端口</th>
               <th>归属机构</th>
             </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+            <tr v-for="(baseStation, index) in baseStations">
+              <td><input type="checkbox" title="选择" v-bind:value="index" v-model.number="selectedbaseStationIndex"></td>
+              <td>{{baseStation.code}}</td>
+              <td>{{baseStation.ip}}</td>
+              <td>{{baseStation.port}}</td>
+              <td>{{baseStation.departmentCode}}</td>
             </tr>
           </table>
+          <!--基站添加更新模态框-->
+          <div class="modal fade" style="color: #1b6d85" id="baseStationModal" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 style="display: inline">添加/修改用户</h3>
+                  <button class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <span class="input-group-addon">基站编号</span>
+                        <input type="text" class="form-control" title="请输入基站编号" v-model="baseStationInput.code">
+                      </div>
+                      <br>
+                      <div class="input-group">
+                        <span class="input-group-addon">IP地址</span>
+                        <input type="text" class="form-control" title="请输入IP地址" v-model="baseStationInput.ip">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <span class="input-group-addon">隶属机构</span>
+                        <select class="form-control" title="选择隶属机构" v-model="baseStationInput.departmentCode">
+                          <option v-for="bank in banks" v-bind:value="bank.code">{{bank.name}}</option>
+                        </select>
+                      </div>
+                      <br>
+                      <div class="input-group">
+                        <span class="input-group-addon">端口号</span>
+                        <input type="number" class="form-control" title="请输入基站编号" v-model.number="baseStationInput.port">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="addBaseStation()">确定</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -112,10 +171,22 @@
         window.location.href = '../system/bvms-login.html';
       }
       this.getModule();
+      this.getBank();
+      this.getBaseStation();
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
       parentModuleAvailable: [],
+      baseStations: [],
+      banks: [],
+      baseStationInput: {
+        code: null,
+        ip: null,
+        port: null,
+        departmentCode: null,
+      },
+      selectedbaseStationIndex: [],
+      deleteBaseStationId: [],
     },
     methods: {
       getModule: function () {
@@ -148,9 +219,117 @@
             alert('与服务器通信失败，请联系管理员');
           }
         });
-      }
+      },
+      getBank: function () {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'bank/all',
+          type: 'get',
+          success: function (data) {
+            if (data.isSuccess) {
+              that.banks = data.result;
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
+      getBaseStation: function () {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'baseStation/all' + '?departmentCode=' + that.loginUser.departmentCode,
+          type: 'get',
+          success: function (data) {
+            if (data.isSuccess) {
+              that.baseStations = data.result;
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
+      clearInputData: function () {
+        let that = this;
+        that.baseStationInput = {
+          code: null,
+          ip: null,
+          port: null,
+          departmentCode: that.loginUser.departmentCode,
+        }
+      },
+      addBaseStation: function () {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'baseStation/add',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(that.baseStationInput),
+          success: function (data) {
+            if (data.isSuccess) {
+              alert('添加基站成功！');
+              that.clearInputData();
+              that.getBaseStation();
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
+      updateBaseStation: function () {
+        let that = this;
+        if (that.selectedbaseStationIndex.length > 1) {
+          alert('不能同时更新多个基站！');
+        } else if (that.selectedbaseStationIndex.length === 0) {
+          alert('请选择一个基站！');
+        } else {
+          that.baseStationInput = that.baseStations[that.selectedbaseStationIndex[0]];
+          // if (n === 1) {
+          //   that.selectedRoleId = [];
+          //   that.getRoleIdByUserId(that.userInput.id);
+          // }
+        }
+      },
+      deleteBaseStation: function () {
+        let that = this;
+        if (that.selectedbaseStationIndex.length === 0) {
+          alert("请至少选择一个用户");
+        } else {
+          that.selectedbaseStationIndex.forEach(function (item) {
+            if (!that.deleteBaseStationId.includes(that.baseStations[item].id)) {
+              that.deleteBaseStationId.push(that.baseStations[item].id);
+            }
+          });
+          let ids = that.deleteBaseStationId.toString();
+          console.log('要删除的基站的id：' + ids);
+          $.ajax({
+            url: getUrlLocal() + 'baseStation/del/' + ids,
+            type: 'post',
+            success: function (data) {
+              if (data.isSuccess) {
+                console.log('请求成功，信息：' + data.result);
+                that.getBaseStation();
+                that.selectedbaseStationIndex = [];
+                that.deleteBaseStationId = [];
+              } else {
+                alert(data.result);
+              }
+            },
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
+            }
+          });
+        }
+      },
     }
-
   })
 </script>
 

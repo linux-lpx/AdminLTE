@@ -117,7 +117,7 @@
             </div>
           </div>
         </div>
-        <div class="box box-success box-solid box-flat">
+        <div class="box box-primary box-solid box-flat" v-show="true">
           <div class="box-header">
             <div class="box-title">押运员：</div>
           </div>
@@ -134,12 +134,12 @@
             </div>
           </div>
         </div>
-        <button class="btn btn-success btn-flat btn-block">获取任务列表</button>
+        <button class="btn btn-success btn-flat btn-block" v-show="true">获取任务列表</button>
       </div>
       <div title="任务界面" v-show="part2">
         <div class="row">
           <div class="col-md-3">
-            <button class="btn btn-primary btn-flat btn-block">清点尾箱</button>
+            <button class="btn btn-primary btn-flat btn-block" v-on:click="showBankName('830')">清点尾箱</button>
           </div>
           <div class="col-md-3">
             <button class="btn btn-success btn-flat btn-block">确认交接</button>
@@ -167,10 +167,10 @@
                     <th>目标机构</th>
                   </tr>
                   <tr v-for="(box, index) in turnInTaskBoxes">
-                    <td>{{index}}</td>
+                    <td>{{index + 1}}</td>
                     <td>{{box.items[0].boxOuterCode}}</td>
-                    <td>{{box.applyBankCode}}</td>
-                    <td>{{box.targetBankCode}}</td>
+                    <td>{{showBankName(box.applyBankCode)}}</td>
+                    <td>{{showBankName(box.targetBankCode)}}</td>
                   </tr>
                 </table>
               </div>
@@ -220,6 +220,7 @@
         window.location.href = '../system/bvms-login.html';
       }
       this.getModule();
+      this.getBank();
       this.getTurnInTaskBoxes();
     },
     data: {
@@ -228,6 +229,7 @@
       part1: false,
       part2: true,
       part3: false,
+      banks: [],
       turnInTaskBoxes: [],
     },
     methods: {
@@ -262,22 +264,40 @@
           }
         });
       },
+      getBank: function () {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'bank/all',
+          type: 'get',
+          success: function (data) {
+            if (data.isSuccess) {
+              that.banks = data.result;
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
       showPart: function (part) {
+        let that = this;
         switch (part) {
           case 1:
-            this.part1 = true;
-            this.part2 = false;
-            this.part3 = false;
+            that.part1 = true;
+            that.part2 = false;
+            that.part3 = false;
             break;
           case 2:
-            this.part1 = false;
-            this.part2 = true;
-            this.part3 = false;
+            that.part1 = false;
+            that.part2 = true;
+            that.part3 = false;
             break;
           case 3:
-            this.part1 = false;
-            this.part2 = false;
-            this.part3 = true;
+            that.part1 = false;
+            that.part2 = false;
+            that.part3 = true;
             break;
           default:
             break
@@ -303,6 +323,15 @@
           }
         });
       },
+      showBankName: function (code) {
+        let that = this;
+        let names = that.banks.filter(function (bank) {
+          if (bank.code === code) {
+            return bank;
+          }
+        });
+        return names[0].name;
+      }
     }
 
   })
