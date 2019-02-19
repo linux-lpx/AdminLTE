@@ -139,7 +139,7 @@
       <div title="任务界面" v-show="part2">
         <div class="row">
           <div class="col-md-3">
-            <button class="btn btn-primary btn-flat btn-block" v-on:click="showBankName('830')">清点尾箱</button>
+            <button class="btn btn-primary btn-flat btn-block" v-on:click="checkBoxes()">清点尾箱</button>
           </div>
           <div class="col-md-3">
             <button class="btn btn-success btn-flat btn-block">确认交接</button>
@@ -168,7 +168,7 @@
                   </tr>
                   <tr v-for="(box, index) in turnInTaskBoxes">
                     <td>{{index + 1}}</td>
-                    <td>{{box.items[0].boxOuterCode}}</td>
+                    <td>{{box.boxOuterCode}}</td>
                     <td>{{showBankName(box.applyBankCode)}}</td>
                     <td>{{showBankName(box.targetBankCode)}}</td>
                   </tr>
@@ -186,14 +186,18 @@
                   <tr>
                     <th>序号</th>
                     <th>尾箱编号</th>
-                    <th>申请机构</th>
-                    <th>目标机构</th>
+                    <th>是否异常</th>
+                    <th>说明</th>
+                    <!--<th>申请机构</th>-->
+                    <!--<th>目标机构</th>-->
                   </tr>
-                  <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
+                  <tr v-for="(box, index) in checkResult.data.boxes" v-bind:class="{'danger':box.hasException}">
+                    <td>{{index + 1}}</td>
+                    <td>{{box.code}}</td>
+                    <td>{{box.hasException ? '异常' : '正常'}}</td>
+                    <td>{{box.memo}}</td>
+                    <!--<td>{{box.code}}</td>-->
+                    <!--<td>{{box.code}}</td>-->
                   </tr>
                 </table>
               </div>
@@ -231,6 +235,19 @@
       part3: false,
       banks: [],
       turnInTaskBoxes: [],
+      checkResult: {
+        success: null,
+        message: null,
+        code: null,
+        total: null,
+        data: {
+          boxes: [],
+          handoverType: null,
+          memo: null,
+          locatorCode: null,
+          hasException: null
+        }
+      },
     },
     methods: {
       getModule: function () {
@@ -268,6 +285,23 @@
         let that = this;
         $.ajax({
           url: getUrlLocal() + 'bank/all',
+          type: 'get',
+          success: function (data) {
+            if (data.isSuccess) {
+              that.banks = data.result;
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
+      getBox: function () {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'box/all',
           type: 'get',
           success: function (data) {
             if (data.isSuccess) {
@@ -323,24 +357,34 @@
           }
         });
       },
-      // getHandoverBox: function () {
-      //   $.ajax({
-      //             url: getUrlLocal() + 'cmd/',
-      //             type: ,
-      //             contentType: 'application/json',
-      //             data: ,
-      //             success: function (data) {
-      //               if (data.isSuccess) {
-      //
-      //               } else {
-      //                 alert(data.result);
-      //               }
-      //             },
-      //             error: function () {
-      //               alert('与服务器通信失败，请联系管理员');
-      //             }
-      //           });
-      // },
+      checkBoxes: function () {
+        let that = this;
+        let data = {
+          handoverType: "3",
+          codes: "65700",
+          // isAlarm: true,
+          // arriveTimes: 20,
+          // leaveTimes: 20,
+          // expectTimes: 60
+        };
+        $.ajax({
+          url: getUrlLocal() + 'cmd/boxesCheck',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function (data) {
+            if (data.isSuccess) {
+              that.checkResult = JSON.parse(data.result);
+              console.log(that.checkResult);
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
       showBankName: function (code) {
         let that = this;
         let names = that.banks.filter(function (bank) {
