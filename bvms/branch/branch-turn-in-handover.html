@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml"
+      xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <title>网点上缴交接</title>
@@ -76,13 +77,13 @@
     <div class="content">
       <ol class="breadcrumb" style="border-radius: 0;">
         <li v-bind:class="{'breadcrumb-active':part1}">
-          <a href="javascript:void(0)" v-on:click="showPart(1)">押运员验证</a>
+          <a href="javascript:void(0)" @click="showPart(1)">押运员验证</a>
         </li>
         <li v-bind:class="{'breadcrumb-active':part2}">
-          <a href="javascript:void(0)" v-on:click="showPart(2)">尾箱清点/交接</a>
+          <a href="javascript:void(0)" @click="showPart(2)">尾箱清点/交接</a>
         </li>
         <li v-bind:class="{'breadcrumb-active':part3}">
-          <a href="javascript:void(0)" v-on:click="showPart(3)">交接完成</a>
+          <a href="javascript:void(0)" @click="showPart(3)">交接完成</a>
         </li>
       </ol>
       <div title="押运员验证界面" v-show="part1">
@@ -139,7 +140,7 @@
       <div title="任务界面" v-show="part2">
         <div class="row">
           <div class="col-md-3">
-            <button class="btn btn-primary btn-flat btn-block" v-on:click="checkBoxes()">清点尾箱</button>
+            <button class="btn btn-primary btn-flat btn-block" @click="checkBoxes()">清点尾箱</button>
           </div>
           <div class="col-md-3">
             <button class="btn btn-success btn-flat btn-block">确认交接</button>
@@ -167,10 +168,10 @@
                     <th>目标机构</th>
                   </tr>
                   <tr v-for="(box, index) in turnInTaskBoxes">
-                    <td>{{index + 1}}</td>
-                    <td>{{box.boxOuterCode}}</td>
-                    <td>{{showBankName(box.applyBankCode)}}</td>
-                    <td>{{showBankName(box.targetBankCode)}}</td>
+                    <td v-text="index + 1"></td>
+                    <td v-text="box.boxOuterCode"></td>
+                    <td v-text="showBankName(box.applyBankCode)"></td>
+                    <td v-text="showBankName(box.targetBankCode)"></td>
                   </tr>
                 </table>
               </div>
@@ -192,10 +193,10 @@
                     <!--<th>目标机构</th>-->
                   </tr>
                   <tr v-for="(box, index) in checkResult.data.boxes" v-bind:class="{'danger':box.hasException}">
-                    <td>{{index + 1}}</td>
-                    <td>{{box.code}}</td>
-                    <td>{{box.hasException ? '异常' : '正常'}}</td>
-                    <td>{{box.memo}}</td>
+                    <td v-text="index + 1"></td>
+                    <td v-text="showBoxOuterCode(box.code)"></td>
+                    <td v-text="box.hasException ? '异常' : '正常'"></td>
+                    <td v-text="box.memo"></td>
                     <!--<td>{{box.code}}</td>-->
                     <!--<td>{{box.code}}</td>-->
                   </tr>
@@ -234,6 +235,7 @@
       part2: true,
       part3: false,
       banks: [],
+      boxes: [],
       turnInTaskBoxes: [],
       checkResult: {
         success: null,
@@ -298,6 +300,14 @@
           }
         });
       },
+      showBoxOuterCode: function (innerCode) {
+        let outerCode = this.turnInTaskBoxes.filter(function (box) {
+          if (innerCode === box.boxInnerCode) {
+            return box.boxOuterCode;
+          }
+        });
+        return outerCode[0];
+      },
       getBox: function () {
         let that = this;
         $.ajax({
@@ -305,7 +315,7 @@
           type: 'get',
           success: function (data) {
             if (data.isSuccess) {
-              that.banks = data.result;
+              that.boxes = data.result;
             } else {
               alert(data.result);
             }

@@ -75,15 +75,15 @@
       <br>
       <div class="btn-group">
         <button class="btn btn-success btn-flat" tabindex="-1"
-                data-toggle="modal" data-target="#baseStationModal" v-on:click="clearInputData()">添加基站
+                data-toggle="modal" data-target="#baseStationModal" @click="clearInputData()">添加基站
         </button>
         <button class="btn btn-info btn-flat" tabindex="-1"
-                data-toggle="modal" data-target="#baseStationModal" v-on:click="updateBaseStation()">更新基站
+                data-toggle="modal" data-target="#baseStationModal" @click="updateBaseStation()">更新基站
         </button>
-        <button class="btn btn-danger btn-flat" v-on:click="deleteBaseStation()">删除基站</button>
+        <button class="btn btn-danger btn-flat" @click="deleteBaseStation()">删除基站</button>
       </div>
       <!--<button class="btn btn-warning btn-flat" tabindex="-1"-->
-              <!--data-toggle="modal" data-target="#userAllotRoleModal" v-on:click="">XXXX-->
+              <!--data-toggle="modal" data-target="#userAllotRoleModal" @click="">XXXX-->
       <!--</button>-->
     </div>
     <div class="content">
@@ -146,7 +146,7 @@
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="addBaseStation()">确定</button>
+                  <button class="btn btn-primary" data-dismiss="modal" @click="addBaseStation()">确定</button>
                 </div>
               </div>
             </div>

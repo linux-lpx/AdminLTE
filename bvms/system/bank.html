@@ -76,12 +76,12 @@
       <br>
       <div class="btn-group">
       <button class="btn btn-success btn-flat" id="btn_dialog" tabindex="-1"
-              data-toggle="modal" data-target="#bankModal" v-on:click="clearInputData()">添加机构
+              data-toggle="modal" data-target="#bankModal" @click="clearInputData()">添加机构
       </button>
       <button class="btn btn-info btn-flat" id="btn_update" tabindex="-1"
-              data-toggle="modal" data-target="#bankModal" v-on:click="updateBank()">更新机构
+              data-toggle="modal" data-target="#bankModal" @click="updateBank()">更新机构
       </button>
-      <button class="btn btn-danger btn-flat" id="btn_delete" v-on:click="deleteBank()">删除机构</button>
+      <button class="btn btn-danger btn-flat" id="btn_delete" @click="deleteBank()">删除机构</button>
     </div>
     </div>
     <div class="content">
@@ -159,7 +159,7 @@
                   </div>
                   <div class="modal-footer">
                     <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                    <button class="btn btn-primary" data-dismiss="modal" v-on:click="addBank()">确定</button>
+                    <button class="btn btn-primary" data-dismiss="modal" @click="addBank()">确定</button>
                   </div>
                 </div>
               </div>

@@ -74,15 +74,15 @@
       <br>
       <div class="btn-group">
         <button class="btn btn-success btn-flat" tabindex="-1"
-                data-toggle="modal" data-target="#userModal" v-on:click="clearInputData()">添加用户
+                data-toggle="modal" data-target="#userModal" @click="clearInputData()">添加用户
         </button>
         <button class="btn btn-info btn-flat" tabindex="-1"
-                data-toggle="modal" data-target="#userModal" v-on:click="updateUser()">更新用户
+                data-toggle="modal" data-target="#userModal" @click="updateUser()">更新用户
         </button>
-        <button class="btn btn-danger btn-flat" v-on:click="deleteUser()">删除用户</button>
+        <button class="btn btn-danger btn-flat" @click="deleteUser()">删除用户</button>
       </div>
       <button class="btn btn-warning btn-flat" tabindex="-1"
-              data-toggle="modal" data-target="#userAllotRoleModal" v-on:click="updateUser(1)">分配角色
+              data-toggle="modal" data-target="#userAllotRoleModal" @click="updateUser(1)">分配角色
       </button>
     </div>
     <div class="content">
@@ -152,7 +152,7 @@
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="addUser()">确定</button>
+                  <button class="btn btn-primary" data-dismiss="modal" @click="addUser()">确定</button>
                 </div>
               </div>
             </div>
@@ -185,7 +185,7 @@
                   <br>
                   <ul class="list-group">
                     <li class="list-group-item list-group-item-info" style="font-size: 20px">角色列表</li>
-                    <li class="list-group-item" v-for="role in roles" v-on:click="selectRole(role.id)">
+                    <li class="list-group-item" v-for="role in roles" @click="selectRole(role.id)">
                       {{role.name}}
                       <span class="fa fa-check pull-right" v-if="selectedRoleId.includes(role.id)">&numsp;</span>
                     </li>
@@ -193,7 +193,7 @@
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="addRoleToUser()">确定</button>
+                  <button class="btn btn-primary" data-dismiss="modal" @click="addRoleToUser()">确定</button>
                 </div>
               </div>
             </div>

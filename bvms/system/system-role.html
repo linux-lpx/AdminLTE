@@ -74,15 +74,15 @@
       <br>
       <div class="btn-group">
         <button class="btn btn-success btn-flat" tabindex="-1"
-                data-toggle="modal" data-target="#roleModal" v-on:click="clearInputData()">添加角色
+                data-toggle="modal" data-target="#roleModal" @click="clearInputData()">添加角色
         </button>
         <button class="btn btn-info btn-flat" tabindex="-1"
-                data-toggle="modal" v-bind:data-target="targetModal" v-on:click="updateRole()">更新角色
+                data-toggle="modal" v-bind:data-target="targetModal" @click="updateRole()">更新角色
         </button>
-        <button class="btn btn-danger btn-flat" v-on:click="deleteRole()">删除角色</button>
+        <button class="btn btn-danger btn-flat" @click="deleteRole()">删除角色</button>
       </div>
       <button class="btn btn-warning btn-flat" tabindex="-1"
-              data-toggle="modal" data-target="#moduleToRoleModal" v-on:click="updateRole(1)">权限设置
+              data-toggle="modal" data-target="#moduleToRoleModal" @click="updateRole(1)">权限设置
       </button>
     </div>
     <div class="content">
@@ -134,7 +134,7 @@
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="addRole()">确定</button>
+                  <button class="btn btn-primary" data-dismiss="modal" @click="addRole()">确定</button>
                 </div>
               </div>
             </div>
@@ -157,7 +157,7 @@
                     <li class="list-group-item list-group-item-info" style="font-size: 20px">模块列表</li>
                     <li class="list-group-item"
                         v-for="module in modules2"
-                        v-on:click="clickModule(module.type, module.id)"
+                        @click="clickModule(module.type, module.id)"
                         v-bind:style="setFloderStyle(module.type)"
                         v-show="module.isVisible">
                       <span class="fa"
@@ -171,7 +171,7 @@
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="addModuleToRole()">确定</button>
+                  <button class="btn btn-primary" data-dismiss="modal" @click="addModuleToRole()">确定</button>
                 </div>
               </div>
             </div>

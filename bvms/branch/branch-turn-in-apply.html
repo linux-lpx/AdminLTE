@@ -95,10 +95,10 @@
     <div class="content">
       <div class="row">
         <div class="col-md-3">
-          <button class="btn btn-success btn-flat btn-block" v-on:click="addTurnInTaskBox()">添加尾箱</button>
+          <button class="btn btn-success btn-flat btn-block" @click="addTurnInTaskBox()">添加尾箱</button>
         </div>
         <div class="col-md-3">
-          <button class="btn btn-primary btn-flat btn-block" v-on:click="submitTask()">确认申请</button>
+          <button class="btn btn-primary btn-flat btn-block" @click="submitTask()">确认申请</button>
         </div>
       </div>
       <br>
@@ -107,7 +107,7 @@
           <div class="box-title">款箱：{{turnInTaskBox.boxCode}}</div>
           <div class="box-tools pull-right">
             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-            <button class="btn btn-box-tool" data-widget="remove" v-on:click="delTurnInTaskBox(boxIndex)">
+            <button class="btn btn-box-tool" data-widget="remove" @click="delTurnInTaskBox(boxIndex)">
               <i class="fa fa-remove"></i>
             </button>
           </div>
@@ -189,7 +189,7 @@
           </div>
           <div class="row" v-show="turnInTaskBox.itemsType === 1">
             <div class="col-md-3">
-              <button class="btn btn-default btn-flat btn-block" v-on:click="addItem(boxIndex)">添加现金</button>
+              <button class="btn btn-default btn-flat btn-block" @click="addItem(boxIndex)">添加现金</button>
             </div>
           </div>
           <br v-show="turnInTaskBox.itemsType === 1">
@@ -236,7 +236,7 @@
                 </div>
               </div>
               <div class="col-md-1">
-                <button class="btn btn-danger btn-flat btn-block" v-on:click="delItem(boxIndex, itemIndex)">
+                <button class="btn btn-danger btn-flat btn-block" @click="delItem(boxIndex, itemIndex)">
                   删除
                 </button>
               </div>

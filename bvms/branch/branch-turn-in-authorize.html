@@ -77,10 +77,10 @@
       <br>
       <div class="row">
         <div class="col-md-2">
-          <button class="btn btn-success btn-flat btn-block" v-on:click="authorizeApplyAll(2)">批量授权</button>
+          <button class="btn btn-success btn-flat btn-block" @click="authorizeApplyAll(2)">批量授权</button>
         </div>
         <div class="col-md-2">
-          <button class="btn btn-danger btn-flat btn-block" v-on:click="authorizeApplyAll(3)">批量拒绝</button>
+          <button class="btn btn-danger btn-flat btn-block" @click="authorizeApplyAll(3)">批量拒绝</button>
         </div>
       </div>
     </div>
@@ -110,30 +110,30 @@
             </tr>
             <tr v-for="(box, index) in turnInTaskBoxes">
               <td><input type="checkbox" title="选择" v-bind:value="index" v-model="selectTaskBoxIndex"></td>
-              <td>{{box.applyBankCode}}</td>
-              <td>{{box.targetBankCode}}</td>
-              <td>{{box.applyUserLoginName}}</td>
-              <td>{{box.createTime}}</td>
-              <td>{{box.turnInDate}}</td>
-              <td>{{box.turnBackDate}}</td>
-              <td>{{box.boxOuterCode}}</td>
-              <td>{{box.boxType === 1 ? '箱' : '包'}}</td>
-              <td>{{box.boxTaskType === 1 ? '上缴' : '寄存'}}</td>
+              <td v-text="box.applyBankCode"></td>
+              <td v-text="box.targetBankCode"></td>
+              <td v-text="box.applyUserLoginName"></td>
+              <td v-text="box.createTime"></td>
+              <td v-text="box.turnInDate"></td>
+              <td v-text="box.turnBackDate"></td>
+              <td v-text="box.boxOuterCode"></td>
+              <td v-text="box.boxType === 1 ? '箱' : '包'"></td>
+              <td v-text="box.boxTaskType === 1 ? '上缴' : '寄存'"></td>
               <!--<td>正常</td>-->
-              <td>{{box.boxItemType === 1 ? '现金' : '非现金'}}</td>
+              <td v-text="box.boxItemType === 1 ? '现金' : '非现金'"></td>
               <td>
                 <button class="btn btn-success btn-sm btn-flat"
-                        v-on:click="authorizeApply(box.code, 2)">授权
+                        @click="authorizeApply(box.code, 2)">授权
                 </button>
               </td>
               <td>
                 <button class="btn btn-danger btn-sm btn-flat"
-                        v-on:click="authorizeApply(box.code, 3)">拒绝
+                        @click="authorizeApply(box.code, 3)">拒绝
                 </button>
               </td>
               <td>
                 <button class="btn btn-primary btn-sm btn-flat" data-toggle="modal" data-target="#itemsModal"
-                        v-on:click="boxIndex = index">查看
+                        @click="boxIndex = index">查看
                 </button>
               </td>
             </tr>
@@ -143,7 +143,7 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h3 style="display: inline">任务箱{{turnInTaskBoxes[boxIndex].boxOuterCode}}</h3>
+                  <h3 style="display: inline" v-text="'任务箱' + turnInTaskBoxes[boxIndex].boxOuterCode"></h3>
                   <button class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -156,10 +156,10 @@
                       <th>总数</th>
                     </tr>
                     <tr v-for="item in turnInTaskBoxes[boxIndex].items">
-                      <td>{{showCurrency(item.currency)}}</td>
-                      <td>{{item.denomination}}</td>
-                      <td>{{item.amount * 100}}张</td>
-                      <td>{{showCashItemSum(item.currency, item.denomination, item.amount)}}</td>
+                      <td v-text="showCurrency(item.currency)"></td>
+                      <td v-text="item.denomination"></td>
+                      <td v-text="item.amount * 100 + '张'"></td>
+                      <td v-text="showCashItemSum(item.currency, item.denomination, item.amount)"></td>
                     </tr>
                   </table>
                   <div class="form-group" v-show="turnInTaskBoxes[boxIndex].boxItemType === 0">

@@ -77,15 +77,15 @@
       <br>
       <div class="btn-group">
         <button class="btn btn-success btn-flat" tabindex="-1"
-                data-toggle="modal" data-target="#boxModal" v-on:click="clearInputData()">添加尾箱
+                data-toggle="modal" data-target="#boxModal" @click="clearInputData()">添加尾箱
         </button>
         <button class="btn btn-info btn-flat" tabindex="-1"
-                data-toggle="modal" data-target="#boxModal" v-on:click="updateBox()">更新尾箱
+                data-toggle="modal" data-target="#boxModal" @click="updateBox()">更新尾箱
         </button>
-        <button class="btn btn-danger btn-flat" v-on:click="deleteBox()">删除尾箱</button>
+        <button class="btn btn-danger btn-flat" @click="deleteBox()">删除尾箱</button>
       </div>
       <button class="btn btn-warning btn-flat" tabindex="-1"
-              data-toggle="modal" data-target="#boxModal" v-on:click="updateBox(1)">分配尾箱
+              data-toggle="modal" data-target="#boxModal" @click="updateBox(1)">分配尾箱
       </button>
     </div>
     <div class="content">
@@ -143,7 +143,7 @@
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="addBox()">确定</button>
+                  <button class="btn btn-primary" data-dismiss="modal" @click="addBox()">确定</button>
                 </div>
               </div>
             </div>
@@ -163,13 +163,13 @@
             </tr>
             <tr v-for="(box, index) in boxes">
               <td><input type="checkbox" title="选择" v-bind:value="index" v-model="selectedBoxIndex"></td>
-              <td>{{box.outerCode}}</td>
-              <td>{{box.belongBankCode}}</td>
-              <td>{{box.belongBankName}}</td>
-              <td>{{box.typeId}}</td>
-              <td>{{box.stateName}}</td>
-              <td>{{box.hasException === 0 ? '正常' : '异常'}}</td>
-              <td>{{box.runStateName}}</td>
+              <td v-text="box.outerCode"></td>
+              <td v-text="box.belongBankCode"></td>
+              <td v-text="box.belongBankName"></td>
+              <td v-text="box.typeId"></td>
+              <td v-text="box.stateName"></td>
+              <td v-text="box.hasException === 0 ? '正常' : '异常'"></td>
+              <td v-text="box.runStateName"></td>
             </tr>
           </table>
         </div>
