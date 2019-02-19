@@ -131,7 +131,7 @@
                 </div>
                 <div class="modal-body">
                   <table class="table table-striped table-hover table-bordered"
-                         v-show="turnInHistoryTaskBoxes[boxIndex].type === 1">
+                         v-show="turnInHistoryTaskBoxes[boxIndex].boxItemType === 1">
                     <tr>
                       <th>币种</th>
                       <th>面额</th>
@@ -145,7 +145,7 @@
                       <td>{{showCashItemSum(item.currency, item.denomination, item.amount)}}</td>
                     </tr>
                   </table>
-                  <div class="form-group" v-show="turnInHistoryTaskBoxes[boxIndex].type === 0">
+                  <div class="form-group" v-show="turnInHistoryTaskBoxes[boxIndex].boxItemType === 0">
                     <label>物品说明</label>
                     <textarea class="form-control" rows="2" placeholder="物品说明 ..."
                               v-model="turnInHistoryTaskBoxes[boxIndex].items[0].itemDesc" disabled></textarea>
