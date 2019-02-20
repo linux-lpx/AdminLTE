@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <title>钞箱信息</title>
@@ -26,7 +26,8 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a></li>
+          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -40,19 +41,17 @@
           <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>支行金库1管理员</p>
-          <a href="#"><i class="fa fa-circle text-success">&numsp;</i> Online</a>
+          <p v-text="loginUser.loginName"></p>
+          <a href="#"><i class="fa fa-circle text-success">&numsp;</i>{{loginUser.name}}</a>
         </div>
       </div>
-
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header" style="font-size: large">主菜单</li>
-
         <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable"
             v-if="item.type === 0 || item.parentId === 1">
           <a href="#">
             <i class="fa fa-folder" v-bind:class="{'fa-file-text-o' : item.type === 1}">&numsp;</i>
-            <span>{{item.name}}</span>
+            <span v-text="item.name"></span>
             <span class="pull-right-container">
               <i class="fa pull-right" v-bind:class="{'fa-angle-left':item.children.length > 0}">&numsp;</i>
             </span>
@@ -89,7 +88,7 @@
     <div class="content">
       <div class="box box-solid box-primary box-flat">
         <div class="box-header">
-          <div class="box-title">钞箱：No.{{data.code}} 基本信息</div>
+          <div class="box-title" v-text="'钞箱：' + data.code"></div>
         </div>
         <div class="box-body">
           <div>
@@ -198,7 +197,7 @@
           <br>
           <div class="box box-solid box-info">
             <div class="box-header">
-              <div class="box-title">操作记录：{{records.length}}条</div>
+              <div class="box-title" v-text="'操作记录：' + records.length + '条'"></div>
             </div>
             <div class="box-body">
               <div v-for="record in records">
@@ -206,7 +205,8 @@
                   <div class="col-md-3">
                     <div class="input-group">
                       <span class="input-group-addon">序号</span>
-                      <input type="text" class="form-control" placeholder="序号" v-model.number="record.recordIndex" disabled>
+                      <input type="text" class="form-control" placeholder="序号" v-model.number="record.recordIndex"
+                             disabled>
                     </div>
                   </div>
                   <div class="col-md-3">

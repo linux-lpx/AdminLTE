@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <title>系统模块管理</title>
@@ -26,7 +26,8 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a></li>
+          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -40,8 +41,8 @@
           <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>支行金库1管理员</p>
-          <a href="#"><i class="fa fa-circle text-success">&numsp;</i> Online</a>
+          <p v-text="loginUser.loginName"></p>
+          <a href="#"><i class="fa fa-circle text-success">&numsp;</i>{{loginUser.name}}</a>
         </div>
       </div>
       <ul class="sidebar-menu" data-widget="tree">
@@ -50,7 +51,7 @@
             v-if="item.type === 0 || item.parentId === 1">
           <a href="#">
             <i class="fa fa-folder" v-bind:class="{'fa-file-text-o' : item.type === 1}">&numsp;</i>
-            <span>{{item.name}}</span>
+            <span v-text="item.name"></span>
             <span class="pull-right-container">
               <i class="fa pull-right" v-bind:class="{'fa-angle-left':item.children.length > 0}">&numsp;</i>
             </span>
@@ -122,7 +123,7 @@
                       <div class="col-md-6">
                         <div class="input-group">
                           <span class="input-group-addon">模块类别</span>
-                          <select title="模块类别" class="form-control" style="width: 100%;" v-on:change="setDisabled()"
+                          <select title="模块类别" class="form-control" style="width: 100%;" :onchange="setDisabled()"
                                   v-model.number="moduleInput.type">
                             <option value="1">模块</option>
                             <option value="0">目录</option>
@@ -138,8 +139,7 @@
                         <div class="input-group">
                           <span class="input-group-addon">父模块</span>
                           <select title="父模块名称" class="form-control" v-model="moduleInput.parentName">
-                            <option v-for="module in parentModuleAll" v-bind:value="module.name">
-                              {{module.name}}
+                            <option v-for="module in parentModuleAll" v-bind:value="module.name" v-text="module.name">
                             </option>
                           </select>
                         </div>
@@ -177,15 +177,15 @@
             </tr>
             <tr v-for="(module, index) in modules">
               <td><input type="checkbox" v-bind:value="index" title="选中" v-model="selectedModuleIndex"></td>
-              <td>{{module.id}}</td>
-              <td>{{module.name}}</td>
-              <td>{{module.description}}</td>
-              <td>{{module.path}}</td>
-              <td>{{module.parentName}}</td>
-              <td>{{module.imgPath}}</td>
-              <td>{{module.isAvailable === 1 ? '可用' : '不可用'}}</td>
-              <td>{{module.type === 1 ? '页面' : '目录'}}</td>
-              <td>{{module.roleId}}</td>
+              <td v-text="module.id"></td>
+              <td v-text="module.name"></td>
+              <td v-text="module.description"></td>
+              <td v-text="module.path"></td>
+              <td v-text="module.parentName"></td>
+              <td v-text="module.imgPath"></td>
+              <td v-text="module.isAvailable === 1 ? '可用' : '不可用'"></td>
+              <td v-text="module.type === 1 ? '页面' : '目录'"></td>
+              <td v-text="module.roleId"></td>
             </tr>
           </table>
         </div>
@@ -363,6 +363,7 @@
         }
       },
       setDisabled: function () {
+        console.log("出发了");
         if (this.moduleInput.type === 0) {
           // 当类型为目录的时候，清除模块路径，并设置为不可编辑
           this.moduleInput.path = null;
