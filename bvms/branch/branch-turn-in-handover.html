@@ -142,10 +142,12 @@
             <button class="btn btn-primary btn-flat btn-block" @click="checkBoxes()">清点尾箱</button>
           </div>
           <div class="col-md-3">
-            <button class="btn btn-success btn-flat btn-block">确认交接</button>
+            <button class="btn btn-primary btn-flat btn-block" @click="handlerException()">处理异常</button>
           </div>
           <div class="col-md-3">
-            <!--<button class="btn btn-primary btn-flat btn-block">按钮</button>-->
+            <button class="btn btn-success btn-flat btn-block" v-bind:disabled="checkResult.data.hasException"
+                    @click="handoverBoxes()">确认交接
+            </button>
           </div>
           <div class="col-md-3">
             <!--<button class="btn btn-primary btn-flat btn-block">按钮</button>-->
@@ -176,8 +178,9 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6">
-            <div class="box box-solid box-primary box-flat">
+          <div class="col-md-6" v-show="checkResult.success">
+            <div class="box box-solid box-flat" v-bind:class="{'box-danger' : checkResult.data.hasException,
+              'box-primary': !checkResult.data.hasException}">
               <div class="box-header">
                 <div class="box-title">交接区已清点出的尾箱列表</div>
               </div>
@@ -186,18 +189,18 @@
                   <tr>
                     <th>序号</th>
                     <th>尾箱编号</th>
+                    <th>尾箱内置编号</th>
                     <th>是否异常</th>
+                    <th>异常编号</th>
                     <th>说明</th>
-                    <!--<th>申请机构</th>-->
-                    <!--<th>目标机构</th>-->
                   </tr>
-                  <tr v-for="(box, index) in checkResult.data.boxes" v-bind:class="{'danger':box.hasException}">
+                  <tr v-for="(box, index) in checkResult.data.boxes" v-bind:class="{'danger' : box.hasException}">
                     <td v-text="index + 1"></td>
                     <td v-text="showBoxOuterCode(box.code)"></td>
+                    <td v-text="box.code"></td>
                     <td v-text="box.hasException ? '异常' : '正常'"></td>
+                    <td v-text="box.exceptionType"></td>
                     <td v-text="box.memo"></td>
-                    <!--<td>{{box.code}}</td>-->
-                    <!--<td>{{box.code}}</td>-->
                   </tr>
                 </table>
               </div>
@@ -235,9 +238,13 @@
       part3: false,
       banks: [],
       boxes: [],
+      // 位置类型：0-网点，1-在途中，2-金库。用于处理【场景错误异常】
+      site: 0,
+      // 交际类型：1-离开金库，2-进入金库，3-离开网点，4-进入网点。
+      handoverType: 3,
       turnInTaskBoxes: [],
       checkResult: {
-        success: null,
+        success: false,
         message: null,
         code: null,
         total: null,
@@ -246,7 +253,7 @@
           handoverType: null,
           memo: null,
           locatorCode: null,
-          hasException: null
+          hasException: true,
         }
       },
     },
@@ -301,11 +308,15 @@
       },
       showBoxOuterCode: function (innerCode) {
         let outerCode = this.turnInTaskBoxes.filter(function (box) {
-          if (innerCode === box.boxInnerCode) {
-            return box.boxOuterCode;
+          if (innerCode.toString() === box.boxInnerCode) {
+            return box;
           }
         });
-        return outerCode[0];
+        if (outerCode.length === 0) {
+          return '';
+        } else {
+          return outerCode[0].boxOuterCode;
+        }
       },
       getBox: function () {
         let that = this;
@@ -368,13 +379,22 @@
       },
       checkBoxes: function () {
         let that = this;
+        that.checkResult = {
+          success: false,
+          message: null,
+          code: null,
+          total: null,
+          data: {
+            boxes: [],
+            handoverType: null,
+            memo: null,
+            locatorCode: null,
+            hasException: true,
+          }
+        };
         let data = {
-          handoverType: "3",
-          codes: "65700",
-          // isAlarm: true,
-          // arriveTimes: 20,
-          // leaveTimes: 20,
-          // expectTimes: 60
+          handoverType: that.handoverType,
+          codes: "65700,1010000001",
         };
         $.ajax({
           url: getUrlLocal() + 'cmd/boxesCheck',
@@ -384,10 +404,63 @@
           success: function (data) {
             if (data.isSuccess) {
               that.checkResult = JSON.parse(data.result);
-              console.log(that.checkResult);
             } else {
               alert(data.result);
             }
+            alert('清点完毕！');
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
+      handlerException: function () {
+        let that = this;
+        let boxesException = that.checkResult.data.boxes.map(function (box) {
+            box.site = that.site;
+            box.handoverType = that.handoverType;
+            return box;
+        });
+        $.ajax({
+          url: getUrlLocal() + 'cmd/boxesHandleExceptionAll',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(boxesException),
+          success: function (data) {
+            if (data.isSuccess) {
+              that.checkResult = JSON.parse(data.result);
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+
+      },
+      handoverBoxes: function () {
+        let that = this;
+        let data = {
+          handoverType: that.handoverType,
+          codes: "65700,1010000001",
+          isAlarm: true,
+          arriveTimes: 20,
+          leaveTimes: 20,
+          expectTimes: 60
+        };
+        $.ajax({
+          url: getUrlLocal() + 'cmd/boxesHandover',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function (data) {
+            if (data.isSuccess) {
+              // that.checkResult = JSON.parse(data.result);
+            } else {
+              alert(data.result);
+            }
+            alert('清点完毕！');
           },
           error: function () {
             alert('与服务器通信失败，请联系管理员');

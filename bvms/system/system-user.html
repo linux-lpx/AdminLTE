@@ -120,7 +120,7 @@
                       <div class="input-group">
                         <span class="input-group-addon">隶属机构</span>
                         <select class="form-control" title="选择隶属机构" v-model="userInput.departmentCode">
-                          <option v-for="bank in banks" v-bind:value="bank.code">{{bank.name}}</option>
+                          <option v-for="bank in banks" v-bind:value="bank.code" v-text="bank.name"></option>
                         </select>
                       </div>
                     </div>
@@ -142,7 +142,7 @@
                       <br>
                       <div class="input-group">
                         <span class="input-group-addon">是否可用</span>
-                        <select class="form-control" title="是否可用" v-model.number="userInput.isAvailable">
+                        <select class="form-control" title="是否可用" v-model.number="userInput.isAvailable" disabled>
                           <option value="1">可用</option>
                           <option value="0">不可用</option>
                         </select>

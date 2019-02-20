@@ -136,7 +136,16 @@
                       <br>
                       <div class="input-group">
                         <span class="input-group-addon">归属机构</span>
-                        <input type="email" class="form-control" title="归属机构" v-model="boxInput.belongBankCode">
+                        <select class="form-control" title="归属机构" v-model="boxInput.belongBankCode">
+                          <option v-for="bank in banks" v-bind:value="bank.code" v-text="bank.name"></option>
+                        </select>
+                      </div>
+                      <br>
+                      <div class="input-group">
+                        <span class="input-group-addon">所在机构</span>
+                        <select class="form-control" title="尾箱当前所在机构" v-model="boxInput.currentBankCode">
+                          <option v-for="bank in banks" v-bind:value="bank.code" v-text="bank.name"></option>
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -154,20 +163,20 @@
             <tr>
               <th>选择</th>
               <th>尾箱编号</th>
-              <th>机构编号</th>
-              <th>机构名称</th>
+              <th>尾箱内置编号</th>
+              <th>归属机构编号</th>
               <th>尾箱类型</th>
-              <th>尾箱位置</th>
+              <th>尾箱当前所在机构</th>
               <th>是否正常</th>
               <th>是否启用</th>
             </tr>
             <tr v-for="(box, index) in boxes">
               <td><input type="checkbox" title="选择" v-bind:value="index" v-model="selectedBoxIndex"></td>
               <td v-text="box.outerCode"></td>
+              <td v-text="box.innerCode"></td>
               <td v-text="box.belongBankCode"></td>
-              <td v-text="box.belongBankName"></td>
-              <td v-text="box.typeId"></td>
-              <td v-text="box.stateName"></td>
+              <td v-text="box.typeId === 1 ? '业务箱' : '其他'"></td>
+              <td v-text="box.currentBankCode"></td>
               <td v-text="box.hasException === 0 ? '正常' : '异常'"></td>
               <td v-text="box.runStateName"></td>
             </tr>
@@ -193,11 +202,13 @@
       }
       this.getModule();
       this.getBox();
+      this.getBank();
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
       parentModuleAvailable: [],
       boxes: [],
+      banks: [],
       boxInput: {
         id: null,
         outerCode: null,
@@ -279,6 +290,23 @@
           success: function (data) {
             if (data.isSuccess) {
               that.boxes = data.result;
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
+      getBank: function () {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'bank/all',
+          type: 'get',
+          success: function (data) {
+            if (data.isSuccess) {
+              that.banks = data.result;
             } else {
               alert(data.result);
             }
