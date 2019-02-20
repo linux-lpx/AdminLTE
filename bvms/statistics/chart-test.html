@@ -41,7 +41,7 @@
         </div>
         <div class="pull-left info">
           <p v-text="loginUser.loginName"></p>
-          <a href="#"><i class="fa fa-circle text-success">&numsp;</i>{{loginUser.name}}</a>
+          <a href="#"><i class="fa fa-circle text-success">&numsp;</i><span v-text="loginUser.name"></span></a>
         </div>
       </div>
 
@@ -76,6 +76,25 @@
       <h1>图表测试</h1>
     </div>
     <div class="content">
+      <div>
+        <div class="box box-danger">
+          <div class="box-header with-border">
+            <div class="box-title">本网点上缴统计（上周）</div>
+            <div class="box-tools pull-right">
+              <button class="btn btn-box-tool" @click="lastWeekTurninChart()">
+                <i class="fa fa-refresh"></i>
+              </button>
+              <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            </div>
+          </div>
+          <div class="box-body">
+            <div class="chart">
+              <canvas id="lastWeekTurnin"></canvas>
+            </div>
+          </div>
+          <div class="box-footer">底部</div>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-6">
           <div class="box box-danger">
@@ -264,6 +283,7 @@
         window.location.href = '../system/bvms-login.html';
       }
       this.getModule();
+      this.lastWeekTurninChart();
       this.loadChart1();
       this.loadChart2();
       this.loadChart3();
@@ -330,6 +350,43 @@
           }
         });
       },
+      lastWeekTurninChart: function () {
+        let ctx = document.getElementById("lastWeekTurnin").getContext('2d');
+        let content = {
+          type: 'bar',
+          data: {
+            labels: this.labels,
+            datasets: [
+              {
+                label: '柱状图',
+                type: 'bar',
+                data: this.data,
+                backgroundColor: this.backgroundColor,
+                borderColor: this.borderColor,
+                borderWidth: this.borderWidth,
+              },
+              // {
+              //   type: 'line',
+              //   label: '曲线图',
+              //   data: this.data,
+              //   backgroundColor: '#0000ff00',
+              //   borderColor: '#0000ff',
+              //   borderWidth: this.borderWidth,
+              // }
+            ],
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+        };
+        new Chart(ctx, content);
+      },
       loadChart1: function () {
         let ctx = document.getElementById("chart1").getContext('2d');
         let content = {
@@ -345,14 +402,14 @@
                 borderColor: this.borderColor,
                 borderWidth: this.borderWidth,
               },
-              {
-                type: 'line',
-                label: '曲线图',
-                data: this.data,
-                backgroundColor: '#0000ff00',
-                borderColor: '#0000ff',
-                borderWidth: this.borderWidth,
-              }
+              // {
+              //   type: 'line',
+              //   label: '曲线图',
+              //   data: this.data,
+              //   backgroundColor: '#0000ff00',
+              //   borderColor: '#0000ff',
+              //   borderWidth: this.borderWidth,
+              // }
             ],
           },
           options: {

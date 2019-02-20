@@ -179,8 +179,8 @@
             </div>
           </div>
           <div class="col-md-6" v-show="checkResult.success">
-            <div class="box box-solid box-flat" v-bind:class="{'box-danger' : checkResult.data.hasException,
-              'box-primary': !checkResult.data.hasException}">
+            <div class="box box-solid box-flat"
+                 v-bind:class="{'box-danger':checkResult.data.hasException,'box-primary':!checkResult.data.hasException}">
               <div class="box-header">
                 <div class="box-title">交接区已清点出的尾箱列表</div>
               </div>
