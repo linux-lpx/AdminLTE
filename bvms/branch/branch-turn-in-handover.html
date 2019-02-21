@@ -76,13 +76,13 @@
     <div class="content">
       <ol class="breadcrumb" style="border-radius: 0;">
         <li v-bind:class="{'breadcrumb-active':part1}">
-          <a href="javascript:void(0)" @click="showPart(1)">押运员验证</a>
+          <a href="javascript:void(0)" disabled>押运员验证</a>
         </li>
         <li v-bind:class="{'breadcrumb-active':part2}">
-          <a href="javascript:void(0)" @click="showPart(2)">尾箱清点/交接</a>
+          <a href="javascript:void(0)" disabled>尾箱清点/交接</a>
         </li>
         <li v-bind:class="{'breadcrumb-active':part3}">
-          <a href="javascript:void(0)" @click="showPart(3)">交接完成</a>
+          <a href="javascript:void(0)">交接完成</a>
         </li>
       </ol>
       <div title="押运员验证界面" v-show="part1">
@@ -107,9 +107,9 @@
               <div class="box-body">
                 <div>
                   <div class="input-group">
-                    <input class="form-control" type="password" placeholder="请输入密码">
+                    <input class="form-control" type="password" placeholder="请输入密码" v-model="pswd">
                     <span class="input-group-btn">
-                    <button type="button" class="btn btn-default btn-flat">验证</button>
+                    <button type="button" class="btn btn-default btn-flat" @click="checkSupercargo()">验证</button>
                   </span>
                   </div>
                 </div>
@@ -117,7 +117,7 @@
             </div>
           </div>
         </div>
-        <div class="box box-primary box-solid box-flat" v-show="true">
+        <div class="box box-primary box-solid box-flat" v-show="isOpenPart2">
           <div class="box-header">
             <div class="box-title">押运员：</div>
           </div>
@@ -134,24 +134,27 @@
             </div>
           </div>
         </div>
-        <button class="btn btn-success btn-flat btn-block" v-show="true">获取任务列表</button>
+        <button class="btn btn-success btn-flat btn-block" v-bind:disabled="!isOpenPart2" @click="showPart(2)">
+          获取任务列表
+        </button>
       </div>
       <div title="任务界面" v-show="part2">
         <div class="row">
-          <div class="col-md-3">
-            <button class="btn btn-primary btn-flat btn-block" @click="checkBoxes()">清点尾箱</button>
+          <div class="col-md-4">
+            <button class="btn btn-primary btn-flat btn-block" v-bind:disabled="turnInTaskBoxes.length === 0"
+                    @click="checkBoxes()" >清点尾箱</button>
           </div>
-          <div class="col-md-3">
-            <button class="btn btn-primary btn-flat btn-block" @click="handlerException()">处理异常</button>
+          <div class="col-md-4">
+            <button class="btn btn-primary btn-flat btn-block" v-bind:disabled="!checkResult.success"
+                    @click="handlerException()">处理异常</button>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
             <button class="btn btn-success btn-flat btn-block" v-bind:disabled="checkResult.data.hasException"
-                    @click="handoverBoxes()">确认交接
-            </button>
+                    @click="handoverBoxes()">确认交接</button>
           </div>
-          <div class="col-md-3">
+          <!--<div class="col-md-3">-->
             <!--<button class="btn btn-primary btn-flat btn-block">按钮</button>-->
-          </div>
+          <!--</div>-->
         </div>
         <br>
         <div class="row">
@@ -176,6 +179,7 @@
                   </tr>
                 </table>
               </div>
+              <div class="box-footer" v-text="'押运的尾箱：' + turnInTaskBoxes.length">押运的尾箱：</div>
             </div>
           </div>
           <div class="col-md-6" v-show="checkResult.success">
@@ -263,9 +267,11 @@
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
       parentModuleAvailable: [],
-      part1: false,
-      part2: true,
+      part1: true,
+      part2: false,
       part3: false,
+      pswd: null,
+      isOpenPart2: false,
       banks: [],
       boxes: [],
       // 位置类型：0-网点，1-在途中，2-金库。用于处理【场景错误异常】
@@ -378,6 +384,14 @@
           }
         });
       },
+      checkSupercargo: function () {
+        let that = this;
+        if (that.pswd === that.loginUser.password) {
+          that.isOpenPart2 = true;
+        } else {
+          alert('密码错误，请重新输入！');
+        }
+      },
       showPart: function (part) {
         let that = this;
         switch (part) {
@@ -439,7 +453,6 @@
         that.turnInTaskBoxes.forEach(function (box) {
           codes.push(box.boxInnerCode);
         });
-        console.log(codes.toString());
         let data = {
           handoverType: that.handoverType,
           codes: codes.toString(),
@@ -463,10 +476,14 @@
       },
       handlerException: function () {
         let that = this;
+        if (!that.checkResult.data.hasException) {
+          alert('没有异常情况需要处理！');
+          return;
+        }
         let boxesException = that.checkResult.data.boxes.map(function (box) {
-            box.site = that.site;
-            box.handoverType = that.handoverType;
-            return box;
+          box.site = that.site;
+          box.handoverType = that.handoverType;
+          return box;
         });
         $.ajax({
           url: getUrlLocal() + 'cmd/boxesHandleExceptionAll',
@@ -510,11 +527,14 @@
               that.handoverResult = JSON.parse(data.result);
               if (that.handoverResult.success) {
                 that.showPart(3);
+                // TODO 尾箱交接完成后，需要在数据库中对任务/箱子进行状态更新，比如任务进程，箱子所在机构等
+                that.updateTask();
+                that.updateBoxes();
               }
             } else {
               alert(data.result);
             }
-            alert('清点完毕！');
+            alert('交接完毕！');
           },
           error: function () {
             alert('与服务器通信失败，请联系管理员');
@@ -529,7 +549,63 @@
           }
         });
         return names[0].name;
-      }
+      },
+      updateTask: function () {
+        let that = this;
+        let taskCodes = that.turnInTaskBoxes.map(function (box) {
+          return box.code;
+        });
+        let info = {
+          loginName: that.loginUser.loginName,
+          id: that.loginUser.id,
+          taskCodes: taskCodes.toString(),
+        };
+        $.ajax({
+          url: getUrlLocal() + 'task/branchTurnInHandoverAll',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(info),
+          success: function (data) {
+            if (data.isSuccess) {
+              // alert(data.result);
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
+      updateBoxes: function () {
+        let that = this;
+        let boxOuterCodes = that.turnInTaskBoxes.map(function (box) {
+          return box.boxOuterCode;
+        });
+        let info = {
+          currentBankCode: '押运途中',
+          locationId: 1,
+          locationName: '押运途中',
+          boxOuterCodes: boxOuterCodes.toString(),
+        };
+        $.ajax({
+          url: getUrlLocal() + 'box/handoverLeaveBranch',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(info),
+          success: function (data) {
+            if (data.isSuccess) {
+              console.log(data.result);
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
+
     }
 
   })

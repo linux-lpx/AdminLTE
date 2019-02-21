@@ -2,7 +2,7 @@
 <html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>网点上缴2</title>
+  <title>网点上缴</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
@@ -44,9 +44,7 @@
 
   <!--左边的菜单栏-->
   <aside class="main-sidebar">
-    <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
-      <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
           <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
@@ -56,10 +54,8 @@
           <a href="#"><i class="fa fa-circle text-success">&numsp;</i>{{loginUser.name}}</a>
         </div>
       </div>
-
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header" style="font-size: large">主菜单</li>
-
         <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable"
             v-if="item.type === 0 || item.parentId === 1">
           <a href="#">
@@ -86,9 +82,7 @@
 
     <!--内容头部-->
     <div class="content-header">
-      <h1>网点上缴2
-        <small>test branch-turn-in2</small>
-      </h1>
+      <h1>网点上缴<small>test branch-turn-in2</small></h1>
     </div>
 
     <!--内容主体-->

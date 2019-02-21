@@ -2,7 +2,7 @@
 <html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>基站管理</title>
+  <title>设备管理</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
@@ -71,82 +71,110 @@
   <!--内容-->
   <section class="content-wrapper">
     <div class="content-header">
-      <h1>基站管理</h1>
+      <h1>设备管理</h1>
       <br>
       <div class="btn-group">
         <button class="btn btn-success btn-flat" tabindex="-1"
-                data-toggle="modal" data-target="#baseStationModal" @click="clearInputData()">添加基站
+                data-toggle="modal" data-target="#deviceModal" @click="clearInputData()">添加设备
         </button>
         <button class="btn btn-info btn-flat" tabindex="-1"
-                data-toggle="modal" data-target="#baseStationModal" @click="updateBaseStation()">更新基站
+                data-toggle="modal" data-target="#deviceModal" @click="updateDevice()">更新设备
         </button>
-        <button class="btn btn-danger btn-flat" @click="deleteBaseStation()">删除基站</button>
+        <button class="btn btn-danger btn-flat" @click="deleteDevice()">删除设备</button>
       </div>
       <!--<button class="btn btn-warning btn-flat" tabindex="-1"-->
-              <!--data-toggle="modal" data-target="#userAllotRoleModal" @click="">XXXX-->
+      <!--data-toggle="modal" data-target="#userAllotRoleModal" @click="">XXXX-->
       <!--</button>-->
     </div>
     <div class="content">
       <div class="box box-solid box-primary box-flat">
         <div class="box-header">
-          <div class="box-title">基站列表</div>
+          <div class="box-title">设备列表</div>
         </div>
         <div class="box-body">
           <table class="table table-hover table-striped table-bordered">
             <tr>
               <th>选择</th>
-              <th>基站编号</th>
+              <th>设备类型</th>
+              <th>设备编号</th>
               <th>IP</th>
               <th>端口</th>
               <th>归属机构</th>
+              <th>操作</th>
             </tr>
-            <tr v-for="(baseStation, index) in baseStations">
-              <td><input type="checkbox" title="选择" v-bind:value="index" v-model.number="selectedbaseStationIndex"></td>
-              <td v-text="baseStation.code"></td>
-              <td v-text="baseStation.ip"></td>
-              <td v-text="baseStation.port"></td>
-              <td v-text="baseStation.departmentCode"></td>
+            <tr v-for="(device, index) in devices">
+              <td><input type="checkbox" title="选择" v-bind:value="index" v-model.number="selectedDeviceIndex"></td>
+              <td v-text="showType(device.type)"></td>
+              <td v-text="device.code"></td>
+              <td v-text="device.ip"></td>
+              <td v-text="device.port"></td>
+              <td v-text="device.departmentCode"></td>
+              <td>
+                <button class="btn btn-danger btn-sm btn-flat" @click="stopAlarm(device.code)"
+                        v-show="device.type === 3 || device.type === 4">停止报警
+                </button>
+              </td>
             </tr>
           </table>
-          <!--基站添加更新模态框-->
-          <div class="modal fade" style="color: #1b6d85" id="baseStationModal" role="dialog">
+          <!--设备添加更新模态框-->
+          <div class="modal fade" style="color: #1b6d85" id="deviceModal" role="dialog">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h3 style="display: inline">添加/修改用户</h3>
+                  <h3 style="display: inline">添加/修改设备</h3>
                   <button class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
                   <div class="row">
                     <div class="col-md-6">
                       <div class="input-group">
-                        <span class="input-group-addon">基站编号</span>
-                        <input type="text" class="form-control" title="请输入基站编号" v-model="baseStationInput.code">
+                        <span class="input-group-addon">设备类型</span>
+                        <select class="form-control" v-model.number="deviceInput.type">
+                          <option value="1">基站</option>
+                          <option value="2">交接定位器</option>
+                          <option value="3">门禁定位器</option>
+                          <option value="4">监控定位器</option>
+                        </select>
+                      </div>
+                      <br>
+                      <div class="input-group">
+                        <span class="input-group-addon">设备编号</span>
+                        <input type="text" class="form-control" title="设备编号" v-model="deviceInput.code">
                       </div>
                       <br>
                       <div class="input-group">
                         <span class="input-group-addon">IP地址</span>
-                        <input type="text" class="form-control" title="请输入IP地址" v-model="baseStationInput.ip">
+                        <input type="text" class="form-control" placeholder="请输入IP地址（仅针对基站）"
+                               v-bind:disabled="deviceInput.type !== 1" v-model="deviceInput.ip">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="input-group">
+                        <span class="input-group-addon">是否可用</span>
+                        <select class="form-control" disabled>
+                          <option value="1">可用</option>
+                          <option value="0">不可用</option>
+                        </select>
+                      </div>
+                      <br>
+                      <div class="input-group">
                         <span class="input-group-addon">隶属机构</span>
-                        <select class="form-control" title="选择隶属机构" v-model="baseStationInput.departmentCode">
+                        <select class="form-control" title="选择隶属机构" v-model="deviceInput.departmentCode">
                           <option v-for="bank in banks" v-bind:value="bank.code" v-text="bank.name"></option>
                         </select>
                       </div>
                       <br>
                       <div class="input-group">
                         <span class="input-group-addon">端口号</span>
-                        <input type="number" class="form-control" title="请输入基站编号" v-model.number="baseStationInput.port">
+                        <input type="number" class="form-control" placeholder="请输入端口（仅针对基站）"
+                               v-bind:disabled="deviceInput.type !== 1" v-model.number="deviceInput.port">
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                  <button class="btn btn-primary" data-dismiss="modal" @click="addBaseStation()">确定</button>
+                  <button class="btn btn-primary" data-dismiss="modal" @click="addDevice()">确定</button>
                 </div>
               </div>
             </div>
@@ -172,21 +200,22 @@
       }
       this.getModule();
       this.getBank();
-      this.getBaseStation();
+      this.getDevice();
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
       parentModuleAvailable: [],
-      baseStations: [],
+      devices: [],
       banks: [],
-      baseStationInput: {
+      deviceInput: {
+        type: null,
         code: null,
         ip: null,
         port: null,
         departmentCode: null,
       },
-      selectedbaseStationIndex: [],
-      deleteBaseStationId: [],
+      selectedDeviceIndex: [],
+      deleteDeviceId: [],
     },
     methods: {
       getModule: function () {
@@ -237,14 +266,14 @@
           }
         });
       },
-      getBaseStation: function () {
+      getDevice: function () {
         let that = this;
         $.ajax({
-          url: getUrlLocal() + 'baseStation/all' + '?departmentCode=' + that.loginUser.departmentCode,
+          url: getUrlLocal() + 'device/' + that.loginUser.departmentCode + '/all',
           type: 'get',
           success: function (data) {
             if (data.isSuccess) {
-              that.baseStations = data.result;
+              that.devices = data.result;
             } else {
               alert(data.result);
             }
@@ -254,27 +283,49 @@
           }
         });
       },
+      showType: function (type) {
+        let typeDesc;
+        switch (type) {
+          case 1:
+            typeDesc = '基站';
+            break;
+          case 2:
+            typeDesc = '交接定位器';
+            break;
+          case 3:
+            typeDesc = '门禁定位器';
+            break;
+          case 4:
+            typeDesc = '监控定位器';
+            break;
+          default:
+            typeDesc = '';
+            break;
+        }
+        return typeDesc;
+      },
       clearInputData: function () {
         let that = this;
-        that.baseStationInput = {
+        that.deviceInput = {
+          type: null,
           code: null,
           ip: null,
           port: null,
           departmentCode: that.loginUser.departmentCode,
         }
       },
-      addBaseStation: function () {
+      addDevice: function () {
         let that = this;
         $.ajax({
-          url: getUrlLocal() + 'baseStation/add',
+          url: getUrlLocal() + 'device/add',
           type: 'post',
           contentType: 'application/json',
-          data: JSON.stringify(that.baseStationInput),
+          data: JSON.stringify(that.deviceInput),
           success: function (data) {
             if (data.isSuccess) {
-              alert('添加基站成功！');
+              alert('添加设备成功！');
               that.clearInputData();
-              that.getBaseStation();
+              that.getDevice();
             } else {
               alert(data.result);
             }
@@ -284,41 +335,37 @@
           }
         });
       },
-      updateBaseStation: function () {
+      updateDevice: function () {
         let that = this;
-        if (that.selectedbaseStationIndex.length > 1) {
-          alert('不能同时更新多个基站！');
-        } else if (that.selectedbaseStationIndex.length === 0) {
-          alert('请选择一个基站！');
+        if (that.selectedDeviceIndex.length > 1) {
+          alert('不能同时更新多个设备！');
+        } else if (that.selectedDeviceIndex.length === 0) {
+          alert('请选择一个设备！');
         } else {
-          that.baseStationInput = that.baseStations[that.selectedbaseStationIndex[0]];
-          // if (n === 1) {
-          //   that.selectedRoleId = [];
-          //   that.getRoleIdByUserId(that.userInput.id);
-          // }
+          that.deviceInput = that.devices[that.selectedDeviceIndex[0]];
         }
       },
-      deleteBaseStation: function () {
+      deleteDevice: function () {
         let that = this;
-        if (that.selectedbaseStationIndex.length === 0) {
-          alert("请至少选择一个用户");
+        if (that.selectedDeviceIndex.length === 0) {
+          alert("请至少选择一个设备");
         } else {
-          that.selectedbaseStationIndex.forEach(function (item) {
-            if (!that.deleteBaseStationId.includes(that.baseStations[item].id)) {
-              that.deleteBaseStationId.push(that.baseStations[item].id);
+          that.selectedDeviceIndex.forEach(function (item) {
+            if (!that.deleteDeviceId.includes(that.devices[item].id)) {
+              that.deleteDeviceId.push(that.devices[item].id);
             }
           });
-          let ids = that.deleteBaseStationId.toString();
-          console.log('要删除的基站的id：' + ids);
+          let ids = that.deleteDeviceId.toString();
+          console.log('要删除的设备的id：' + ids);
           $.ajax({
-            url: getUrlLocal() + 'baseStation/del/' + ids,
+            url: getUrlLocal() + 'device/del/' + ids,
             type: 'post',
             success: function (data) {
               if (data.isSuccess) {
                 console.log('请求成功，信息：' + data.result);
-                that.getBaseStation();
-                that.selectedbaseStationIndex = [];
-                that.deleteBaseStationId = [];
+                that.getDevice();
+                that.selectedDeviceIndex = [];
+                that.deleteDeviceId = [];
               } else {
                 alert(data.result);
               }
@@ -329,6 +376,23 @@
           });
         }
       },
+      stopAlarm: function (code) {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'cmd/locators/'+ code+'/stopAlarm',
+          type:'post',
+          success: function (data) {
+            if (data.isSuccess) {
+              console.log(data.result);
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      }
     }
   })
 </script>

@@ -112,7 +112,7 @@
               <!--<td>正常</td>-->
               <td v-text="box.boxItemType === 1 ? '现金' : '非现金'"></td>
 
-              <td v-text="showProcess(box.process)"></td>
+              <td><b v-text="showProcess(box.process)"></b></td>
               <td>
                 <button class="btn btn-primary btn-sm btn-flat" data-toggle="modal" data-target="#itemsModal"
                         @click="boxIndex = index">查看
@@ -251,7 +251,10 @@
             result = '审核拒绝';
             break;
           case 6:
-            result = '待定。。。';
+            result = '网点 => 在途';
+            break;
+          case 7:
+            result = '在途 => 金库';
             break;
           default:
             result = '';
