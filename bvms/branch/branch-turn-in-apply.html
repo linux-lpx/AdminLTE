@@ -353,7 +353,7 @@
       getBox: function () {
         let that = this;
         $.ajax({
-          url: getUrlLocal() + 'box/all',
+          url: getUrlLocal() + 'box/'+ that.loginUser.departmentCode +'/all',
           type: 'GET',
           success: function (data) {
             if (data.isSuccess) {

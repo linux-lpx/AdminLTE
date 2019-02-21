@@ -113,9 +113,9 @@
                       <div class="input-group">
                         <span class="input-group-addon">尾箱位置</span>
                         <select class="form-control" title="尾箱类型" v-model.number="boxInput.locationId">
-                          <option value="0">在金库</option>
+                          <option value="0">在网点</option>
                           <option value="1">在途中</option>
-                          <option value="2">在网点</option>
+                          <option value="2">在金库</option>
                         </select>
                       </div>
                       <br>
@@ -168,7 +168,7 @@
               <th>尾箱类型</th>
               <th>尾箱当前所在机构</th>
               <th>是否正常</th>
-              <th>是否启用</th>
+              <!--<th>是否启用</th>-->
             </tr>
             <tr v-for="(box, index) in boxes">
               <td><input type="checkbox" title="选择" v-bind:value="index" v-model="selectedBoxIndex"></td>
@@ -178,7 +178,7 @@
               <td v-text="box.typeId === 1 ? '业务箱' : '其他'"></td>
               <td v-text="box.currentBankCode"></td>
               <td v-text="box.hasException === 0 ? '正常' : '异常'"></td>
-              <td v-text="box.runStateName"></td>
+              <!--<td v-text="box.runStateName"></td>-->
             </tr>
           </table>
         </div>
