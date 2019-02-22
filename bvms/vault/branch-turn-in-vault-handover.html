@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>网点上缴交接</title>
+  <title>金库入库交接</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
@@ -71,7 +71,7 @@
   <!--内容-->
   <section class="content-wrapper">
     <div class="content-header">
-      <h1>网点上缴交接</h1>
+      <h1>金库入库交接</h1>
     </div>
     <div class="content">
       <ol class="breadcrumb" style="border-radius: 0;">
@@ -275,9 +275,9 @@
       banks: [],
       boxes: [],
       // 位置类型：0-网点，1-在途中，2-金库。用于处理【场景错误异常】
-      site: 0,
+      site: 1,
       // 交际类型：1-离开金库，2-进入金库，3-离开网点，4-进入网点。
-      handoverType: 3,
+      handoverType: 2,
       turnInTaskBoxes: [],
       checkResult: {
         success: false,
@@ -420,7 +420,7 @@
           url: getUrlLocal() + 'task/branchTurnInApplyInfo' +
             '?departmentCode=' + that.loginUser.departmentCode +
             '&taskType=' + '1' +
-            '&process=' + '4',
+            '&process=' + '6',
           type: 'get',
           success: function (data) {
             if (data.isSuccess) {
@@ -501,7 +501,6 @@
             alert('与服务器通信失败，请联系管理员');
           }
         });
-
       },
       handoverBoxes: function () {
         let that = this;
@@ -556,7 +555,7 @@
           return box.code;
         });
         let info = {
-          process: 6,
+          process: 8,
           loginName: that.loginUser.loginName,
           id: that.loginUser.id,
           taskCodes: taskCodes.toString(),
@@ -584,9 +583,9 @@
           return box.boxOuterCode;
         });
         let info = {
-          currentBankCode: '押运途中',
-          locationId: 1,
-          locationName: '押运途中',
+          currentBankCode: that.loginUser.departmentCode,
+          locationId: 2,
+          locationName: '在金库',
           boxOuterCodes: boxOuterCodes.toString(),
         };
         $.ajax({

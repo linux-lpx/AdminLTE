@@ -26,7 +26,8 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a></li>
+          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -76,24 +77,46 @@
       <h1>图表测试</h1>
     </div>
     <div class="content">
-      <div>
-        <div class="box box-danger">
-          <div class="box-header with-border">
-            <div class="box-title">本网点上缴统计（上周）</div>
-            <div class="box-tools pull-right">
-              <button class="btn btn-box-tool" @click="lastWeekTurninChart()">
-                <i class="fa fa-refresh"></i>
-              </button>
-              <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="box box-danger">
+            <div class="box-header with-border">
+              <div class="box-title">本网点上缴统计（上周）</div>
+              <div class="box-tools pull-right">
+                <button class="btn btn-box-tool" @click="lastWeekTurninChart()">
+                  <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+              </div>
             </div>
-          </div>
-          <div class="box-body">
-            <div class="chart">
-              <canvas id="lastWeekTurnin"></canvas>
+            <div class="box-body">
+              <div class="chart">
+                <canvas id="lastWeekTurnin"></canvas>
+              </div>
             </div>
+            <div class="box-footer">底部</div>
           </div>
-          <div class="box-footer">底部</div>
         </div>
+        <div class="col-md-6">
+          <div class="box box-danger">
+            <div class="box-header with-border">
+              <div class="box-title">本网点上缴统计（本周）</div>
+              <div class="box-tools pull-right">
+                <button class="btn btn-box-tool" @click="getWeekTurnInTask(1)">
+                  <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="box-body">
+              <div class="chart">
+                <canvas id="currentWeekTurnin"></canvas>
+              </div>
+            </div>
+            <div class="box-footer">底部</div>
+          </div>
+        </div>
+
       </div>
       <div class="row">
         <div class="col-md-6">
@@ -283,7 +306,7 @@
         window.location.href = '../system/bvms-login.html';
       }
       this.getModule();
-      this.lastWeekTurninChart();
+      this.getWeekTurnInTask(1);
       this.loadChart1();
       this.loadChart2();
       this.loadChart3();
@@ -297,6 +320,8 @@
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
       parentModuleAvailable: [],
       labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周天'],
+      lastWeekTurnInTask: [],
+      currentWeekTurnInTask: [],
       data: [10, 20, 30, 40, 50, 80, 70],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
@@ -350,29 +375,95 @@
           }
         });
       },
+      getWeekTurnInTask: function (type) {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'statistics/weekTurnInTask/'+ that.loginUser.departmentCode +'/'+ type,
+          type: 'get',
+          success: function (data) {
+            if (data.isSuccess) {
+              that.currentWeekTurnInTask = JSON.parse(data.result);
+              that.currentWeekTurninChart();
+              that.lastWeekTurninChart();
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
       lastWeekTurninChart: function () {
         let ctx = document.getElementById("lastWeekTurnin").getContext('2d');
+        let chartData = [];
+        this.lastWeekTurnInTask.forEach(function (item) {
+          chartData.push(item.length);
+        });
+        console.log(chartData);
         let content = {
           type: 'bar',
           data: {
             labels: this.labels,
             datasets: [
               {
-                label: '柱状图',
+                label: '上缴任务数量（以箱子为单位）',
                 type: 'bar',
-                data: this.data,
+                data: chartData,
                 backgroundColor: this.backgroundColor,
                 borderColor: this.borderColor,
                 borderWidth: this.borderWidth,
               },
-              // {
-              //   type: 'line',
-              //   label: '曲线图',
-              //   data: this.data,
-              //   backgroundColor: '#0000ff00',
-              //   borderColor: '#0000ff',
-              //   borderWidth: this.borderWidth,
-              // }
+              {
+                type: 'line',
+                label: '曲线图',
+                data: chartData,
+                backgroundColor: '#0000ff00',
+                borderColor: '#0000ff',
+                borderWidth: this.borderWidth,
+              }
+            ],
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+        };
+        new Chart(ctx, content);
+      },
+      currentWeekTurninChart: function () {
+        let ctx = document.getElementById("currentWeekTurnin").getContext('2d');
+        let chartData = [];
+        this.currentWeekTurnInTask.forEach(function (item) {
+          chartData.push(item.length);
+        });
+        console.log(chartData);
+        let content = {
+          type: 'bar',
+          data: {
+            labels: this.labels,
+            datasets: [
+              {
+                label: '上缴任务数量（以箱子为单位）',
+                type: 'bar',
+                data: chartData,
+                backgroundColor: this.backgroundColor,
+                borderColor: this.borderColor,
+                borderWidth: this.borderWidth,
+              },
+              {
+                type: 'line',
+                label: '曲线图',
+                data: chartData,
+                backgroundColor: '#0000ff00',
+                borderColor: '#0000ff',
+                borderWidth: this.borderWidth,
+              }
             ],
           },
           options: {

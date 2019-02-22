@@ -82,14 +82,11 @@
         </button>
         <button class="btn btn-danger btn-flat" @click="deleteDevice()">删除设备</button>
       </div>
-      <!--<button class="btn btn-warning btn-flat" tabindex="-1"-->
-      <!--data-toggle="modal" data-target="#userAllotRoleModal" @click="">XXXX-->
-      <!--</button>-->
     </div>
     <div class="content">
       <div class="box box-solid box-primary box-flat">
         <div class="box-header">
-          <div class="box-title">设备列表</div>
+          <div class="box-title">当前机构设备列表</div>
         </div>
         <div class="box-body">
           <table class="table table-hover table-striped table-bordered">
@@ -102,7 +99,7 @@
               <th>归属机构</th>
               <th>操作</th>
             </tr>
-            <tr v-for="(device, index) in devices">
+            <tr v-for="(device, index) in devices" style="vertical-align: middle">
               <td><input type="checkbox" title="选择" v-bind:value="index" v-model.number="selectedDeviceIndex"></td>
               <td v-text="showType(device.type)"></td>
               <td v-text="device.code"></td>
@@ -139,12 +136,12 @@
                       <br>
                       <div class="input-group">
                         <span class="input-group-addon">设备编号</span>
-                        <input type="text" class="form-control" title="设备编号" v-model="deviceInput.code">
+                        <input type="number" class="form-control" title="设备编号" v-model="deviceInput.code">
                       </div>
                       <br>
                       <div class="input-group">
                         <span class="input-group-addon">IP地址</span>
-                        <input type="text" class="form-control" placeholder="请输入IP地址（仅针对基站）"
+                        <input type="text" class="form-control" placeholder="仅针对基站，其他类型设备输入无效"
                                v-bind:disabled="deviceInput.type !== 1" v-model="deviceInput.ip">
                       </div>
                     </div>
@@ -166,7 +163,7 @@
                       <br>
                       <div class="input-group">
                         <span class="input-group-addon">端口号</span>
-                        <input type="number" class="form-control" placeholder="请输入端口（仅针对基站）"
+                        <input type="number" class="form-control" placeholder="仅针对基站，其他类型设备输入无效"
                                v-bind:disabled="deviceInput.type !== 1" v-model.number="deviceInput.port">
                       </div>
                     </div>
@@ -323,7 +320,7 @@
           data: JSON.stringify(that.deviceInput),
           success: function (data) {
             if (data.isSuccess) {
-              alert('添加设备成功！');
+              alert('添加/更新设备成功！');
               that.clearInputData();
               that.getDevice();
             } else {

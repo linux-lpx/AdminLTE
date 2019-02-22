@@ -82,7 +82,9 @@
 
     <!--内容头部-->
     <div class="content-header">
-      <h1>网点上缴<small>test branch-turn-in2</small></h1>
+      <h1>网点上缴
+        <small>test branch-turn-in2</small>
+      </h1>
     </div>
 
     <!--内容主体-->
@@ -134,7 +136,7 @@
                 </select>
               </div>
               <br>
-              <div class="input-group"  v-bind:class="{'has-error' : turnInTaskBox.boxCode === null}">
+              <div class="input-group" v-bind:class="{'has-error' : turnInTaskBox.boxCode === null}">
                 <span class="input-group-addon"
                       v-bind:class="{'input-error' : turnInTaskBox.boxCode === null}">尾箱编号</span>
                 <select class="form-control" title="选择尾箱编号" v-model="turnInTaskBox.boxCode">
@@ -215,7 +217,7 @@
                 </div>
               </div>
               <div class="col-md-3">
-                <div class="input-group"  v-bind:class="{'has-error' : item.amount < 1}">
+                <div class="input-group" v-bind:class="{'has-error' : item.amount < 1}">
                   <span class="input-group-addon" title="每把包含纸币100张"
                         v-bind:class="{'input-error' : item.amount < 1}">数量（把）</span>
                   <input type="number" class="form-control" v-model.number="item.amount" placeholder="请输入把数信息">
@@ -347,7 +349,7 @@
       getBox: function () {
         let that = this;
         $.ajax({
-          url: getUrlLocal() + 'box/'+ that.loginUser.departmentCode +'/all',
+          url: getUrlLocal() + 'box/' + that.loginUser.departmentCode + '/all',
           type: 'GET',
           success: function (data) {
             if (data.isSuccess) {
@@ -471,7 +473,7 @@
               ];
               alert(data.result);
             } else {
-              console.log(data.result);
+              alert(data.result + '可能是数据填写未规范，请检查后填写提交');
             }
           },
           error: function () {
