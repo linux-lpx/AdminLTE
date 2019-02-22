@@ -83,7 +83,7 @@
             <div class="box-header with-border">
               <div class="box-title">本网点上缴统计（上周）</div>
               <div class="box-tools pull-right">
-                <button class="btn btn-box-tool" @click="lastWeekTurninChart()">
+                <button class="btn btn-box-tool" @click="getWeekTurnInTask(1)">
                   <i class="fa fa-refresh"></i>
                 </button>
                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -116,7 +116,6 @@
             <div class="box-footer">底部</div>
           </div>
         </div>
-
       </div>
       <div class="row">
         <div class="col-md-6">
@@ -384,7 +383,6 @@
             if (data.isSuccess) {
               that.currentWeekTurnInTask = JSON.parse(data.result);
               that.currentWeekTurninChart();
-              that.lastWeekTurninChart();
             } else {
               alert(data.result);
             }

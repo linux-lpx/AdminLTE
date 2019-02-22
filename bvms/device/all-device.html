@@ -376,8 +376,8 @@
       stopAlarm: function (code) {
         let that = this;
         $.ajax({
-          url: getUrlLocal() + 'cmd/locators/'+ code+'/stopAlarm',
-          type:'post',
+          url: getUrlLocal() + 'cmd/' + that.loginUser.departmentCode + '/locators/' + code + '/stopAlarm',
+          type: 'post',
           success: function (data) {
             if (data.isSuccess) {
               console.log(data.result);

@@ -74,6 +74,9 @@
       <h1>尾箱实时信息（腾帜）</h1>
       <br>
       <button class="btn btn-primary btn-flat" @click="getTzBox()">获取信息</button>
+      <button class="btn btn-primary btn-flat" @click="getTzBox()"
+              v-bind:disabled="exceptionTzBoxes.length === 0">处理异常
+      </button>
     </div>
     <div class="content">
       <div class="box box-solid box-primary box-flat">
@@ -97,6 +100,7 @@
               <th>操作记录数</th>
               <th>是否异常</th>
               <th>说明</th>
+              <!--<th>操作</th>-->
             </tr>
             <tr v-for="(tzBox, index) in tzBoxes">
               <td v-text="index + 1"></td>
@@ -113,6 +117,7 @@
               <td v-text="tzBox.data.recordCount"></td>
               <td v-text="tzBox.data.hasException?'是':'否'"></td>
               <td v-text="tzBox.data.memo"></td>
+              <!--<td><button class="btn btn-sm btn-danger btn-flat">处理异常</button></td>-->
             </tr>
           </table>
         </div>
@@ -140,6 +145,7 @@
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
       parentModuleAvailable: [],
       tzBoxes: [],
+      exceptionTzBoxes: [],
     },
     methods: {
       getModule: function () {
@@ -177,11 +183,16 @@
         let that = this;
         that.tzBoxes = [];
         $.ajax({
-          url: getUrlLocal() + 'box/allTzBoxes',
+          url: getUrlLocal() + 'box/' + that.loginUser.departmentCode + '/allTzBoxes',
           type: 'get',
           success: function (data) {
             if (data.isSuccess) {
               that.tzBoxes = JSON.parse(data.result);
+              that.exceptionTzBoxes = that.tzBoxes.filter(function (box) {
+                if (box.data.hasException) {
+                  return box;
+                }
+              })
             } else {
               alert(data.result);
             }
@@ -198,7 +209,7 @@
             result = '网点';
             break;
           case 1:
-            result = '途中';
+            result = '押运途中';
             break;
           case 2:
             result = '金库';
@@ -208,6 +219,25 @@
             break
         }
         return result;
+      },
+      handlerException: function () {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'box/' + that.loginUser.departmentCode + '/boxHandlerException',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(that.exceptionTzBoxes),
+          success: function (data) {
+            if (data.isSuccess) {
+
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
       }
     },
 

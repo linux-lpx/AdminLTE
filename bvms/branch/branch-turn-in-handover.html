@@ -88,7 +88,7 @@
       <div title="押运员验证界面" v-show="part1">
         <div class="row">
           <div class="col-md-6">
-            <div class="box box-default box-flat">
+            <div class="box box-primary box-solid box-flat">
               <div class="box-header with-border">
                 <div class="box-title">指纹验证</div>
               </div>
@@ -100,7 +100,7 @@
             </div>
           </div>
           <div class="col-md-6">
-            <div class="box box-default box-flat">
+            <div class="box box-primary box-solid box-flat">
               <div class="box-header with-border">
                 <div class="box-title">密码验证</div>
               </div>
@@ -142,18 +142,21 @@
         <div class="row">
           <div class="col-md-3">
             <button class="btn btn-primary btn-flat btn-block" v-bind:disabled="turnInTaskBoxes.length === 0"
-                    @click="checkBoxes()" >清点尾箱</button>
+                    @click="checkBoxes()">清点尾箱
+            </button>
           </div>
           <div class="col-md-3">
             <button class="btn btn-primary btn-flat btn-block" v-bind:disabled="!checkResult.success"
-                    @click="handlerException()">处理异常</button>
+                    @click="handlerException()">处理异常
+            </button>
           </div>
           <div class="col-md-3">
             <button class="btn btn-success btn-flat btn-block" v-bind:disabled="checkResult.data.hasException"
-                    @click="handoverBoxes()">确认交接</button>
+                    @click="handoverBoxes()">确认交接
+            </button>
           </div>
           <!--<div class="col-md-3">-->
-            <!--<button class="btn btn-primary btn-flat btn-block">按钮</button>-->
+          <!--<button class="btn btn-primary btn-flat btn-block">按钮</button>-->
           <!--</div>-->
         </div>
         <br>
@@ -161,7 +164,7 @@
           <div class="col-md-6">
             <div class="box box-solid box-primary box-flat">
               <div class="box-header">
-                <div class="box-title">待押运尾箱列表</div>
+                <div class="box-title" v-text="'待押运尾箱列表'+turnInTaskBoxes.length+'个'"></div>
               </div>
               <div class="box-body">
                 <table class="table table-bordered table-striped table-striped table-hover">
@@ -179,14 +182,13 @@
                   </tr>
                 </table>
               </div>
-              <div class="box-footer" v-text="'押运的尾箱：' + turnInTaskBoxes.length">押运的尾箱：</div>
             </div>
           </div>
           <div class="col-md-6" v-show="checkResult.success">
             <div class="box box-solid box-flat"
                  v-bind:class="{'box-danger':checkResult.data.hasException,'box-primary':!checkResult.data.hasException}">
               <div class="box-header">
-                <div class="box-title">交接区已清点出的尾箱列表</div>
+                <div class="box-title" v-text="'交接区已清点出的尾箱列表：'+checkResult.data.hasException?'有异常':'没有异常'"></div>
               </div>
               <div class="box-body">
                 <table class="table table-bordered table-striped table-striped table-hover">
@@ -274,7 +276,7 @@
       isOpenPart2: false,
       banks: [],
       boxes: [],
-      // 位置类型：0-网点，1-在途中，2-金库。用于处理【场景错误异常】
+      // 位置类型：0-网点，1-押运途中，2-金库。用于处理【场景错误异常】
       site: 0,
       // 交际类型：1-离开金库，2-进入金库，3-离开网点，4-进入网点。
       handoverType: 3,
@@ -458,7 +460,7 @@
           codes: codes.toString(),
         };
         $.ajax({
-          url: getUrlLocal() + 'cmd/boxesCheck',
+          url: getUrlLocal() + 'cmd/' + that.loginUser.departmentCode + '/boxesCheck',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(data),
@@ -486,7 +488,7 @@
           return box;
         });
         $.ajax({
-          url: getUrlLocal() + 'cmd/boxesHandleExceptionAll',
+          url: getUrlLocal() + 'cmd/' + that.loginUser.departmentCode + '/boxesHandleExceptionAll',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(boxesException),
@@ -518,7 +520,7 @@
           expectTimes: 60
         };
         $.ajax({
-          url: getUrlLocal() + 'cmd/boxesHandover',
+          url: getUrlLocal() + 'cmd/' + that.loginUser.departmentCode + '/boxesHandover',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(data),
