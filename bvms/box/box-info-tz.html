@@ -74,7 +74,7 @@
       <h1>尾箱实时信息（腾帜）</h1>
       <br>
       <button class="btn btn-primary btn-flat" @click="getTzBox()">获取信息</button>
-      <button class="btn btn-primary btn-flat" @click="getTzBox()"
+      <button class="btn btn-primary btn-flat" @click="handlerException()"
               v-bind:disabled="exceptionTzBoxes.length === 0">处理异常
       </button>
     </div>
@@ -229,7 +229,8 @@
           data: JSON.stringify(that.exceptionTzBoxes),
           success: function (data) {
             if (data.isSuccess) {
-
+              that.getTzBox();
+              alert(data.result);
             } else {
               alert(data.result);
             }
@@ -240,8 +241,6 @@
         });
       }
     },
-
-
   })
 </script>
 

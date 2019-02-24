@@ -44,10 +44,8 @@
           <a href="#"><i class="fa fa-circle text-success">&numsp;</i>{{loginUser.name}}</a>
         </div>
       </div>
-
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header" style="font-size: large">主菜单</li>
-
         <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable"
             v-if="item.type === 0 || item.parentId === 1">
           <a href="#">
@@ -131,7 +129,7 @@
                     <div class="col-md-6">
                       <div class="input-group">
                         <span class="input-group-addon">内置编号</span>
-                        <input type="text" class="form-control" title="内置编号" v-model="boxInput.innerCode">
+                        <input type="number" class="form-control" title="内置编号" v-model="boxInput.innerCode">
                       </div>
                       <br>
                       <div class="input-group">
@@ -338,6 +336,7 @@
       },
       updateBox: function (n) {
         let that = this;
+        console.log(n);
         if (that.selectedBoxIndex.length > 1) {
           alert('不能同时更新多个尾箱！');
         } else if (that.selectedBoxIndex.length === 0) {
@@ -382,8 +381,8 @@
           id: null,
           outerCode: null,
           innerCode: null,
-          currentBankCode: null,
-          belongBankCode: null,
+          currentBankCode: this.loginUser.departmentCode,
+          belongBankCode: this.loginUser.departmentCode,
           belongBankName: null,
           typeId: 1,
           typeName: null,
