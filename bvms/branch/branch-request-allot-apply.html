@@ -92,19 +92,19 @@
     <div class="content">
       <div class="row">
         <div class="col-md-3">
-          <button class="btn btn-success btn-flat btn-block" @click="addTurnInTaskBox()">添加尾箱</button>
+          <button class="btn btn-success btn-flat btn-block" @click="addrequestAllotTaskBox()">添加尾箱</button>
         </div>
         <div class="col-md-3">
           <button class="btn btn-primary btn-flat btn-block" @click="submitTask()">确认申请</button>
         </div>
       </div>
       <br>
-      <div class="box box-primary box-solid box-flat" v-for="(turnInTaskBox, boxIndex) in turnInTaskBoxes">
+      <div class="box box-primary box-solid box-flat" v-for="(requestAllotTaskBox, boxIndex) in requestAllotTaskBoxes">
         <div class="box-header">
-          <div class="box-title" v-text="'尾箱：' + turnInTaskBox.boxCode"></div>
+          <div class="box-title" v-text="'尾箱：' + (boxIndex + 1)"></div>
           <div class="box-tools pull-right">
             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-            <button class="btn btn-box-tool" data-widget="remove" @click="delTurnInTaskBox(boxIndex)">
+            <button class="btn btn-box-tool" @click="delrequestAllotTaskBox(boxIndex)">
               <i class="fa fa-remove"></i>
             </button>
           </div>
@@ -112,85 +112,55 @@
         <div class="box-body">
           <div class="row">
             <div class="col-md-3">
-              <div class="input-group" v-bind:class="{'has-error' : turnInTaskBox.targetVaultCode === null}">
+              <div class="input-group" v-bind:class="{'has-error' : requestAllotTaskBox.targetVaultCode === null}">
                 <span class="input-group-addon"
-                      v-bind:class="{'input-error' : turnInTaskBox.targetVaultCode === null}">上缴金库</span>
-                <select class="form-control" title="选择上缴金库" v-model="turnInTaskBox.targetVaultCode">
+                      v-bind:class="{'input-error' : requestAllotTaskBox.targetVaultCode === null}">目标金库</span>
+                <select class="form-control" title="选择目标金库" v-model="requestAllotTaskBox.targetVaultCode">
                   <option v-for="vault in vaults" v-bind:value="vault.code" v-text="vault.name"></option>
-                </select>
-              </div>
-              <br>
-              <div class="input-group">
-                <span class="input-group-addon">物品类别</span>
-                <select class="form-control" title="选择物品类别" v-model.number="turnInTaskBox.itemsType">
-                  <option value="1">现金</option>
-                  <option value="0">非现金</option>
                 </select>
               </div>
             </div>
             <div class="col-md-3">
               <div class="input-group">
                 <span class="input-group-addon">箱包类别</span>
-                <select class="form-control" title="选择箱包类别" v-model.number="turnInTaskBox.boxType">
+                <select class="form-control" title="选择箱包类别" v-model.number="requestAllotTaskBox.boxType">
                   <option value="1">箱</option>
                   <option value="0">包</option>
                 </select>
               </div>
-              <br>
-              <div class="input-group" v-bind:class="{'has-error' : turnInTaskBox.boxCode === null}">
-                <span class="input-group-addon"
-                      v-bind:class="{'input-error' : turnInTaskBox.boxCode === null}">尾箱编号</span>
-                <select class="form-control" title="选择尾箱编号" v-model="turnInTaskBox.boxCode">
-                  <option v-for="box in boxes" v-bind:value="box.outerCode" v-text="box.outerCode"></option>
-                </select>
-              </div>
             </div>
             <div class="col-md-3">
               <div class="input-group">
-                <span class="input-group-addon">任务类别</span>
-                <select class="form-control" title="选择任务类别" v-model.number="turnInTaskBox.boxTaskType">
-                  <option value="1">上缴</option>
-                  <option value="0">寄存</option>
-                </select>
-              </div>
-              <br>
-              <div class="input-group">
-                <span class="input-group-addon">尾箱状态</span>
-                <select class="form-control" title="选择尾箱状态" v-model.number="turnInTaskBox.boxIsNormal">
-                  <option value="1">正常</option>
-                  <option value="0">异常</option>
+                <span class="input-group-addon">物品类别</span>
+                <select class="form-control" title="选择物品类别" v-model.number="requestAllotTaskBox.itemsType">
+                  <option value="1">现金</option>
+                  <option value="0">非现金</option>
                 </select>
               </div>
             </div>
             <div class="col-md-3">
               <div class="input-group"
-                   v-bind:class="{'has-error' : turnInTaskBox.turnInDate === null || turnInTaskBox.turnInDate === ''}">
+                   v-bind:class="{'has-error':requestAllotTaskBox.reqAllotDate===null||requestAllotTaskBox.reqAllotDate===''}">
                 <span class="input-group-addon"
-                      v-bind:class="{'input-error' : turnInTaskBox.turnInDate === null || turnInTaskBox.turnInDate === ''}">上缴日期</span>
-                <input type="date" class="form-control" title="选择上缴日期" v-model="turnInTaskBox.turnInDate">
-              </div>
-              <br>
-              <div class="input-group"
-                   v-bind:class="{'has-error' : turnInTaskBox.turnBackDate === null || turnInTaskBox.turnBackDate === ''}">
-                <span class="input-group-addon"
-                      v-bind:class="{'input-error' : turnInTaskBox.turnBackDate === null || turnInTaskBox.turnBackDate === ''}">解领日期</span>
-                <input type="date" class="form-control" title="选择解领日期" v-model="turnInTaskBox.turnBackDate">
+                      v-bind:class="{'input-error':requestAllotTaskBox.reqAllotDate===null||requestAllotTaskBox.reqAllotDate===''}">
+                  调拨日期</span>
+                <input type="date" class="form-control" title="选择调拨日期" v-model="requestAllotTaskBox.reqAllotDate">
               </div>
             </div>
           </div>
           <br>
-          <div class="form-group" v-show="turnInTaskBox.itemsType === 0">
+          <div class="form-group" v-show="requestAllotTaskBox.itemsType === 0">
             <label>物品说明</label>
             <textarea class="form-control" rows="2" placeholder="物品说明 ..."
-                      v-model="turnInTaskBox.contentDesc"></textarea>
+                      v-model="requestAllotTaskBox.contentDesc"></textarea>
           </div>
-          <div class="row" v-show="turnInTaskBox.itemsType === 1">
+          <div class="row" v-show="requestAllotTaskBox.itemsType === 1">
             <div class="col-md-3">
               <button class="btn btn-default btn-flat btn-block" @click="addItem(boxIndex)">添加现金</button>
             </div>
           </div>
-          <br v-show="turnInTaskBox.itemsType === 1">
-          <div v-for="(item, itemIndex) in turnInTaskBox.items" v-show="turnInTaskBox.itemsType === 1">
+          <br v-show="requestAllotTaskBox.itemsType === 1">
+          <div v-for="(item, itemIndex) in requestAllotTaskBox.items" v-show="requestAllotTaskBox.itemsType === 1">
             <div class="row">
               <div class="col-md-3">
                 <div class="input-group">
@@ -233,9 +203,7 @@
                 </div>
               </div>
               <div class="col-md-1">
-                <button class="btn btn-danger btn-flat btn-block" @click="delItem(boxIndex, itemIndex)">
-                  删除
-                </button>
+                <button class="btn btn-danger btn-flat btn-block" @click="delItem(boxIndex, itemIndex)">删除</button>
               </div>
             </div>
             <br>
@@ -263,11 +231,8 @@
       const that = this;
       slide.getModule(this.loginUser.id, this.loginUser.loginName, function (module) {
         that.parentModuleAvailable = module;
-        console.log(module);
       });
-      // this.getModule();
       this.getVault();
-      this.getBox();
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
@@ -275,16 +240,12 @@
       currentPagePath: sessionStorage.getItem('path'),
       parentModuleAvailable: [],
       boxNumber: '',
-      turnInTaskBoxes: [
+      requestAllotTaskBoxes: [
         {
           targetVaultCode: null,  // 目标金库
           boxType: 1,  // 箱包类别 【1-箱】，【0-包】
-          boxTaskType: 1,  // 任务类别 【1-上缴】，【0-寄存】
-          turnInDate: null,  // 上缴日期
+          reqAllotDate: null,  // 上缴日期
           itemsType: 1,  // 物品类别 【1-现金】，【0-非现金】
-          boxCode: null,  // 尾箱编号
-          boxIsNormal: 1,  // 尾箱状态 【1-正常】，【0-非正常】
-          turnBackDate: null,  // 解领日期
           contentDesc: '',  // 物品说明
           items: [
             {
@@ -297,47 +258,9 @@
         }
       ],
       vaults: [],
-      boxes: [],
       bankCode: '',
     },
     methods: {
-      // getModule: function () {
-      //   let that = this;
-      //   let url = getUrlLocal() + 'system_module/all' + '?loginName=' + that.loginUser.loginName + '&id=' +
-      //     that.loginUser.id;
-      //   if (that.loginUser.loginName === 'system') {
-      //     url = getUrlLocal() + 'system_module/allModule';
-      //   }
-      //   $.ajax({
-      //     url: url,
-      //     type: 'GET',
-      //     success: function (data) {
-      //       if (data.isSuccess) {
-      //         that.modules = data.result;
-      //         that.parentModuleAll = data.result.filter(function (item) {
-      //           if (item.type === 0) {
-      //             return item;
-      //           }
-      //         });
-      //         that.parentModuleAvailable = data.result.filter(function (vaule) {
-      //           if (vaule.isAvailable === 1) {
-      //             let children = data.result.filter(function (item) {
-      //               if (item.parentId === vaule.id && item.isAvailable === 1) {
-      //                 return item;
-      //               }
-      //             });
-      //             return vaule['children'] = children;
-      //           }
-      //         });
-      //       } else {
-      //         alert(data.result);
-      //       }
-      //     },
-      //     error: function () {
-      //       alert('与服务器通信失败，请联系管理员');
-      //     }
-      //   });
-      // },
       goToPage: function (path, parentName) {
         route.goToPage(path, parentName);
       },
@@ -358,40 +281,15 @@
           }
         });
       },
-      getBox: function () {
-        let that = this;
-        $.ajax({
-          url: getUrlLocal() + 'box/' + that.loginUser.departmentCode + '/all',
-          type: 'GET',
-          success: function (data) {
-            if (data.isSuccess) {
-              that.boxes = data.result;
-            } else {
-              alert(data.result);
-            }
-          },
-          error: function () {
-            alert('与服务器通信失败，请联系管理员');
-          }
-        });
-      },
-      addTurnInTaskBox: function () {
-        if (this.turnInTaskBoxes.length >= this.boxes.length) {
-          alert('当前机构只有' + this.boxes.length + '个尾箱，不能添加更多了！');
-          return;
-        }
-        let turnInTaskBox = {
+      addrequestAllotTaskBox: function () {
+        let requestAllotTaskBox = {
           applyBankCode: this.loginUser.departmentCode, // 申请机构
           applyUserId: this.loginUser.id, // 申请人id
           applyUserLoginName: this.loginUser.loginName, // 申请人登录名
           targetVaultCode: null,
           boxType: 1,
-          boxTaskType: 1,
-          turnInDate: null,
+          reqAllotDate: null,
           itemsType: 1,
-          boxCode: null,
-          boxIsNormal: 1,
-          turnBackDate: null,
           contentDesc: '',
           items: [
             {
@@ -402,10 +300,10 @@
             }
           ]
         };
-        this.turnInTaskBoxes.push(turnInTaskBox);
+        this.requestAllotTaskBoxes.push(requestAllotTaskBox);
       },
-      delTurnInTaskBox: function (boxIndex) {
-        this.turnInTaskBoxes.splice(boxIndex, 1);
+      delrequestAllotTaskBox: function (boxIndex) {
+        this.requestAllotTaskBoxes.splice(boxIndex, 1);
       },
       addItem: function (boxIndex) {
         let item = {
@@ -414,10 +312,10 @@
           amount: 0,
           sum: null,
         };
-        this.turnInTaskBoxes[boxIndex].items.push(item);
+        this.requestAllotTaskBoxes[boxIndex].items.push(item);
       },
       delItem: function (boxIndex, itemIndex) {
-        this.turnInTaskBoxes[boxIndex].items.splice(itemIndex, 1);
+        this.requestAllotTaskBoxes[boxIndex].items.splice(itemIndex, 1);
       },
       showCashItemSum: function (currency, denomination, amount) {
         let currencyDetail;
@@ -442,21 +340,19 @@
       },
       submitTask: function () {
         let that = this;
-        if (that.turnInTaskBoxes.length < 1) {
-          alert('没有要上缴的箱子，请重新申请！');
+        if (that.requestAllotTaskBoxes.length < 1) {
+          alert('没有调拨的数据，请重新申请！');
           return;
         }
-        let isUnqualified = that.turnInTaskBoxes.some(function (turnInTaskBoxe) {
-          // 检查这四个数据是否为空，如果为空则返回true
-          if (turnInTaskBoxe.targetVaultCode === null ||
-            turnInTaskBoxe.turnInDate === null ||
-            turnInTaskBoxe.turnBackDate === null ||
-            turnInTaskBoxe.boxCode === null) {
+        let isUnqualified = that.requestAllotTaskBoxes.some(function (requestAllotTaskBoxe) {
+          // 检查这两个数据是否为空，如果为空则返回true
+          if (requestAllotTaskBoxe.targetVaultCode === null ||
+            requestAllotTaskBoxe.reqAllotDate === null) {
             return true;
           }
           // 当物品类别为现金才检查现金数量是否小于等于0
-          if (turnInTaskBoxe.itemsType === 1) {
-            return turnInTaskBoxe.items.some(function (item) {
+          if (requestAllotTaskBoxe.itemsType === 1) {
+            return requestAllotTaskBoxe.items.some(function (item) {
               // 如果数量错误（数量小于等于0），则返回true。
               if (item.amount <= 0) {
                 return true;
@@ -470,30 +366,26 @@
           alert('申请信息填写不规范，请检查页面红色部分，重新填写再申请！');
           return;
         }
-        that.turnInTaskBoxes.forEach(function (turnInTaskBoxe) {
-          turnInTaskBoxe.applyBankCode = that.loginUser.departmentCode;
-          turnInTaskBoxe.applyUserId = that.loginUser.id; // 申请人id
-          turnInTaskBoxe.applyUserLoginName = that.loginUser.loginName; // 申请人登录名
+        that.requestAllotTaskBoxes.forEach(function (requestAllotTaskBoxe) {
+          requestAllotTaskBoxe.applyBankCode = that.loginUser.departmentCode;
+          requestAllotTaskBoxe.applyUserId = that.loginUser.id; // 申请人id
+          requestAllotTaskBoxe.applyUserLoginName = that.loginUser.loginName; // 申请人登录名
         });
         $.ajax({
-          url: getUrlLocal() + 'task/branchTurnInApply',
+          url: getUrlLocal() + 'task/branchRequestAllotApply',
           type: 'post',
           contentType: 'application/json',
-          data: JSON.stringify(that.turnInTaskBoxes),
+          data: JSON.stringify(that.requestAllotTaskBoxes),
           success: function (data) {
             if (data.isSuccess) {
               console.log(data.result);
               // 申请成功后将页面恢复至初始化状态
-              that.turnInTaskBoxes = [
+              that.requestAllotTaskBoxes = [
                 {
                   targetVaultCode: null,
                   boxType: 1,
-                  boxTaskType: 1,
-                  turnInDate: null,
+                  reqAllotDate: null,
                   itemsType: 1,
-                  boxCode: null,
-                  boxIsNormal: 1,
-                  turnBackDate: null,
                   contentDesc: '',
                   items: [
                     {
@@ -516,10 +408,8 @@
         });
       }
     }
-
   });
 </script>
-
 </body>
 </html>
 
