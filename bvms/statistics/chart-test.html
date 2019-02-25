@@ -319,6 +319,8 @@
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
+      currentPageParentName: sessionStorage.getItem('parentName'),
+      currentPagePath: sessionStorage.getItem('path'),
       parentModuleAvailable: [],
       labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周天'],
       lastWeekTurnInTask: [],

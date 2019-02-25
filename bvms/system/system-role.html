@@ -214,15 +214,18 @@
       if (this.loginUser === null) {
         window.location.href = 'bvms-login.html';
       }
-      const that = this;
-      slide.getModule(this.loginUser.id, this.loginUser.loginName, function (module) {
-        that.parentModuleAvailable = module;
-        console.log(module);
-      });
+      this.getModule();
+      // const that = this;
+      // slide.getModule(this.loginUser.id, this.loginUser.loginName, function (module) {
+      //   that.parentModuleAvailable = module;
+      //   console.log(module);
+      // });
       this.getRole();
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
+      currentPageParentName: sessionStorage.getItem('parentName'),
+      currentPagePath: sessionStorage.getItem('path'),
 
       // 侧边栏目录模块对应的数据
       parentModuleAvailable: [],

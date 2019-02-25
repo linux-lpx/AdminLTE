@@ -208,15 +208,17 @@
       if (this.loginUser === null) {
         window.location.href = 'bvms-login.html';
       }
-      const that = this;
-      slide.getModule(this.loginUser.id, this.loginUser.loginName, function (module) {
-        that.parentModuleAvailable = module;
-
-        console.log(module);
-      });
+      this.getModule();
+      // const that = this;
+      // slide.getModule(this.loginUser.id, this.loginUser.loginName, function (module) {
+      //   that.parentModuleAvailable = module;
+      //   console.log(module);
+      // });
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
+      currentPageParentName: sessionStorage.getItem('parentName'),
+      currentPagePath: sessionStorage.getItem('path'),
       modules: [],
       parentModuleAll: [],
       parentModuleAvailable: [],

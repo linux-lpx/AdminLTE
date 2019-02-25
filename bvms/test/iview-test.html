@@ -123,6 +123,8 @@
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
+      currentPageParentName: sessionStorage.getItem('parentName'),
+      currentPagePath: sessionStorage.getItem('path'),
       parentModuleAvailable: [],
       visible: false,
       treeData:[],
