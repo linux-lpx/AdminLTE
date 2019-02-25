@@ -2,7 +2,7 @@
 <html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>网点上缴授权</title>
+  <title>网点调拨审核</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
@@ -73,21 +73,21 @@
   <!--内容-->
   <section class="content-wrapper">
     <div class="content-header">
-      <h1>网点上缴授权</h1>
+      <h1>网点调拨审核</h1>
       <br>
       <div class="row">
         <div class="col-md-2">
-          <button class="btn btn-success btn-flat btn-block" @click="authorizeApplyAll(2)">批量授权</button>
+          <button class="btn btn-success btn-flat btn-block" @click="checkAll(4)">批量审核</button>
         </div>
         <div class="col-md-2">
-          <button class="btn btn-danger btn-flat btn-block" @click="authorizeApplyAll(3)">批量拒绝</button>
+          <button class="btn btn-danger btn-flat btn-block" @click="checkAll(5)">批量拒绝</button>
         </div>
       </div>
     </div>
     <div class="content">
       <div class="box box-solid box-primary box-flat">
         <div class="box-header">
-          <div class="box-title">网点上缴授权</div>
+          <div class="box-title">网点上缴审核</div>
         </div>
         <div class="box-body">
           <table class="table table-hover table-striped table-bordered">
@@ -97,38 +97,28 @@
               <th>目标机构</th>
               <th>申请人</th>
               <th>申请时间</th>
-              <th>上缴日期</th>
-              <th>解领时间</th>
-              <th>尾箱编号</th>
               <th>箱包类别</th>
-              <th>尾箱任务类别</th>
-              <!--<th>尾箱状态</th>-->
               <th>物品类别</th>
               <th>授权</th>
               <th>拒绝</th>
               <th>详情</th>
             </tr>
-            <tr v-for="(box, index) in turnInTaskBoxes">
+            <tr v-for="(box, index) in requestAllotTaskBoxes">
               <td><input type="checkbox" title="选择" v-bind:value="index" v-model="selectTaskBoxIndex"></td>
               <td v-text="box.applyBankCode"></td>
               <td v-text="box.targetBankCode"></td>
               <td v-text="box.applyUserLoginName"></td>
               <td v-text="box.createTime"></td>
-              <td v-text="box.turnInDate"></td>
-              <td v-text="box.turnBackDate"></td>
-              <td v-text="box.boxOuterCode"></td>
               <td v-text="box.boxType === 1 ? '箱' : '包'"></td>
-              <td v-text="box.boxTaskType === 1 ? '上缴' : '寄存'"></td>
-              <!--<td>正常</td>-->
               <td v-text="box.boxItemType === 1 ? '现金' : '非现金'"></td>
               <td>
                 <button class="btn btn-success btn-sm btn-flat"
-                        @click="authorizeApply(box.code, 2)">授权
+                        @click="check(box.code, 4)">审核
                 </button>
               </td>
               <td>
                 <button class="btn btn-danger btn-sm btn-flat"
-                        @click="authorizeApply(box.code, 3)">拒绝
+                        @click="check(box.code, 5)">拒绝
                 </button>
               </td>
               <td>
@@ -139,33 +129,33 @@
             </tr>
           </table>
           <!--任务箱中内容的模态框-->
-          <div class="modal fade" style="color: #1b6d85" id="itemsModal" role="dialog" v-if="turnInTaskBoxes.length > 0">
+          <div class="modal fade" style="color: #1b6d85" id="itemsModal" role="dialog" v-if="requestAllotTaskBoxes.length > 0">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h3 style="display: inline" v-text="'任务箱' + turnInTaskBoxes[boxIndex].boxOuterCode"></h3>
+                  <h3 style="display: inline">任务箱</h3>
                   <button class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
                   <table class="table table-striped table-hover table-bordered"
-                         v-show="turnInTaskBoxes[boxIndex].boxItemType === 1">
+                         v-show="requestAllotTaskBoxes[boxIndex].boxItemType === 1">
                     <tr>
                       <th>币种</th>
                       <th>面额</th>
                       <th>数量</th>
                       <th>总数</th>
                     </tr>
-                    <tr v-for="item in turnInTaskBoxes[boxIndex].items">
+                    <tr v-for="item in requestAllotTaskBoxes[boxIndex].items">
                       <td v-text="showCurrency(item.currency)"></td>
                       <td v-text="item.denomination"></td>
                       <td v-text="item.amount * 100 + '张'"></td>
                       <td v-text="showCashItemSum(item.currency, item.denomination, item.amount)"></td>
                     </tr>
                   </table>
-                  <div class="form-group" v-show="turnInTaskBoxes[boxIndex].boxItemType === 0">
+                  <div class="form-group" v-show="requestAllotTaskBoxes[boxIndex].boxItemType === 0">
                     <label>物品说明</label>
                     <textarea class="form-control" rows="2" placeholder="物品说明 ..."
-                              v-model="turnInTaskBoxes[boxIndex].items[0].itemDesc" disabled></textarea>
+                              v-model="requestAllotTaskBoxes[boxIndex].items[0].itemDesc" disabled></textarea>
                   </div>
                 </div>
               </div>
@@ -191,12 +181,12 @@
         window.location.href = '../system/bvms-login.html';
       }
       this.getModule();
-      this.getTurnInTaskBoxes();
+      this.getRequestAllotTaskBoxes();
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
       parentModuleAvailable: [],
-      turnInTaskBoxes: [],
+      requestAllotTaskBoxes: [],
       boxIndex: 0,
       selectTaskBoxIndex: [],
     },
@@ -232,20 +222,20 @@
           }
         });
       },
-      getTurnInTaskBoxes: function () {
+      getRequestAllotTaskBoxes: function () {
         let that = this;
         $.ajax({
           url: getUrlLocal() + 'task/taskInfo' +
             '?departmentCode=' + that.loginUser.departmentCode +
-            '&taskType=' + '1' +
-            '&process=' + '1',
+            '&taskType=' + '2' +
+            '&process=' + '2',
           type: 'get',
           success: function (data) {
             if (data.isSuccess) {
-              that.turnInTaskBoxes = JSON.parse(data.result);
+              that.requestAllotTaskBoxes = JSON.parse(data.result);
               // 先清空复选框勾选
               that.selectTaskBoxIndex = [];
-              for (let i = 0; i < that.turnInTaskBoxes.length; i++) {
+              for (let i = 0; i < that.requestAllotTaskBoxes.length; i++) {
                 // 再依次勾选
                 that.selectTaskBoxIndex.push(i);
               }
@@ -264,26 +254,26 @@
       showCashItemSum: function (currency, denomination, amount) {
         return (amount * denomination * 100) + this.showCurrency(currency);
       },
-      authorizeApply: function (code, authorizeType) {
+      check: function (code, checkType) {
         let that = this;
         let info = {
           loginName: that.loginUser.loginName,
           id: that.loginUser.id,
           taskCode: code,
-          authorizeType: authorizeType,
+          checkType: checkType,
         };
         $.ajax({
-          url: getUrlLocal() + 'task/authorize',
+          url: getUrlLocal() + 'task/check',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(info),
           success: function (data) {
             if (data.isSuccess) {
               alert(data.result);
-              that.getTurnInTaskBoxes();
+              that.getRequestAllotTaskBoxes();
             } else {
               alert(data.result);
-              that.getTurnInTaskBoxes();
+              that.getRequestAllotTaskBoxes();
             }
           },
           error: function () {
@@ -291,34 +281,34 @@
           }
         });
       },
-      authorizeApplyAll: function (authorizeType) {
+      checkAll: function (checkType) {
         let that = this;
         if (that.selectTaskBoxIndex.length === 0) {
           alert('未选择任何任务箱！');
           return;
         }
         let taskCodes = that.selectTaskBoxIndex.map(function (value) {
-          return that.turnInTaskBoxes[value].code;
+          return that.requestAllotTaskBoxes[value].code;
         });
         console.log(taskCodes);
         let info = {
           loginName: that.loginUser.loginName,
           id: that.loginUser.id,
           taskCodes: taskCodes.toString(),
-          authorizeType: authorizeType,
+          checkType: checkType,
         };
         $.ajax({
-          url: getUrlLocal() + 'task/authorizeAll',
+          url: getUrlLocal() + 'task/checkAll',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(info),
           success: function (data) {
             if (data.isSuccess) {
               alert(data.result);
-              that.getTurnInTaskBoxes();
+              that.getRequestAllotTaskBoxes();
             } else {
               alert(data.result);
-              that.getTurnInTaskBoxes();
+              that.getRequestAllotTaskBoxes();
             }
           },
           error: function () {

@@ -26,7 +26,7 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          <li><a href="javascript:void(0)" onclick="route.logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
           </li>
         </ul>
       </div>
@@ -266,25 +266,7 @@
         return result;
       },
       showCurrency: function (currency) {
-        let currencyDesc;
-        switch (currency) {
-          case 1:
-            currencyDesc = '人民币';
-            break;
-          case 2:
-            currencyDesc = '美元';
-            break;
-          case 3:
-            currencyDesc = '欧元';
-            break;
-          case 4:
-            currencyDesc = '英镑';
-            break;
-          default:
-            currencyDesc = '人民币';
-            break;
-        }
-        return currencyDesc;
+        return util.showCurrency(currency);
       },
       showCashItemSum: function (currency, denomination, amount) {
         return (amount * denomination * 100) + this.showCurrency(currency);

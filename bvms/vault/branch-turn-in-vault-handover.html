@@ -26,7 +26,7 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          <li><a href="javascript:void(0)" onclick="route.logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
           </li>
         </ul>
       </div>
@@ -419,7 +419,7 @@
       getTurnInTaskBoxes: function () {
         let that = this;
         $.ajax({
-          url: getUrlLocal() + 'task/branchTurnInApplyInfo' +
+          url: getUrlLocal() + 'task/taskInfo' +
             '?departmentCode=' + that.loginUser.departmentCode +
             '&taskType=' + '1' +
             '&process=' + '6',
