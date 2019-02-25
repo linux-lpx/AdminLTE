@@ -111,7 +111,7 @@
               <!--<td>正常</td>-->
               <td v-text="box.boxItemType === 1 ? '现金' : '非现金'"></td>
 
-              <td v-text="showProcess(box.process)"></td>
+              <td><b v-text="showProcess(box.process)"></b></td>
               <td>
                 <button class="btn btn-primary btn-sm btn-flat" data-toggle="modal" data-target="#itemsModal"
                         @click="boxIndex = index">查看
@@ -176,7 +176,6 @@
       const that = this;
       slide.getModule(this.loginUser.id, this.loginUser.loginName, function (module) {
         that.parentModuleAvailable = module;
-        console.log(module);
       });
       this.getTurnInHistoryTaskBoxes();
     },
