@@ -200,6 +200,7 @@
 <script src="../../bower_components/vue/dist/vue.js"></script>
 <script src="../../dist/js/pages/bvms-constant.js"></script>
 <script src="../../dist/js/pages/bvms-system.js"></script>
+<script src="../../dist/js/pages/module.js"></script>
 <script>
   new Vue({
     el: '#app',
@@ -207,7 +208,12 @@
       if (this.loginUser === null) {
         window.location.href = 'bvms-login.html';
       }
-      this.getModule();
+      const that = this;
+      slide.getModule(this.loginUser.id, this.loginUser.loginName, function (module) {
+        that.parentModuleAvailable = module;
+
+        console.log(module);
+      });
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),

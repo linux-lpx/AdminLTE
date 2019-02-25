@@ -101,6 +101,7 @@
 <script type="text/javascript"
         src="http://api.map.baidu.com/getscript?v=3.0&ak=0bMgGrEuYIiMFWgQu21gVShV1wP2YpDY"></script>
 <script src="../../dist/js/pages/bvms-system.js"></script>
+<script src="../../dist/js/pages/module.js"></script>
 <script>
   new Vue({
     el: '#app',
@@ -108,7 +109,11 @@
       if (this.loginUser === null) {
         window.location.href = '../system/bvms-login.html';
       }
-      this.getModule();
+      const that = this;
+      slide.getModule(this.loginUser.id, this.loginUser.loginName, function (module) {
+        that.parentModuleAvailable = module;
+        console.log(module);
+      });
       // 百度地图API功能
       let map = new BMap.Map("mapTest");    // 创建Map实例
       map.centerAndZoom(new BMap.Point(121.3774480000, 31.2353110000), 11);  // 初始化地图,设置中心点坐标和地图级别
@@ -131,52 +136,9 @@
       parentModuleAvailable: [],
     },
     methods: {
-      getModule: function () {
-        let that = this;
-        let url = getUrlLocal() + 'system_module/all' + '?loginName=' + that.loginUser.loginName + '&id=' +
-          that.loginUser.id;
-        if (that.loginUser.loginName === 'system') {
-          url = getUrlLocal() + 'system_module/allModule';
-        }
-        $.ajax({
-          url: url,
-          type: 'GET',
-          success: function (data) {
-            if (data.isSuccess) {
-              that.parentModuleAvailable = data.result.filter(function (vaule) {
-                if (vaule.isAvailable === 1) {
-                  let children = data.result.filter(function (item) {
-                    if (item.parentId === vaule.id && item.isAvailable === 1) {
-                      return item;
-                    }
-                  });
-                  return vaule['children'] = children;
-                }
-              });
-            } else {
-              alert(data.result);
-            }
-          },
-          error: function () {
-            alert('与服务器通信失败，请联系管理员');
-          }
-        });
-      }
     }
 
   });
-  // // 百度地图API功能
-  // var map = new BMap.Map("mapTest");    // 创建Map实例
-  // map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);  // 初始化地图,设置中心点坐标和地图级别
-  // //添加地图类型控件
-  // map.addControl(new BMap.MapTypeControl({
-  //   mapTypes: [
-  //     BMAP_NORMAL_MAP,
-  //     BMAP_HYBRID_MAP
-  //   ]
-  // }));
-  // map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
-  // map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
 </script>
 
 </body>

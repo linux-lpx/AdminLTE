@@ -236,6 +236,7 @@
 <script src="../../bower_components/vue/dist/vue.js"></script>
 <script src="../../dist/js/pages/bvms-constant.js"></script>
 <script src="../../dist/js/pages/bvms-system.js"></script>
+<script src="../../dist/js/pages/module.js"></script>
 <script>
   new Vue({
     el: '#app',
@@ -243,7 +244,11 @@
       if (this.loginUser === null) {
         window.location.href = '../system/bvms-login.html';
       }
-      this.getModule();
+      const that = this;
+      slide.getModule(this.loginUser.id, this.loginUser.loginName, function (module) {
+        that.parentModuleAvailable = module;
+        console.log(module);
+      });
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
@@ -274,37 +279,6 @@
       boxesNotOK: [],
     },
     methods: {
-      getModule: function () {
-        let that = this;
-        let url = getUrlLocal() + 'system_module/all' + '?loginName=' + that.loginUser.loginName + '&id=' +
-          that.loginUser.id;
-        if (that.loginUser.loginName === 'system') {
-          url = getUrlLocal() + 'system_module/allModule';
-        }
-        $.ajax({
-          url: url,
-          type: 'GET',
-          success: function (data) {
-            if (data.isSuccess) {
-              that.parentModuleAvailable = data.result.filter(function (vaule) {
-                if (vaule.isAvailable === 1) {
-                  let children = data.result.filter(function (item) {
-                    if (item.parentId === vaule.id && item.isAvailable === 1) {
-                      return item;
-                    }
-                  });
-                  return vaule['children'] = children;
-                }
-              });
-            } else {
-              alert(data.result);
-            }
-          },
-          error: function () {
-            alert('与服务器通信失败，请联系管理员');
-          }
-        });
-      },
       checkBox: function (code) {
         let that = this;
         if (that.handoverType === null) {
