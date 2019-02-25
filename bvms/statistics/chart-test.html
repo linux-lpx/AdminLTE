@@ -45,10 +45,8 @@
           <a href="#"><i class="fa fa-circle text-success">&numsp;</i><span v-text="loginUser.name"></span></a>
         </div>
       </div>
-
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header" style="font-size: large">主菜单</li>
-
         <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable"
             v-if="item.type === 0 || item.parentId === 1">
           <a href="#">
@@ -66,7 +64,6 @@
             </li>
           </ul>
         </li>
-
       </ul>
     </section>
   </aside>
