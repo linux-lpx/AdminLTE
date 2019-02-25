@@ -59,6 +59,8 @@
 <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../../bower_components/vue/dist/vue.js"></script>
 <script src="../../dist/js/pages/bvms-constant.js"></script>
+<script src="../../dist/js/pages/bvms-system.js"></script>
+<script src="../../dist/js/pages/module.js"></script>
 <script>
 
   new Vue({
@@ -74,6 +76,9 @@
       checkRemb: null,
     },
     methods: {
+      goToPage: function (path, parentName) {
+        route.goToPage(path, parentName);
+      },
       login: function () {
         let that = this;
         $.ajax({
@@ -84,7 +89,7 @@
           success: function (data) {
             if (data.isSuccess) {
               sessionStorage.setItem('loginUser', data.result);
-              window.location.href = '../index/bvms-index.html';
+              that.goToPage('../index/bvms-index.html', '主页');
             } else {
               alert(data.result);
             }

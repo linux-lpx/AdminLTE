@@ -46,18 +46,19 @@
       </div>
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header" style="font-size: large">主菜单</li>
-        <li v-bind:class="{treeview:item.children.length > 0}" v-for="item in parentModuleAvailable"
+        <li v-bind:class="{treeview:item.children.length > 0, active:item.name === currentPageParentName}"
+            v-for="item in parentModuleAvailable"
             v-if="item.type === 0 || item.parentId === 1">
           <a href="#">
             <i class="fa fa-folder" v-bind:class="{'fa-file-text-o' : item.type === 1}">&numsp;</i>
             <span v-text="item.name"></span>
             <span class="pull-right-container">
-              <i class="fa pull-right" v-bind:class="{'fa-angle-left' : item.children.length > 0}">&numsp;</i>
+              <i class="fa pull-right" v-bind:class="{'fa-angle-left':item.children.length > 0}">&numsp;</i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li v-for="child in item.children">
-              <a v-bind:href="child.path">
+            <li v-for="child in item.children" v-bind:class="{active:child.path === currentPagePath}">
+              <a href="javascript:void(0)" @click="goToPage(child.path, item.name)">
                 <i class="fa fa-file-text-o">&numsp;</i>{{child.name}}
               </a>
             </li>
@@ -280,6 +281,9 @@
       deleteUserId: [],
     },
     methods: {
+      goToPage: function (path, parentName) {
+        route.goToPage(path, parentName);
+      },
       getRole: function () {
         let that = this;
         $.ajax({
