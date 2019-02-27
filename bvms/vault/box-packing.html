@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>尾箱装箱</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../../dist/css/bvms.css">
+</head>
+
+<!--body里面的class一定要设置样式，不然是白色的-->
+<body class="hold-transition skin-blue sidebar-mini">
+<div id="app" class="wrapper">
+
+  <!--顶部导航栏-->
+  <header class="main-header">
+    <a href="../index/bvms-index.html" class="logo">
+      <span class="logo-mini">BVMS</span>
+      <span class="logo-lg"><b>金库管理系统</b></span>
+    </a>
+    <nav class="navbar navbar-static-top">
+      <!--切换按钮（左侧的菜单栏的收缩与展开）-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <li><a href="javascript:void(0)" onclick="route.logout()"><i class="fa fa-sign-out"
+                                                                       title="退出登录">&numsp;</i></a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!--左边的菜单栏-->
+  <aside class="main-sidebar">
+    <section class="sidebar">
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+          <p v-text="loginUser.loginName"></p>
+          <a href="#"><i class="fa fa-circle text-success">&numsp;</i>{{loginUser.name}}</a>
+        </div>
+      </div>
+      <ul class="sidebar-menu" data-widget="tree">
+        <li class="header" style="font-size: large">主菜单</li>
+        <li v-bind:class="{treeview:item.children.length > 0, active:item.name === currentPageParentName}"
+            v-for="item in parentModuleAvailable"
+            v-if="item.type === 0 || item.parentId === 1">
+          <a href="#">
+            <i class="fa fa-folder" v-bind:class="{'fa-file-text-o' : item.type === 1}">&numsp;</i>
+            <span v-text="item.name"></span>
+            <span class="pull-right-container">
+              <i class="fa pull-right" v-bind:class="{'fa-angle-left':item.children.length > 0}">&numsp;</i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li v-for="child in item.children" v-bind:class="{active:child.path === currentPagePath}">
+              <a href="javascript:void(0)" @click="goToPage(child.path, item.name)">
+                <i class="fa fa-file-text-o">&numsp;</i>{{child.name}}
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+  </aside>
+
+  <!--内容-->
+  <section class="content-wrapper">
+    <div class="content-header">
+      <h1>尾箱装箱
+        <small>box-packing</small>
+      </h1>
+    </div>
+    <div class="content">
+      <div class="box box-solid box-primary box-flat">
+        <div class="box-header">
+          <div class="box-title">待调拨列表</div>
+        </div>
+        <div class="box-body">
+          <table class="table table-hover table-striped table-bordered">
+            <tr>
+              <th>序号</th>
+              <th>申请机构</th>
+              <th>目标机构</th>
+              <th>申请人</th>
+              <th>申请时间</th>
+              <th>箱包类别</th>
+              <th>物品类别</th>
+              <th>详情</th>
+              <th>操作</th>
+            </tr>
+            <tr v-for="(box, index) in taskBoxes">
+              <td v-text="index + 1"></td>
+              <td v-text="box.applyBankCode"></td>
+              <td v-text="box.targetBankCode"></td>
+              <td v-text="box.applyUserLoginName"></td>
+              <td v-text="box.createTime"></td>
+              <td v-text="box.boxType === 1 ? '箱' : '包'"></td>
+              <td v-text="box.boxItemType === 1 ? '现金' : '非现金'"></td>
+              <td>
+                <button class="btn btn-primary btn-sm btn-flat" data-toggle="modal" data-target="#itemsModal"
+                        @click="boxIndex = index">查看
+                </button>
+              </td>
+              <td>
+                <button class="btn btn-success btn-sm btn-flat" data-toggle="modal" data-target="#boxPackingModal"
+                        @click="boxIndex = index">装箱
+                </button>
+              </td>
+            </tr>
+          </table>
+          <!--任务箱中内容的模态框-->
+          <div class="modal fade" style="color: #1b6d85" id="itemsModal" role="dialog" v-if="taskBoxes.length > 0">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 style="display: inline" v-text="'任务'"></h3>
+                  <button class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  <table class="table table-striped table-hover table-bordered"
+                         v-show="taskBoxes[boxIndex].boxItemType === 1">
+                    <tr>
+                      <th>币种</th>
+                      <th>面额</th>
+                      <th>数量</th>
+                      <th>总数</th>
+                    </tr>
+                    <tr v-for="item in taskBoxes[boxIndex].items">
+                      <td v-text="showCurrency(item.currency)"></td>
+                      <td v-text="item.denomination"></td>
+                      <td v-text="item.amount * 100 + '张'"></td>
+                      <td v-text="showCashItemSum(item.currency, item.denomination, item.amount)"></td>
+                    </tr>
+                  </table>
+                  <div class="form-group" v-show="taskBoxes[boxIndex].boxItemType === 0">
+                    <label>物品说明</label>
+                    <textarea class="form-control" rows="2" placeholder="物品说明 ..."
+                              v-model="taskBoxes[boxIndex].items[0].itemDesc" disabled></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--尾箱装箱的模态框-->
+          <div class="modal fade" style="color: #1b6d85" id="boxPackingModal" role="dialog" v-if="taskBoxes.length > 0">
+            <div class="modal-dialog" style="width: 1200px">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 style="display: inline" v-text="'任务箱装箱'"></h3>
+                  <button class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <button class="btn btn-success btn-block btn-flat" @click="addQRCode()">添加二维码扫描结果</button>
+                    </div>
+                  </div>
+                  <br>
+                  <div v-for="(qrCode, index) in qrCodes">
+                    <div class="row">
+                      <div class="col-md-9">
+                        <input type="text" class="form-control" style="width: 100%" v-model="qrCode.code">
+                      </div>
+                      <div class="col-md-3">
+                        <button class="btn btn-danger btn-flat btn-block" @click="delQRCode(index)">移除</button>
+                      </div>
+                    </div>
+                    <br>
+                  </div>
+                  <div class="form-group" v-show="taskBoxes[boxIndex].boxItemType === 0">
+                    <label>物品说明</label>
+                    <textarea class="form-control" rows="2" placeholder="物品说明 ..."
+                              v-model="taskBoxes[boxIndex].contentDesc"></textarea>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <button class="btn btn-default btn-flat btn-block">添加现金条目</button>
+                    </div>
+                  </div>
+                  <br>
+                  <div v-for="(item, itemIndex) in taskBoxes[boxIndex].items"
+                       v-show="taskBoxes[boxIndex].boxItemType === 1">
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div class="input-group">
+                          <span class="input-group-addon">币种</span>
+                          <select class="form-control" title="币种" v-model.number="item.currency">
+                            <option value="1">人民币</option>
+                            <option value="2">美元</option>
+                            <option value="3">欧元</option>
+                            <option value="4">英镑</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="input-group">
+                          <span class="input-group-addon">面额</span>
+                          <select class="form-control" title="面额" v-model.number="item.denomination">
+                            <option value="100">100</option>
+                            <option value="50">50</option>
+                            <option value="20">20</option>
+                            <option value="10">10</option>
+                            <option value="5">5</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="input-group" v-bind:class="{'has-error' : item.amount < 1}">
+                          <span class="input-group-addon" title="每把包含纸币100张"
+                                v-bind:class="{'input-error' : item.amount < 1}">数量（把）</span>
+                          <input type="number" class="form-control" v-model.number="item.amount" placeholder="请输入把数信息">
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="input-group">
+                          <span class="input-group-addon">总额</span>
+                          <input type="text" class="form-control"
+                                 v-bind:title="showCashItemSum(item.currency, item.denomination, item.amount)"
+                                 v-bind:value="showCashItemSum(item.currency, item.denomination, item.amount)" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-1">
+                        <button class="btn btn-danger btn-flat btn-block" @click="delItem(boxIndex, itemIndex)">
+                          删除
+                        </button>
+                      </div>
+                    </div>
+                    <br>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                  <button class="btn btn-primary" data-dismiss="modal" @click="">确定</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../../dist/js/adminlte.min.js"></script>
+<script src="../../bower_components/vue/dist/vue.js"></script>
+<script src="../../dist/js/pages/bvms-constant.js"></script>
+<script src="../../dist/js/pages/bvms-system.js"></script>
+<script src="../../dist/js/pages/module.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    mounted: function () {
+      if (this.loginUser === null) {
+        window.location.href = '../system/bvms-login.html';
+      }
+      const that = this;
+      slide.getModule(this.loginUser.id, this.loginUser.loginName, function (module) {
+        that.parentModuleAvailable = module;
+      });
+      this.getTaskBoxes();
+    },
+    data: {
+      loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
+      currentPageParentName: sessionStorage.getItem('parentName'),
+      currentPagePath: sessionStorage.getItem('path'),
+      parentModuleAvailable: [],
+      taskBoxes: [],
+      // items: [
+      //   {
+      //     currency: 1,
+      //     denomination: 100,
+      //     amount: 0,
+      //     sum: null,
+      //   }
+      // ],
+      qrCodes: [{
+        code: '222'
+      }],
+      addQRCode: function () {
+        let qrCode = {
+          code: '222'
+        };
+        this.qrCodes.push(qrCode);
+      },
+      delQRCode: function (index) {
+        this.qrCodes.splice(index, 1)
+      },
+      boxIndex: 0
+    },
+    methods: {
+      goToPage: function (path, parentName) {
+        route.goToPage(path, parentName);
+      },
+      getTaskBoxes: function () {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'task/taskInfo' +
+            '?departmentCode=' + that.loginUser.departmentCode +
+            '&taskType=' + '2' +
+            '&process=' + '4',
+          type: 'get',
+          success: function (data) {
+            if (data.isSuccess) {
+              that.taskBoxes = JSON.parse(data.result);
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
+      showCurrency: function (currency) {
+        return util.showCurrency(currency);
+      },
+      showCashItemSum: function (currency, denomination, amount) {
+        return (amount * denomination * 100) + this.showCurrency(currency);
+      },
+    }
+
+  })
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

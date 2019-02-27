@@ -88,10 +88,10 @@
           <br>
           <div class="row">
             <div class="col-md-6">
-              <button class="btn btn-primary btn-flat btn-block">高级查询</button>
+              <button class="btn btn-primary btn-flat btn-block" @click="getFsn()">高级查询</button>
             </div>
             <div class="col-md-6">
-              <button class="btn btn-primary btn-flat btn-block">查询</button>
+              <button class="btn btn-primary btn-flat btn-block" @click="getFsn()">查询</button>
             </div>
           </div>
         </div>
@@ -170,6 +170,39 @@
               <th>信息分类</th>
               <th>解析版本</th>
             </tr>
+            <tr v-for="(fsn, index) in fsns">
+              <td v-text="index + 1"></td>
+              <td v-text="fsn.bankCode"></td>
+              <td v-text="fsn.bankName"></td>
+              <td v-text="fsn.collectUserLoginName"></td>
+              <td v-text="fsn.collectTime"></td>
+              <td v-text="fsn.collectTime"></td>
+              <td v-text="fsn.fsnCode"></td>
+              <td v-text="'冠字号图像'">冠字号图像</td>
+              <td v-text="fsn.deviceName">设备编号</td>
+              <td v-text="fsn.counterfeitMoney">真假币</td>
+              <td v-text="fsn.edition">版别</td>
+              <td v-text="fsn.denomination">面额</td>
+              <td v-text="fsn.businessType">业务模式</td>
+              <td v-text="fsn.peoplesBankBusinessType">人行业务类型</td>
+              <td v-text="fsn.atmBoxCode">ATM钞箱编码</td>
+              <td v-text="fsn.manufacturersCode">厂家编码</td>
+              <td v-text="fsn.saveTime">存储时间</td>
+              <td v-text="fsn.batchCode">批次号</td>
+              <td v-text="fsn.serialCode">流水号</td>
+              <td v-text="fsn.debugTime">调试时间</td>
+              <td v-text="fsn.prosCons">正反面</td>
+              <td v-text="fsn.returnReason">退钞票原因</td>
+              <td v-text="fsn.cashOutType">出钞类型</td>
+              <td v-text="'账号'">账号</td>
+              <td v-text="fsn.businessSerialCode">业务流水号</td>
+              <td v-text="fsn.errorCode">错误码</td>
+              <td v-text="fsn.sourceType">来源类型</td>
+              <td v-text="fsn.sourceInfo">来源信息</td>
+              <td v-text="fsn.levelOfNew">成色</td>
+              <td v-text="fsn.infoType">信息分类</td>
+              <td v-text="fsn.analysisEdition">解析版本</td>
+            </tr>
           </table>
         </div>
       </div>
@@ -195,6 +228,7 @@
       slide.getModule(this.loginUser.id, this.loginUser.loginName, function (module) {
         that.parentModuleAvailable = module;
       });
+      this.getFsn();
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
@@ -202,11 +236,29 @@
       currentPagePath: sessionStorage.getItem('path'),
       parentModuleAvailable: [],
       time: null,
+      fsns: [],
     },
     methods: {
       goToPage: function (path, parentName) {
         route.goToPage(path, parentName);
       },
+      getFsn: function () {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'fsn/all',
+          type: 'get',
+          success: function (data) {
+            if (data.isSuccess) {
+              that.fsns = data.result;
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      }
     }
 
   })
