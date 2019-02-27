@@ -15,3 +15,11 @@
 .vertical-middle {
   vertical-align: middle;
 }
+
+.square-flat {
+  /*border: 2px solid #d2d6de;*/
+  border: 1px solid #d2d6de;
+  padding: 15px;
+  margin: 0 0 15px;
+  background: #EEEEEE;
+}

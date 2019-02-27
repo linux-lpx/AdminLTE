@@ -156,84 +156,152 @@
                   <button class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                  <div class="row">
-                    <div class="col-md-3">
-                      <button class="btn btn-success btn-block btn-flat" @click="addQRCode()">添加二维码扫描结果</button>
-                    </div>
-                  </div>
-                  <br>
-                  <div v-for="(qrCode, index) in qrCodes">
-                    <div class="row">
-                      <div class="col-md-9">
-                        <input type="text" class="form-control" style="width: 100%" v-model="qrCode.code">
-                      </div>
-                      <div class="col-md-3">
-                        <button class="btn btn-danger btn-flat btn-block" @click="delQRCode(index)">移除</button>
-                      </div>
-                    </div>
-                    <br>
-                  </div>
-                  <div class="form-group" v-show="taskBoxes[boxIndex].boxItemType === 0">
-                    <label>物品说明</label>
-                    <textarea class="form-control" rows="2" placeholder="物品说明 ..."
-                              v-model="taskBoxes[boxIndex].contentDesc"></textarea>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-3">
-                      <button class="btn btn-default btn-flat btn-block">添加现金条目</button>
-                    </div>
-                  </div>
-                  <br>
-                  <div v-for="(item, itemIndex) in taskBoxes[boxIndex].items"
-                       v-show="taskBoxes[boxIndex].boxItemType === 1">
+                  <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 1">
                     <div class="row">
                       <div class="col-md-3">
-                        <div class="input-group">
-                          <span class="input-group-addon">币种</span>
-                          <select class="form-control" title="币种" v-model.number="item.currency">
-                            <option value="1">人民币</option>
-                            <option value="2">美元</option>
-                            <option value="3">欧元</option>
-                            <option value="4">英镑</option>
-                          </select>
+                        <button class="btn btn-success btn-block btn-flat" @click="addQRCode()">添加二维码扫描结果</button>
+                      </div>
+                    </div>
+                    <div v-for="(qrCode, index) in qrCodes">
+                      <br>
+                      <div class="row">
+                        <div class="col-md-9">
+                          <input type="text" class="form-control" style="width: 100%" v-model="qrCode.code">
+                        </div>
+                        <div class="col-md-3">
+                          <button class="btn btn-danger btn-flat btn-block" @click="delQRCode(index)">移除</button>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                  <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 0">
+                    <div class="form-group">
+                      <label>申请·物品说明</label>
+                      <textarea class="form-control" rows="2" placeholder="物品说明 ..."
+                                v-model="taskBoxes[boxIndex].items[0].itemDesc" disabled></textarea>
+                    </div>
+                  </div>
+                  <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 0">
+                    <div class="form-group">
+                      <label>装箱·物品说明</label>
+                      <textarea class="form-control" rows="2" placeholder="物品说明 ..."
+                                v-model="taskBoxes[boxIndex].items[0].itemDesc"></textarea>
+                    </div>
+                  </div>
+                  <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 1">
+                    <div class="row">
                       <div class="col-md-3">
-                        <div class="input-group">
-                          <span class="input-group-addon">面额</span>
-                          <select class="form-control" title="面额" v-model.number="item.denomination">
-                            <option value="100">100</option>
-                            <option value="50">50</option>
-                            <option value="20">20</option>
-                            <option value="10">10</option>
-                            <option value="5">5</option>
-                            <option value="2">2</option>
-                            <option value="1">1</option>
-                          </select>
-                        </div>
+                        <button class="btn btn-default btn-flat btn-block" disabled>申请·现金条目</button>
                       </div>
-                      <div class="col-md-3">
-                        <div class="input-group" v-bind:class="{'has-error' : item.amount < 1}">
+                    </div>
+                    <div v-for="(item, itemIndex) in taskBoxes[boxIndex].items">
+                      <br>
+                      <div class="row">
+                        <div class="col-md-3">
+                          <div class="input-group">
+                            <span class="input-group-addon">币种</span>
+                            <select class="form-control" title="币种" v-model.number="item.currency" disabled>
+                              <option value="1">人民币</option>
+                              <option value="2">美元</option>
+                              <option value="3">欧元</option>
+                              <option value="4">英镑</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="input-group">
+                            <span class="input-group-addon">面额</span>
+                            <select class="form-control" title="面额" v-model.number="item.denomination" disabled>
+                              <option value="100">100</option>
+                              <option value="50">50</option>
+                              <option value="20">20</option>
+                              <option value="10">10</option>
+                              <option value="5">5</option>
+                              <option value="2">2</option>
+                              <option value="1">1</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="input-group" v-bind:class="{'has-error' : item.amount < 1}">
                           <span class="input-group-addon" title="每把包含纸币100张"
                                 v-bind:class="{'input-error' : item.amount < 1}">数量（把）</span>
-                          <input type="number" class="form-control" v-model.number="item.amount" placeholder="请输入把数信息">
+                            <input type="number" class="form-control" v-model.number="item.amount"
+                                   placeholder="请输入把数信息" disabled>
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="input-group">
-                          <span class="input-group-addon">总额</span>
-                          <input type="text" class="form-control"
-                                 v-bind:title="showCashItemSum(item.currency, item.denomination, item.amount)"
-                                 v-bind:value="showCashItemSum(item.currency, item.denomination, item.amount)" disabled>
+                        <div class="col-md-2">
+                          <div class="input-group">
+                            <span class="input-group-addon">总额</span>
+                            <input type="text" class="form-control"
+                                   v-bind:title="showCashItemSum(item.currency, item.denomination, item.amount)"
+                                   v-bind:value="showCashItemSum(item.currency, item.denomination, item.amount)" disabled>
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-1">
-                        <button class="btn btn-danger btn-flat btn-block" @click="delItem(boxIndex, itemIndex)">
-                          删除
-                        </button>
+                        <div class="col-md-1">
+                          <button class="btn btn-danger btn-flat btn-block" @click="delItem(boxIndex, itemIndex)">
+                            删除
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <br>
+                  </div>
+                  <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 1">
+                    <div class="row">
+                      <div class="col-md-3">
+                        <button class="btn btn-success btn-flat btn-block">添加现金条目</button>
+                      </div>
+                    </div>
+                    <div v-for="(item, itemIndex) in taskBoxes[boxIndex].items">
+                      <br>
+                      <div class="row">
+                        <div class="col-md-3">
+                          <div class="input-group">
+                            <span class="input-group-addon">币种</span>
+                            <select class="form-control" title="币种" v-model.number="item.currency">
+                              <option value="1">人民币</option>
+                              <option value="2">美元</option>
+                              <option value="3">欧元</option>
+                              <option value="4">英镑</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="input-group">
+                            <span class="input-group-addon">面额</span>
+                            <select class="form-control" title="面额" v-model.number="item.denomination">
+                              <option value="100">100</option>
+                              <option value="50">50</option>
+                              <option value="20">20</option>
+                              <option value="10">10</option>
+                              <option value="5">5</option>
+                              <option value="2">2</option>
+                              <option value="1">1</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="input-group" v-bind:class="{'has-error' : item.amount < 1}">
+                          <span class="input-group-addon" title="每把包含纸币100张"
+                                v-bind:class="{'input-error' : item.amount < 1}">数量（把）</span>
+                            <input type="number" class="form-control" v-model.number="item.amount" placeholder="请输入把数信息">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="input-group">
+                            <span class="input-group-addon">总额</span>
+                            <input type="text" class="form-control"
+                                   v-bind:title="showCashItemSum(item.currency, item.denomination, item.amount)"
+                                   v-bind:value="showCashItemSum(item.currency, item.denomination, item.amount)" disabled>
+                          </div>
+                        </div>
+                        <div class="col-md-1">
+                          <button class="btn btn-danger btn-flat btn-block" @click="delItem(boxIndex, itemIndex)">
+                            删除
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="modal-footer">

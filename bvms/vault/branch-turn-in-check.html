@@ -250,7 +250,7 @@
           checkType: checkType,
         };
         $.ajax({
-          url: getUrlLocal() + 'task/branchTurnInCheck',
+          url: getUrlLocal() + 'task/check',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(info),
@@ -285,7 +285,7 @@
           checkType: checkType,
         };
         $.ajax({
-          url: getUrlLocal() + 'task/branchTurnInCheckAll',
+          url: getUrlLocal() + 'task/checkAll',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(info),
