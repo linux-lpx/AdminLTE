@@ -72,14 +72,209 @@
   <section class="content-wrapper">
     <div class="content-header">
       <h1>出库确认</h1>
+      <br>
+      <div class="row">
+        <div class="col-md-2">
+          <button class="btn btn-success btn-flat btn-block" @click="outWarehouseConfirmAll(10)">批量确认</button>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-danger btn-flat btn-block" @click="outWarehouseConfirmAll(11)">批量拒绝</button>
+        </div>
+      </div>
     </div>
     <div class="content">
       <div class="box box-solid box-primary box-flat">
         <div class="box-header">
-          <div class="box-title">待出库尾箱列表</div>
+          <div class="box-title">已装箱列表</div>
         </div>
         <div class="box-body">
-          <div>XXXX管理</div>
+          <table class="table table-hover table-striped table-bordered">
+            <tr>
+              <th>选择</th>
+              <th>序号</th>
+              <th>申请机构</th>
+              <th>目标机构</th>
+              <th>申请人</th>
+              <th>申请时间</th>
+              <th>调拨日期</th>
+              <th>箱包类别</th>
+              <th>尾箱编号</th>
+              <th>物品类别</th>
+              <th>详情</th>
+              <th>确认</th>
+              <th>拒绝</th>
+            </tr>
+            <tr v-for="(box, index) in taskBoxes">
+              <td><input type="checkbox" v-bind:value="index" v-model="selectedBoxIndex"></td>
+              <td v-text="index + 1"></td>
+              <td v-text="box.applyBankCode"></td>
+              <td v-text="box.targetBankCode"></td>
+              <td v-text="box.applyUserLoginName"></td>
+              <td v-text="box.createTime"></td>
+              <td v-text="box.reqAllotDate"></td>
+              <td v-text="box.boxType === 1 ? '箱' : '包'"></td>
+              <td v-text="box.boxOuterCode"></td>
+              <td v-text="box.boxItemType === 1 ? '现金' : '非现金'"></td>
+              <td>
+                <button class="btn btn-primary btn-sm btn-flat" data-toggle="modal" data-target="#boxingOverModal"
+                        @click="boxIndex = index">查看
+                </button>
+              </td>
+              <td>
+                <button class="btn btn-success btn-sm btn-flat" @click="outWarehouseConfirm(box.code, 10)">确认</button>
+              </td>
+              <td>
+                <button class="btn btn-danger btn-sm btn-flat" @click="outWarehouseConfirm(box.code, 11)">拒绝</button>
+              </td>
+            </tr>
+          </table>
+          <!--尾箱装箱的模态框-->
+          <div class="modal fade" style="color: #1b6d85" id="boxingOverModal" role="dialog" v-if="taskBoxes.length > 0">
+            <div class="modal-dialog" style="width: 1200px">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 style="display: inline" v-text="'任务箱:' + taskBoxes[boxIndex].boxOuterCode"></h3>
+                  <button class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  <!--二维码扫描结果录入-->
+                  <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 1">
+                    <div class="square-flat-head">扫描现金捆/把</div>
+                    <div v-for="qrCode in taskBoxes[boxIndex].qrCodes">
+                      <br>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <input type="text" class="form-control" style="width: 100%" v-model="qrCode.code" disabled>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--申请的物品（非现金）说明-->
+                  <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 0">
+                    <div class="form-group">
+                      <label>申请·物品说明</label>
+                      <textarea class="form-control" rows="2" placeholder="物品说明 ..."
+                                v-model="getApplyItems(taskBoxes[boxIndex].items, 1)[0].itemDesc" disabled></textarea>
+                    </div>
+                  </div>
+                  <!--装箱完成的物品（非现金）说明-->
+                  <div class="square-flat" v-if="taskBoxes[boxIndex].boxItemType === 0">
+                    <div class="form-group">
+                      <label>装箱·物品说明</label>
+                      <textarea class="form-control" rows="2" placeholder="物品说明 ..."
+                                v-model="getApplyItems(taskBoxes[boxIndex].items, 2)[0].itemDesc" disabled></textarea>
+                    </div>
+                  </div>
+                  <!--申请的现金条目-->
+                  <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 1">
+                    <div class="square-flat-head">
+                      申请·现金条目
+                    </div>
+                    <div v-for="item in getApplyItems(taskBoxes[boxIndex].items, 1)">
+                      <br>
+                      <div class="row">
+                        <div class="col-md-3">
+                          <div class="input-group">
+                            <span class="input-group-addon">币种</span>
+                            <select class="form-control" title="币种" v-model.number="item.currency" disabled>
+                              <option value="1">人民币</option>
+                              <option value="2">美元</option>
+                              <option value="3">欧元</option>
+                              <option value="4">英镑</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="input-group">
+                            <span class="input-group-addon">面额</span>
+                            <select class="form-control" title="面额" v-model.number="item.denomination" disabled>
+                              <option value="100">100</option>
+                              <option value="50">50</option>
+                              <option value="20">20</option>
+                              <option value="10">10</option>
+                              <option value="5">5</option>
+                              <option value="2">2</option>
+                              <option value="1">1</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="input-group" v-bind:class="{'has-error' : item.amount < 1}">
+                          <span class="input-group-addon" title="每把包含纸币100张"
+                                v-bind:class="{'input-error' : item.amount < 1}">数量（把）</span>
+                            <input type="number" class="form-control" v-model.number="item.amount"
+                                   placeholder="请输入把数信息" disabled>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="input-group">
+                            <span class="input-group-addon">总额</span>
+                            <input type="text" class="form-control"
+                                   v-bind:title="showCashItemSum(item.currency, item.denomination, item.amount)"
+                                   v-bind:value="showCashItemSum(item.currency, item.denomination, item.amount)"
+                                   disabled>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--装箱完成后的现金条目，现在是手动录入，如果有扫描枪是自动的-->
+                  <div class="square-flat" v-if="taskBoxes[boxIndex].boxItemType === 1">
+                    <div class="square-flat-head">
+                      装箱·现金条目
+                    </div>
+                    <div v-for="item in getApplyItems(taskBoxes[boxIndex].items, 2)">
+                      <br>
+                      <div class="row">
+                        <div class="col-md-3">
+                          <div class="input-group">
+                            <span class="input-group-addon">币种</span>
+                            <select class="form-control" title="币种" v-model.number="item.currency" disabled>
+                              <option value="1">人民币</option>
+                              <option value="2">美元</option>
+                              <option value="3">欧元</option>
+                              <option value="4">英镑</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="input-group">
+                            <span class="input-group-addon">面额</span>
+                            <select class="form-control" title="面额" v-model.number="item.denomination" disabled>
+                              <option value="100">100</option>
+                              <option value="50">50</option>
+                              <option value="20">20</option>
+                              <option value="10">10</option>
+                              <option value="5">5</option>
+                              <option value="2">2</option>
+                              <option value="1">1</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="input-group" v-bind:class="{'has-error' : item.amount < 1}">
+                          <span class="input-group-addon" title="每把包含纸币100张"
+                                v-bind:class="{'input-error' : item.amount < 1}">数量（把）</span>
+                            <input type="number" class="form-control" v-model.number="item.amount"
+                                   placeholder="请输入把数信息" disabled>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="input-group">
+                            <span class="input-group-addon">总额</span>
+                            <input type="text" class="form-control"
+                                   v-bind:title="showCashItemSum(item.currency, item.denomination, item.amount)"
+                                   v-bind:value="showCashItemSum(item.currency, item.denomination, item.amount)"
+                                   disabled>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -104,17 +299,127 @@
       slide.getModule(this.loginUser.id, this.loginUser.loginName, function (module) {
         that.parentModuleAvailable = module;
       });
+      this.getTaskBoxes();
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
       currentPageParentName: sessionStorage.getItem('parentName'),
       currentPagePath: sessionStorage.getItem('path'),
       parentModuleAvailable: [],
+      taskBoxes: [],
+      boxIndex: 0,
+      selectedBoxIndex: [],
     },
     methods: {
       goToPage: function (path, parentName) {
         route.goToPage(path, parentName);
       },
+      getTaskBoxes: function () {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'task/taskInfo' +
+            '?departmentCode=' + that.loginUser.departmentCode +
+            '&taskType=' + '2' +
+            '&process=' + '8',
+          type: 'get',
+          success: function (data) {
+            if (data.isSuccess) {
+              that.taskBoxes = JSON.parse(data.result);
+              // 先清空复选框勾选
+              that.selectedBoxIndex = [];
+              for (let i = 0; i < that.taskBoxes.length; i++) {
+                // 再依次勾选
+                that.selectedBoxIndex.push(i);
+              }
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
+      getApplyItems: function (items, sceneType) {
+        return items.filter(function (item) {
+          if (item.sceneType === sceneType) {
+            return item;
+          }
+        });
+      },
+      showCurrency: function (currency) {
+        return util.showCurrency(currency);
+      },
+      showCashItemSum: function (currency, denomination, amount) {
+        return (amount * denomination * 100) + this.showCurrency(currency);
+      },
+      outWarehouseConfirmAll: function (process) {
+        if (window.confirm('是否进行批量出库确认？')) {
+          let that = this;
+          if (that.selectedBoxIndex.length === 0) {
+            alert('未选择任何任务箱！');
+            return;
+          }
+          let taskCodes = that.selectedBoxIndex.map(function (value) {
+            return that.taskBoxes[value].code;
+          });
+          console.log(taskCodes);
+          let info = {
+            loginName: that.loginUser.loginName,
+            id: that.loginUser.id,
+            taskCodes: taskCodes.toString(),
+            process: process,
+          };
+          $.ajax({
+            url: getUrlLocal() + 'task/outWarehouseConfirmAll',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(info),
+            success: function (data) {
+              if (data.isSuccess) {
+                alert(data.result);
+                that.getTaskBoxes();
+              } else {
+                alert(data.result);
+                that.getTaskBoxes();
+              }
+            },
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
+            }
+          });
+        }
+      },
+      outWarehouseConfirm: function (code, process) {
+        if (window.confirm('是否进行出库确认？')) {
+          let that = this;
+          let info = {
+            loginName: that.loginUser.loginName,
+            id: that.loginUser.id,
+            taskCode: code,
+            process: process,
+          };
+          $.ajax({
+            url: getUrlLocal() + 'task/outWarehouseConfirm',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(info),
+            success: function (data) {
+              if (data.isSuccess) {
+                alert(data.result);
+                that.getTaskBoxes();
+              } else {
+                alert(data.result);
+                that.getTaskBoxes();
+              }
+            },
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
+            }
+          });
+        }
+      },
+
     }
 
   })
