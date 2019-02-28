@@ -169,8 +169,10 @@
                     <div class="square-flat-head">为该任务选择一个尾箱</div>
                     <div class="row">
                       <div class="col-md-3">
-                        <div class="input-group" v-bind:class="{'has-error' : taskBoxingInfo[boxIndex].boxOuterCode === null}">
-                          <span class="input-group-addon" v-bind:class="{'has-error' : taskBoxingInfo[boxIndex].boxOuterCode === null}">选择尾箱</span>
+                        <div class="input-group"
+                             v-bind:class="{'has-error' : taskBoxingInfo[boxIndex].boxOuterCode === null}">
+                          <span class="input-group-addon"
+                                v-bind:class="{'has-error' : taskBoxingInfo[boxIndex].boxOuterCode === null}">选择尾箱</span>
                           <select class="form-control" v-model="taskBoxingInfo[boxIndex].boxOuterCode">
                             <option v-for="box in boxes" v-bind:value="box.outerCode" v-text="box.outerCode"></option>
                           </select>
@@ -336,7 +338,7 @@
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="boxingOver(boxIndex)">完成装箱</button>
+                  <button class="btn btn-primary" data-dismiss="modal" @click="boxingOver(boxIndex)">完成装箱</button>
                 </div>
               </div>
             </div>
@@ -375,9 +377,6 @@
       parentModuleAvailable: [],
       taskBoxes: [],
       boxes: [],
-      qrCodes: [{
-        code: '222'
-      }],
       taskBoxingInfo: [],
       boxIndex: 0,
     },
@@ -400,6 +399,8 @@
               that.taskBoxes.forEach(function (box) {
                 box['isBoxing'] = false;
                 let info = {
+                  boxingUserId: that.loginUser.id,
+                  boxingUserLoginName: that.loginUser.loginName,
                   process: 6,
                   code: box.code,
                   boxOuterCode: null,
