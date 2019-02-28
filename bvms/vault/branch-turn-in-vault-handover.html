@@ -505,15 +505,17 @@
           success: function (data) {
             if (data.isSuccess) {
               that.handoverResult = JSON.parse(data.result);
-              if (that.handoverResult.success) {
+              if (!that.handoverResult.data.hasException) {
                 that.showPart(3);
                 that.updateTask();
                 that.updateBoxes();
+                alert('交接完毕！');
+              } else {
+                alert('交接产生异常，请重新交接');
               }
             } else {
               alert(data.result);
             }
-            alert('交接完毕！');
           },
           error: function () {
             alert('与服务器通信失败，请联系管理员');

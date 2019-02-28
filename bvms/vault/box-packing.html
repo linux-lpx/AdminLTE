@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <title>尾箱装箱</title>
@@ -77,7 +77,9 @@
       </h1>
       <br>
       <div class="row">
-        <div class="col-md-3"><button class="btn btn-primary btn-block btn-flat">提交</button></div>
+        <div class="col-md-3">
+          <button class="btn btn-primary btn-block btn-flat" @click="submitBoxingTask()">提交</button>
+        </div>
       </div>
     </div>
     <div class="content">
@@ -97,7 +99,7 @@
               <th>物品类别</th>
               <th>申请详情</th>
               <th>操作</th>
-              <th>是否已装箱</th>
+              <!--<th>是否已装箱</th>-->
             </tr>
             <tr v-for="(box, index) in taskBoxes">
               <td v-text="index + 1"></td>
@@ -117,7 +119,7 @@
                         @click="boxIndex = index">装箱
                 </button>
               </td>
-              <td v-text="box.isBoxing ? '已装箱' : '未装箱'"></td>
+              <!--<td v-text="box.isBoxing ? '已装箱' : '未装箱'"></td>-->
             </tr>
           </table>
           <!--任务箱中内容的模态框-->
@@ -167,8 +169,8 @@
                     <div class="square-flat-head">为该任务选择一个尾箱</div>
                     <div class="row">
                       <div class="col-md-3">
-                        <div class="input-group">
-                          <span class="input-group-addon">选择尾箱</span>
+                        <div class="input-group" v-bind:class="{'has-error' : taskBoxingInfo[boxIndex].boxOuterCode === null}">
+                          <span class="input-group-addon" v-bind:class="{'has-error' : taskBoxingInfo[boxIndex].boxOuterCode === null}">选择尾箱</span>
                           <select class="form-control" v-model="taskBoxingInfo[boxIndex].boxOuterCode">
                             <option v-for="box in boxes" v-bind:value="box.outerCode" v-text="box.outerCode"></option>
                           </select>
@@ -181,7 +183,8 @@
                     <div class="square-flat-head">扫描现金捆/把</div>
                     <div class="row">
                       <div class="col-md-3">
-                        <button class="btn btn-success btn-block btn-flat" @click="addQRCode(boxIndex)">添加二维码扫描结果</button>
+                        <button class="btn btn-success btn-block btn-flat" @click="addQRCode(boxIndex)">添加二维码扫描结果
+                        </button>
                       </div>
                     </div>
                     <div v-for="(qrCode, index) in taskBoxingInfo[boxIndex].qrCodes">
@@ -191,7 +194,8 @@
                           <input type="text" class="form-control" style="width: 100%" v-model="qrCode.code">
                         </div>
                         <div class="col-md-3">
-                          <button class="btn btn-danger btn-flat btn-block" @click="delQRCode(boxIndex, index)">移除</button>
+                          <button class="btn btn-danger btn-flat btn-block" @click="delQRCode(boxIndex, index)">移除
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -217,7 +221,7 @@
                     <div class="square-flat-head">
                       申请·现金条目
                     </div>
-                    <div v-for="(item, itemIndex) in taskBoxes[boxIndex].items">
+                    <div v-for="item in taskBoxes[boxIndex].items">
                       <br>
                       <div class="row">
                         <div class="col-md-3">
@@ -272,7 +276,8 @@
                     </div>
                     <div class="row">
                       <div class="col-md-3">
-                        <button class="btn btn-success btn-flat btn-block" @click="addBoxingItem(boxIndex)">添加现金条目</button>
+                        <button class="btn btn-success btn-flat btn-block" @click="addBoxingItem(boxIndex)">添加现金条目
+                        </button>
                       </div>
                     </div>
                     <div v-for="(item, itemIndex) in taskBoxingInfo[boxIndex].items">
@@ -331,7 +336,7 @@
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                  <button class="btn btn-primary" data-dismiss="modal" @click="boxingOver(boxIndex)">完成装箱</button>
+                  <button class="btn btn-primary" data-dismiss="modal" v-on:click="boxingOver(boxIndex)">完成装箱</button>
                 </div>
               </div>
             </div>
@@ -391,9 +396,11 @@
           success: function (data) {
             if (data.isSuccess) {
               that.taskBoxes = JSON.parse(data.result);
+              that.taskBoxingInfo = [];
               that.taskBoxes.forEach(function (box) {
                 box['isBoxing'] = false;
                 let info = {
+                  process: 6,
                   code: box.code,
                   boxOuterCode: null,
                   boxItemType: box.boxItemType,
@@ -453,7 +460,7 @@
       delQRCode: function (boxIndex, index) {
         this.taskBoxingInfo[boxIndex].qrCodes.splice(index, 1)
       },
-      addBoxingItem:function (boxIndex) {
+      addBoxingItem: function (boxIndex) {
         let item = {
           sceneType: 2,
           itemDesc: null,
@@ -464,12 +471,66 @@
         };
         this.taskBoxingInfo[boxIndex].items.push(item);
       },
-      delBoxingItem:function (boxIndex, itemIndex) {
+      delBoxingItem: function (boxIndex, itemIndex) {
         this.taskBoxingInfo[boxIndex].items.splice(itemIndex, 1);
       },
-      boxingOver:function (boxIndex) {
+      boxingOver: function (boxIndex) {
+
         this.taskBoxes[boxIndex].isBoxing = true;
-      }
+      },
+      submitBoxingTask: function () {
+        if (this.taskBoxingInfo.length === 0) {
+          alert('没有任务！');
+          return;
+        }
+        // 检查所有的任务都已装箱完成
+        let isChooseBox = this.taskBoxingInfo.every(function (info) {
+          return info.boxOuterCode !== null;
+        });
+        let isBoxingOver = this.taskBoxes.every(function (box) {
+          return box.isBoxing;
+        });
+        if (isBoxingOver && isChooseBox) {
+          console.log('装箱已完成');
+        } else {
+          alert('装箱未完成，请完成后再提交');
+          return;
+        }
+        let isBoxingFalse = this.taskBoxingInfo.some(function (box) {
+          // 当物品类别为现金才检查现金数量是否小于等于0
+          if (box.boxItemType === 1) {
+            return box.items.some(function (item) {
+              // 如果数量错误（数量小于等于0），则返回true。
+              if (item.amount <= 0) {
+                return true;
+              }
+            });
+          }
+        });
+        if (isBoxingFalse) {
+          alert('装箱数据未正确填写，请填写正确后再提交');
+          return;
+        }
+        console.log('over!');
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'task/boxing',
+          type: 'post',
+          contentType: 'application/json',
+          data: JSON.stringify(that.taskBoxingInfo),
+          success: function (data) {
+            if (data.isSuccess) {
+              that.getTaskBoxes();
+              alert(data.result);
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
     }
 
   })
