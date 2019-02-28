@@ -75,6 +75,10 @@
       <h1>尾箱装箱
         <small>box-packing</small>
       </h1>
+      <br>
+      <div class="row">
+        <div class="col-md-3"><button class="btn btn-primary btn-block btn-flat">提交</button></div>
+      </div>
     </div>
     <div class="content">
       <div class="box box-solid box-primary box-flat">
@@ -91,8 +95,9 @@
               <th>申请时间</th>
               <th>箱包类别</th>
               <th>物品类别</th>
-              <th>详情</th>
+              <th>申请详情</th>
               <th>操作</th>
+              <th>是否已装箱</th>
             </tr>
             <tr v-for="(box, index) in taskBoxes">
               <td v-text="index + 1"></td>
@@ -112,6 +117,7 @@
                         @click="boxIndex = index">装箱
                 </button>
               </td>
+              <td v-text="box.isBoxing ? '已装箱' : '未装箱'"></td>
             </tr>
           </table>
           <!--任务箱中内容的模态框-->
@@ -156,24 +162,41 @@
                   <button class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                  <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 1">
+                  <!--为该任务选择一个箱子-->
+                  <div class="square-flat">
+                    <div class="square-flat-head">为该任务选择一个尾箱</div>
                     <div class="row">
                       <div class="col-md-3">
-                        <button class="btn btn-success btn-block btn-flat" @click="addQRCode()">添加二维码扫描结果</button>
+                        <div class="input-group">
+                          <span class="input-group-addon">选择尾箱</span>
+                          <select class="form-control" v-model="taskBoxingInfo[boxIndex].boxOuterCode">
+                            <option v-for="box in boxes" v-bind:value="box.outerCode" v-text="box.outerCode"></option>
+                          </select>
+                        </div>
                       </div>
                     </div>
-                    <div v-for="(qrCode, index) in qrCodes">
+                  </div>
+                  <!--二维码扫描结果录入-->
+                  <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 1">
+                    <div class="square-flat-head">扫描现金捆/把</div>
+                    <div class="row">
+                      <div class="col-md-3">
+                        <button class="btn btn-success btn-block btn-flat" @click="addQRCode(boxIndex)">添加二维码扫描结果</button>
+                      </div>
+                    </div>
+                    <div v-for="(qrCode, index) in taskBoxingInfo[boxIndex].qrCodes">
                       <br>
                       <div class="row">
                         <div class="col-md-9">
                           <input type="text" class="form-control" style="width: 100%" v-model="qrCode.code">
                         </div>
                         <div class="col-md-3">
-                          <button class="btn btn-danger btn-flat btn-block" @click="delQRCode(index)">移除</button>
+                          <button class="btn btn-danger btn-flat btn-block" @click="delQRCode(boxIndex, index)">移除</button>
                         </div>
                       </div>
                     </div>
                   </div>
+                  <!--申请的物品（非现金）说明-->
                   <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 0">
                     <div class="form-group">
                       <label>申请·物品说明</label>
@@ -181,18 +204,18 @@
                                 v-model="taskBoxes[boxIndex].items[0].itemDesc" disabled></textarea>
                     </div>
                   </div>
-                  <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 0">
+                  <!--装箱完成的物品（非现金）说明-->
+                  <div class="square-flat" v-if="taskBoxingInfo[boxIndex].boxItemType === 0">
                     <div class="form-group">
                       <label>装箱·物品说明</label>
                       <textarea class="form-control" rows="2" placeholder="物品说明 ..."
-                                v-model="taskBoxes[boxIndex].items[0].itemDesc"></textarea>
+                                v-model="taskBoxingInfo[boxIndex].items[0].itemDesc"></textarea>
                     </div>
                   </div>
+                  <!--申请的现金条目-->
                   <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 1">
-                    <div class="row">
-                      <div class="col-md-3">
-                        <button class="btn btn-default btn-flat btn-block" disabled>申请·现金条目</button>
-                      </div>
+                    <div class="square-flat-head">
+                      申请·现金条目
                     </div>
                     <div v-for="(item, itemIndex) in taskBoxes[boxIndex].items">
                       <br>
@@ -230,29 +253,29 @@
                                    placeholder="请输入把数信息" disabled>
                           </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                           <div class="input-group">
                             <span class="input-group-addon">总额</span>
                             <input type="text" class="form-control"
                                    v-bind:title="showCashItemSum(item.currency, item.denomination, item.amount)"
-                                   v-bind:value="showCashItemSum(item.currency, item.denomination, item.amount)" disabled>
+                                   v-bind:value="showCashItemSum(item.currency, item.denomination, item.amount)"
+                                   disabled>
                           </div>
-                        </div>
-                        <div class="col-md-1">
-                          <button class="btn btn-danger btn-flat btn-block" @click="delItem(boxIndex, itemIndex)">
-                            删除
-                          </button>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="square-flat" v-show="taskBoxes[boxIndex].boxItemType === 1">
+                  <!--装箱完成后的现金条目，现在是手动录入，如果有扫描枪是自动的-->
+                  <div class="square-flat" v-if="taskBoxingInfo[boxIndex].boxItemType === 1">
+                    <div class="square-flat-head">
+                      装箱·现金条目
+                    </div>
                     <div class="row">
                       <div class="col-md-3">
-                        <button class="btn btn-success btn-flat btn-block">添加现金条目</button>
+                        <button class="btn btn-success btn-flat btn-block" @click="addBoxingItem(boxIndex)">添加现金条目</button>
                       </div>
                     </div>
-                    <div v-for="(item, itemIndex) in taskBoxes[boxIndex].items">
+                    <div v-for="(item, itemIndex) in taskBoxingInfo[boxIndex].items">
                       <br>
                       <div class="row">
                         <div class="col-md-3">
@@ -284,7 +307,8 @@
                           <div class="input-group" v-bind:class="{'has-error' : item.amount < 1}">
                           <span class="input-group-addon" title="每把包含纸币100张"
                                 v-bind:class="{'input-error' : item.amount < 1}">数量（把）</span>
-                            <input type="number" class="form-control" v-model.number="item.amount" placeholder="请输入把数信息">
+                            <input type="number" class="form-control" v-model.number="item.amount"
+                                   placeholder="请输入把数信息">
                           </div>
                         </div>
                         <div class="col-md-2">
@@ -292,11 +316,12 @@
                             <span class="input-group-addon">总额</span>
                             <input type="text" class="form-control"
                                    v-bind:title="showCashItemSum(item.currency, item.denomination, item.amount)"
-                                   v-bind:value="showCashItemSum(item.currency, item.denomination, item.amount)" disabled>
+                                   v-bind:value="showCashItemSum(item.currency, item.denomination, item.amount)"
+                                   disabled>
                           </div>
                         </div>
                         <div class="col-md-1">
-                          <button class="btn btn-danger btn-flat btn-block" @click="delItem(boxIndex, itemIndex)">
+                          <button class="btn btn-danger btn-flat btn-block" @click="delBoxingItem(boxIndex, itemIndex)">
                             删除
                           </button>
                         </div>
@@ -306,7 +331,7 @@
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-danger" data-dismiss="modal">取消</button>
-                  <button class="btn btn-primary" data-dismiss="modal" @click="">确定</button>
+                  <button class="btn btn-primary" data-dismiss="modal" @click="boxingOver(boxIndex)">完成装箱</button>
                 </div>
               </div>
             </div>
@@ -336,6 +361,7 @@
         that.parentModuleAvailable = module;
       });
       this.getTaskBoxes();
+      this.getBox();
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
@@ -343,27 +369,12 @@
       currentPagePath: sessionStorage.getItem('path'),
       parentModuleAvailable: [],
       taskBoxes: [],
-      // items: [
-      //   {
-      //     currency: 1,
-      //     denomination: 100,
-      //     amount: 0,
-      //     sum: null,
-      //   }
-      // ],
+      boxes: [],
       qrCodes: [{
         code: '222'
       }],
-      addQRCode: function () {
-        let qrCode = {
-          code: '222'
-        };
-        this.qrCodes.push(qrCode);
-      },
-      delQRCode: function (index) {
-        this.qrCodes.splice(index, 1)
-      },
-      boxIndex: 0
+      taskBoxingInfo: [],
+      boxIndex: 0,
     },
     methods: {
       goToPage: function (path, parentName) {
@@ -380,6 +391,44 @@
           success: function (data) {
             if (data.isSuccess) {
               that.taskBoxes = JSON.parse(data.result);
+              that.taskBoxes.forEach(function (box) {
+                box['isBoxing'] = false;
+                let info = {
+                  code: box.code,
+                  boxOuterCode: null,
+                  boxItemType: box.boxItemType,
+                  qrCodes: [{
+                    code: '222'
+                  }],
+                  items: [{
+                    // 2代表尾箱装箱完成时填写的数据
+                    sceneType: 2,
+                    itemDesc: null,
+                    currency: 1,
+                    denomination: 100,
+                    amount: 0,
+                    sum: null,
+                  }]
+                };
+                that.taskBoxingInfo.push(info)
+              });
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
+      getBox: function () {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'box/' + that.loginUser.departmentCode + '/all',
+          type: 'GET',
+          success: function (data) {
+            if (data.isSuccess) {
+              that.boxes = data.result;
             } else {
               alert(data.result);
             }
@@ -395,6 +444,32 @@
       showCashItemSum: function (currency, denomination, amount) {
         return (amount * denomination * 100) + this.showCurrency(currency);
       },
+      addQRCode: function (boxIndex) {
+        let qrCode = {
+          code: '222'
+        };
+        this.taskBoxingInfo[boxIndex].qrCodes.push(qrCode);
+      },
+      delQRCode: function (boxIndex, index) {
+        this.taskBoxingInfo[boxIndex].qrCodes.splice(index, 1)
+      },
+      addBoxingItem:function (boxIndex) {
+        let item = {
+          sceneType: 2,
+          itemDesc: null,
+          currency: 1,
+          denomination: 100,
+          amount: 0,
+          sum: null,
+        };
+        this.taskBoxingInfo[boxIndex].items.push(item);
+      },
+      delBoxingItem:function (boxIndex, itemIndex) {
+        this.taskBoxingInfo[boxIndex].items.splice(itemIndex, 1);
+      },
+      boxingOver:function (boxIndex) {
+        this.taskBoxes[boxIndex].isBoxing = true;
+      }
     }
 
   })

@@ -17,9 +17,17 @@
 }
 
 .square-flat {
-  /*border: 2px solid #d2d6de;*/
   border: 1px solid #d2d6de;
   padding: 15px;
   margin: 0 0 15px;
   background: #EEEEEE;
+}
+
+.square-flat .square-flat-head {
+  text-align: center;
+  color: #7f7f7f;
+  background: #E5E5E5;
+  margin: 0 0 15px;
+  padding: 5px 0;
+  font-size: large;
 }
