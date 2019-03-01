@@ -194,7 +194,7 @@
       slide.getModule(this.loginUser.id, this.loginUser.loginName, function (module) {
         that.parentModuleAvailable = module;
       });
-      this.getTurnInTaskBoxes();
+      this.getTaskBoxes();
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
@@ -209,7 +209,7 @@
       goToPage: function (path, parentName) {
         route.goToPage(path, parentName);
       },
-      getTurnInTaskBoxes: function () {
+      getTaskBoxes: function () {
         let that = this;
         $.ajax({
           url: getUrlLocal() + 'task/taskInfo' +
@@ -257,10 +257,10 @@
           success: function (data) {
             if (data.isSuccess) {
               alert(data.result);
-              that.getTurnInTaskBoxes();
+              that.getTaskBoxes();
             } else {
               alert(data.result);
-              that.getTurnInTaskBoxes();
+              that.getTaskBoxes();
             }
           },
           error: function () {
@@ -292,10 +292,10 @@
           success: function (data) {
             if (data.isSuccess) {
               alert(data.result);
-              that.getTurnInTaskBoxes();
+              that.getTaskBoxes();
             } else {
               alert(data.result);
-              that.getTurnInTaskBoxes();
+              that.getTaskBoxes();
             }
           },
           error: function () {

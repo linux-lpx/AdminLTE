@@ -547,7 +547,7 @@
           taskCodes: taskCodes.toString(),
         };
         $.ajax({
-          url: getUrlLocal() + 'task/turnInHandoverAll',
+          url: getUrlLocal() + 'task/handoverAll',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(info),
@@ -569,9 +569,9 @@
           return box.boxOuterCode;
         });
         let info = {
-          currentBankCode: that.loginUser.departmentCode,
-          locationId: 2,
-          locationName: '在金库',
+          currentBankCode: '押运途中',
+          locationId: 1,
+          locationName: '押运途中',
           boxOuterCodes: boxOuterCodes.toString(),
         };
         $.ajax({

@@ -269,7 +269,7 @@
       });
       this.getBank();
       this.getBox();
-      this.getTurnInTaskBoxes();
+      this.getTaskBoxes();
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
@@ -395,7 +395,7 @@
             break
         }
       },
-      getTurnInTaskBoxes: function () {
+      getTaskBoxes: function () {
         let that = this;
         $.ajax({
           url: getUrlLocal() + 'task/taskInfo' +
@@ -521,7 +521,6 @@
             } else {
               alert(data.result);
             }
-            alert('交接完毕！');
           },
           error: function () {
             alert('与服务器通信失败，请联系管理员');
@@ -549,7 +548,7 @@
           taskCodes: taskCodes.toString(),
         };
         $.ajax({
-          url: getUrlLocal() + 'task/turnInHandoverAll',
+          url: getUrlLocal() + 'task/handoverAll',
           type: 'post',
           contentType: 'application/json',
           data: JSON.stringify(info),
