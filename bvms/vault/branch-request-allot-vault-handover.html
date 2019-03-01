@@ -142,7 +142,7 @@
       <div title="任务界面" v-show="part2">
         <div class="row">
           <div class="col-md-3">
-            <button class="btn btn-primary btn-flat btn-block" v-bind:disabled="turnInTaskBoxes.length === 0"
+            <button class="btn btn-primary btn-flat btn-block" v-bind:disabled="taskBoxes.length === 0"
                     @click="checkBoxes()">清点尾箱
             </button>
           </div>
@@ -165,7 +165,7 @@
           <div class="col-md-6">
             <div class="box box-solid box-primary box-flat">
               <div class="box-header">
-                <div class="box-title" v-text="'待押运尾箱列表'+turnInTaskBoxes.length+'个'"></div>
+                <div class="box-title" v-text="'待押运尾箱列表'+taskBoxes.length+'个'"></div>
               </div>
               <div class="box-body">
                 <table class="table table-bordered table-striped table-striped table-hover">
@@ -175,7 +175,7 @@
                     <th>申请机构</th>
                     <th>目标机构</th>
                   </tr>
-                  <tr v-for="(box, index) in turnInTaskBoxes">
+                  <tr v-for="(box, index) in taskBoxes">
                     <td v-text="index + 1"></td>
                     <td v-text="box.boxOuterCode"></td>
                     <td v-text="showBankName(box.applyBankCode)"></td>
@@ -269,7 +269,7 @@
       });
       this.getBank();
       this.getBox();
-      this.getTurnInTaskBoxes();
+      this.getTaskBoxes();
     },
     data: {
       loginUser: JSON.parse(sessionStorage.getItem('loginUser')),
@@ -284,10 +284,10 @@
       banks: [],
       boxes: [],
       // 位置类型：0-网点，1-押运途中，2-金库。用于处理【场景错误异常】
-      site: 1,
+      site: 2,
       // 交接类型：1-离开金库，2-进入金库，3-离开网点，4-进入网点。
-      handoverType: 2,
-      turnInTaskBoxes: [],
+      handoverType: 1,
+      taskBoxes: [],
       checkResult: {
         success: false,
         message: null,
@@ -337,7 +337,7 @@
         });
       },
       showBoxOuterCode: function (innerCode) {
-        let outerCode = this.turnInTaskBoxes.filter(function (box) {
+        let outerCode = this.taskBoxes.filter(function (box) {
           if (innerCode.toString() === box.boxInnerCode) {
             return box;
           }
@@ -395,17 +395,17 @@
             break
         }
       },
-      getTurnInTaskBoxes: function () {
+      getTaskBoxes: function () {
         let that = this;
         $.ajax({
           url: getUrlLocal() + 'task/taskInfo' +
             '?departmentCode=' + that.loginUser.departmentCode +
-            '&taskType=' + '1' +
-            '&process=' + '6',
+            '&taskType=' + '2' +
+            '&process=' + '10',
           type: 'get',
           success: function (data) {
             if (data.isSuccess) {
-              that.turnInTaskBoxes = JSON.parse(data.result);
+              that.taskBoxes = JSON.parse(data.result);
             } else {
               console.log(data.result);
             }
@@ -431,7 +431,7 @@
           }
         };
         let codes = [];
-        that.turnInTaskBoxes.forEach(function (box) {
+        that.taskBoxes.forEach(function (box) {
           codes.push(box.boxInnerCode);
         });
         let data = {
@@ -486,7 +486,7 @@
       handoverBoxes: function () {
         let that = this;
         let codes = [];
-        that.turnInTaskBoxes.forEach(function (box) {
+        that.taskBoxes.forEach(function (box) {
           codes.push(box.boxInnerCode);
         });
         let data = {
@@ -506,14 +506,20 @@
             if (data.isSuccess) {
               that.handoverResult = JSON.parse(data.result);
               if (that.handoverResult.success) {
-                that.showPart(3);
-                that.updateTask();
-                that.updateBoxes();
+                if (!that.handoverResult.data.hasException) {
+                  that.showPart(3);
+                  that.updateTask();
+                  that.updateBoxes();
+                  alert('交接完毕！');
+                } else {
+                  alert('交接产生异常，请重新交接');
+                }
+              } else {
+                alert('交接产生异常，请重新交接');
               }
             } else {
               alert(data.result);
             }
-            alert('交接完毕！');
           },
           error: function () {
             alert('与服务器通信失败，请联系管理员');
@@ -531,11 +537,11 @@
       },
       updateTask: function () {
         let that = this;
-        let taskCodes = that.turnInTaskBoxes.map(function (box) {
+        let taskCodes = that.taskBoxes.map(function (box) {
           return box.code;
         });
         let info = {
-          process: 8,
+          process: 12,
           loginName: that.loginUser.loginName,
           id: that.loginUser.id,
           taskCodes: taskCodes.toString(),
@@ -559,7 +565,7 @@
       },
       updateBoxes: function () {
         let that = this;
-        let boxOuterCodes = that.turnInTaskBoxes.map(function (box) {
+        let boxOuterCodes = that.taskBoxes.map(function (box) {
           return box.boxOuterCode;
         });
         let info = {

@@ -507,9 +507,16 @@
             if (data.isSuccess) {
               that.handoverResult = JSON.parse(data.result);
               if (that.handoverResult.success) {
-                that.showPart(3);
-                that.updateTask();
-                that.updateBoxes();
+                if (!that.handoverResult.data.hasException) {
+                  that.showPart(3);
+                  that.updateTask();
+                  that.updateBoxes();
+                  alert('交接完毕！');
+                } else {
+                  alert('交接产生异常，请重新交接');
+                }
+              } else {
+                alert('交接产生异常，请重新交接');
               }
             } else {
               alert(data.result);
