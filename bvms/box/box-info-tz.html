@@ -2,7 +2,7 @@
 <html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>尾箱实时信息（腾帜）</title>
+  <title>尾箱实时信息</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
@@ -26,7 +26,8 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="route.logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          <li><a href="javascript:void(0)" onclick="route.logout()"><i class="fa fa-sign-out"
+                                                                       title="退出登录">&numsp;</i></a>
           </li>
         </ul>
       </div>
@@ -72,7 +73,7 @@
   <!--内容-->
   <section class="content-wrapper">
     <div class="content-header">
-      <h1>尾箱实时信息（腾帜）</h1>
+      <h1>尾箱实时信息</h1>
       <br>
       <button class="btn btn-primary btn-flat" @click="getTzBox()">获取信息</button>
       <button class="btn btn-primary btn-flat" @click="handlerException()"
@@ -101,7 +102,8 @@
               <th>操作记录数</th>
               <th>是否异常</th>
               <th>说明</th>
-              <!--<th>操作</th>-->
+              <th>封箱</th>
+              <th>解箱</th>
             </tr>
             <tr v-for="(tzBox, index) in tzBoxes">
               <td v-text="index + 1"></td>
@@ -118,7 +120,12 @@
               <td v-text="tzBox.data.recordCount"></td>
               <td v-text="tzBox.data.hasException?'是':'否'"></td>
               <td v-text="tzBox.data.memo"></td>
-              <!--<td><button class="btn btn-sm btn-danger btn-flat">处理异常</button></td>-->
+              <td>
+                <button class="btn btn-primary btn-flat btn-sm" @click="sealBox(tzBox.data.code, 0)">封箱</button>
+              </td>
+              <td>
+                <button class="btn btn-primary btn-flat btn-sm" @click="sealBox(tzBox.data.code, 1)">解封</button>
+              </td>
             </tr>
           </table>
         </div>
@@ -153,6 +160,7 @@
       parentModuleAvailable: [],
       tzBoxes: [],
       exceptionTzBoxes: [],
+      sealResult: {}
     },
     methods: {
       goToPage: function (path, parentName) {
@@ -210,6 +218,32 @@
             if (data.isSuccess) {
               that.getTzBox();
               alert(data.result);
+            } else {
+              alert(data.result);
+            }
+          },
+          error: function () {
+            alert('与服务器通信失败，请联系管理员');
+          }
+        });
+      },
+      sealBox: function (code, type) {
+        let that = this;
+        $.ajax({
+          url: getUrlLocal() + 'cmd/' + that.loginUser.departmentCode + '/boxSeal' + '?code=' + code + '&type=' + type,
+          type: 'post',
+          success: function (data) {
+            if (data.isSuccess) {
+              that.sealResult = JSON.parse(data.result);
+              if (that.sealResult.success) {
+                if (that.sealResult.data.result) {
+                  alert('操作成功');
+                } else {
+                  console.log('已经操作过了');
+                }
+              } else {
+                alert(that.sealResult.message);
+              }
             } else {
               alert(data.result);
             }
