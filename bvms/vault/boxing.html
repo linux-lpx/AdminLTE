@@ -480,57 +480,59 @@
         this.taskBoxes[boxIndex].isBoxing = true;
       },
       submitBoxingTask: function () {
-        if (this.taskBoxingInfo.length === 0) {
-          alert('没有任务！');
-          return;
-        }
-        // 检查所有的任务都已装箱完成
-        let isChooseBox = this.taskBoxingInfo.every(function (info) {
-          return info.boxOuterCode !== null;
-        });
-        let isBoxingOver = this.taskBoxes.every(function (box) {
-          return box.isBoxing;
-        });
-        if (isBoxingOver && isChooseBox) {
-          console.log('装箱已完成');
-        } else {
-          alert('装箱未完成，请完成后再提交');
-          return;
-        }
-        let isBoxingFalse = this.taskBoxingInfo.some(function (box) {
-          // 当物品类别为现金才检查现金数量是否小于等于0
-          if (box.boxItemType === 1) {
-            return box.items.some(function (item) {
-              // 如果数量错误（数量小于等于0），则返回true。
-              if (item.amount <= 0) {
-                return true;
-              }
-            });
+        if (window.confirm('是否提交？')) {
+          if (this.taskBoxingInfo.length === 0) {
+            alert('没有任务！');
+            return;
           }
-        });
-        if (isBoxingFalse) {
-          alert('装箱数据未正确填写，请填写正确后再提交');
-          return;
-        }
-        console.log('over!');
-        let that = this;
-        $.ajax({
-          url: getUrlLocal() + 'task/boxing',
-          type: 'post',
-          contentType: 'application/json',
-          data: JSON.stringify(that.taskBoxingInfo),
-          success: function (data) {
-            if (data.isSuccess) {
-              that.getTaskBoxes();
-              alert(data.result);
-            } else {
-              alert(data.result);
+          // 检查所有的任务都已装箱完成
+          let isChooseBox = this.taskBoxingInfo.every(function (info) {
+            return info.boxOuterCode !== null;
+          });
+          let isBoxingOver = this.taskBoxes.every(function (box) {
+            return box.isBoxing;
+          });
+          if (isBoxingOver && isChooseBox) {
+            console.log('装箱已完成');
+          } else {
+            alert('装箱未完成，请完成后再提交');
+            return;
+          }
+          let isBoxingFalse = this.taskBoxingInfo.some(function (box) {
+            // 当物品类别为现金才检查现金数量是否小于等于0
+            if (box.boxItemType === 1) {
+              return box.items.some(function (item) {
+                // 如果数量错误（数量小于等于0），则返回true。
+                if (item.amount <= 0) {
+                  return true;
+                }
+              });
             }
-          },
-          error: function () {
-            alert('与服务器通信失败，请联系管理员');
+          });
+          if (isBoxingFalse) {
+            alert('装箱数据未正确填写，请填写正确后再提交');
+            return;
           }
-        });
+          console.log('over!');
+          let that = this;
+          $.ajax({
+            url: getUrlLocal() + 'task/boxing',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(that.taskBoxingInfo),
+            success: function (data) {
+              if (data.isSuccess) {
+                that.getTaskBoxes();
+                alert(data.result);
+              } else {
+                alert(data.result);
+              }
+            },
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
+            }
+          });
+        }
       },
     }
 

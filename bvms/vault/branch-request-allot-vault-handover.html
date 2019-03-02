@@ -26,7 +26,8 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="route.logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          <li><a href="javascript:void(0)" onclick="route.logout()"><i class="fa fa-sign-out"
+                                                                       title="退出登录">&numsp;</i></a>
           </li>
         </ul>
       </div>
@@ -72,7 +73,9 @@
   <!--内容-->
   <section class="content-wrapper">
     <div class="content-header">
-      <h1 style="color: red;">金库出库交接（待完善）<small>网点调拨</small></h1>
+      <h1 style="color: red;">金库出库交接（待完善）
+        <small>网点调拨</small>
+      </h1>
     </div>
     <div class="content">
       <ol class="breadcrumb" style="border-radius: 0;">
@@ -484,47 +487,50 @@
         });
       },
       handoverBoxes: function () {
-        let that = this;
-        let codes = [];
-        that.taskBoxes.forEach(function (box) {
-          codes.push(box.boxInnerCode);
-        });
-        let data = {
-          handoverType: that.handoverType,
-          codes: codes.toString(),
-          isAlarm: true,
-          arriveTimes: 20,
-          leaveTimes: 20,
-          expectTimes: 60
-        };
-        $.ajax({
-          url: getUrlLocal() + 'cmd/' + that.loginUser.departmentCode + '/boxesHandover',
-          type: 'post',
-          contentType: 'application/json',
-          data: JSON.stringify(data),
-          success: function (data) {
-            if (data.isSuccess) {
-              that.handoverResult = JSON.parse(data.result);
-              if (that.handoverResult.success) {
-                if (!that.handoverResult.data.hasException) {
-                  that.showPart(3);
-                  that.updateTask();
-                  that.updateBoxes();
-                  alert('交接完毕！');
+        if (window.confirm('是否进行交接？')) {
+          let that = this;
+          let codes = [];
+          that.taskBoxes.forEach(function (box) {
+            codes.push(box.boxInnerCode);
+          });
+          let data = {
+            handoverType: that.handoverType,
+            codes: codes.toString(),
+            isAlarm: true,
+            arriveTimes: 20,
+            leaveTimes: 20,
+            expectTimes: 60
+          };
+          $.ajax({
+            url: getUrlLocal() + 'cmd/' + that.loginUser.departmentCode + '/boxesHandover',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (data) {
+              if (data.isSuccess) {
+                that.handoverResult = JSON.parse(data.result);
+                if (that.handoverResult.success) {
+                  if (!that.handoverResult.data.hasException) {
+                    that.showPart(3);
+                    that.updateTask();
+                    that.updateBoxes();
+                    alert('交接完毕！');
+                  } else {
+                    alert('交接产生异常，请重新交接');
+                  }
                 } else {
                   alert('交接产生异常，请重新交接');
                 }
               } else {
-                alert('交接产生异常，请重新交接');
+                alert(data.result);
               }
-            } else {
-              alert(data.result);
+            },
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
             }
-          },
-          error: function () {
-            alert('与服务器通信失败，请联系管理员');
-          }
-        });
+          });
+        }
+
       },
       showBankName: function (code) {
         let that = this;

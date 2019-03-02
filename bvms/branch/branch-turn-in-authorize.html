@@ -26,7 +26,8 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="route.logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          <li><a href="javascript:void(0)" onclick="route.logout()"><i class="fa fa-sign-out"
+                                                                       title="退出登录">&numsp;</i></a>
           </li>
         </ul>
       </div>
@@ -76,10 +77,10 @@
       <br>
       <div class="row">
         <div class="col-md-2">
-          <button class="btn btn-success btn-flat btn-block" @click="authorizeApplyAll(2)">批量授权</button>
+          <button class="btn btn-success btn-flat btn-block" @click="authorizeAll(2)">批量授权</button>
         </div>
         <div class="col-md-2">
-          <button class="btn btn-danger btn-flat btn-block" @click="authorizeApplyAll(3)">批量拒绝</button>
+          <button class="btn btn-danger btn-flat btn-block" @click="authorizeAll(3)">批量拒绝</button>
         </div>
       </div>
     </div>
@@ -122,12 +123,12 @@
               <td v-text="box.boxItemType === 1 ? '现金' : '非现金'"></td>
               <td>
                 <button class="btn btn-success btn-sm btn-flat"
-                        @click="authorizeApply(box.code, 2)">授权
+                        @click="authorize(box.code, 2)">授权
                 </button>
               </td>
               <td>
                 <button class="btn btn-danger btn-sm btn-flat"
-                        @click="authorizeApply(box.code, 3)">拒绝
+                        @click="authorize(box.code, 3)">拒绝
                 </button>
               </td>
               <td>
@@ -138,7 +139,8 @@
             </tr>
           </table>
           <!--任务箱中内容的模态框-->
-          <div class="modal fade" style="color: #1b6d85" id="itemsModal" role="dialog" v-if="turnInTaskBoxes.length > 0">
+          <div class="modal fade" style="color: #1b6d85" id="itemsModal" role="dialog"
+               v-if="turnInTaskBoxes.length > 0">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -241,67 +243,71 @@
       showCashItemSum: function (currency, denomination, amount) {
         return (amount * denomination * 100) + this.showCurrency(currency);
       },
-      authorizeApply: function (code, authorizeType) {
-        let that = this;
-        let info = {
-          loginName: that.loginUser.loginName,
-          id: that.loginUser.id,
-          taskCode: code,
-          authorizeType: authorizeType,
-        };
-        $.ajax({
-          url: getUrlLocal() + 'task/authorize',
-          type: 'post',
-          contentType: 'application/json',
-          data: JSON.stringify(info),
-          success: function (data) {
-            if (data.isSuccess) {
-              alert(data.result);
-              that.getTaskBoxes();
-            } else {
-              alert(data.result);
-              that.getTaskBoxes();
+      authorize: function (code, authorizeType) {
+        if (window.confirm('是否进行授权？')) {
+          let that = this;
+          let info = {
+            loginName: that.loginUser.loginName,
+            id: that.loginUser.id,
+            taskCode: code,
+            authorizeType: authorizeType,
+          };
+          $.ajax({
+            url: getUrlLocal() + 'task/authorize',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(info),
+            success: function (data) {
+              if (data.isSuccess) {
+                alert(data.result);
+                that.getTaskBoxes();
+              } else {
+                alert(data.result);
+                that.getTaskBoxes();
+              }
+            },
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
             }
-          },
-          error: function () {
-            alert('与服务器通信失败，请联系管理员');
-          }
-        });
-      },
-      authorizeApplyAll: function (authorizeType) {
-        let that = this;
-        if (that.selectTaskBoxIndex.length === 0) {
-          alert('未选择任何任务箱！');
-          return;
+          });
         }
-        let taskCodes = that.selectTaskBoxIndex.map(function (value) {
-          return that.turnInTaskBoxes[value].code;
-        });
-        console.log(taskCodes);
-        let info = {
-          loginName: that.loginUser.loginName,
-          id: that.loginUser.id,
-          taskCodes: taskCodes.toString(),
-          authorizeType: authorizeType,
-        };
-        $.ajax({
-          url: getUrlLocal() + 'task/authorizeAll',
-          type: 'post',
-          contentType: 'application/json',
-          data: JSON.stringify(info),
-          success: function (data) {
-            if (data.isSuccess) {
-              alert(data.result);
-              that.getTaskBoxes();
-            } else {
-              alert(data.result);
-              that.getTaskBoxes();
-            }
-          },
-          error: function () {
-            alert('与服务器通信失败，请联系管理员');
+      },
+      authorizeAll: function (authorizeType) {
+        if (window.confirm('是否进行授权？')) {
+          let that = this;
+          if (that.selectTaskBoxIndex.length === 0) {
+            alert('未选择任何任务箱！');
+            return;
           }
-        });
+          let taskCodes = that.selectTaskBoxIndex.map(function (value) {
+            return that.turnInTaskBoxes[value].code;
+          });
+          console.log(taskCodes);
+          let info = {
+            loginName: that.loginUser.loginName,
+            id: that.loginUser.id,
+            taskCodes: taskCodes.toString(),
+            authorizeType: authorizeType,
+          };
+          $.ajax({
+            url: getUrlLocal() + 'task/authorizeAll',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(info),
+            success: function (data) {
+              if (data.isSuccess) {
+                alert(data.result);
+                that.getTaskBoxes();
+              } else {
+                alert(data.result);
+                that.getTaskBoxes();
+              }
+            },
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
+            }
+          });
+        }
       },
     }
   });

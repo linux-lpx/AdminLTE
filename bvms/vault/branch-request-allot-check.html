@@ -26,7 +26,8 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="route.logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          <li><a href="javascript:void(0)" onclick="route.logout()"><i class="fa fa-sign-out"
+                                                                       title="退出登录">&numsp;</i></a>
           </li>
         </ul>
       </div>
@@ -128,7 +129,8 @@
             </tr>
           </table>
           <!--任务箱中内容的模态框-->
-          <div class="modal fade" style="color: #1b6d85" id="itemsModal" role="dialog" v-if="requestAllotTaskBoxes.length > 0">
+          <div class="modal fade" style="color: #1b6d85" id="itemsModal" role="dialog"
+               v-if="requestAllotTaskBoxes.length > 0">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -232,66 +234,71 @@
         return (amount * denomination * 100) + this.showCurrency(currency);
       },
       check: function (code, checkType) {
-        let that = this;
-        let info = {
-          loginName: that.loginUser.loginName,
-          id: that.loginUser.id,
-          taskCode: code,
-          checkType: checkType,
-        };
-        $.ajax({
-          url: getUrlLocal() + 'task/check',
-          type: 'post',
-          contentType: 'application/json',
-          data: JSON.stringify(info),
-          success: function (data) {
-            if (data.isSuccess) {
-              alert(data.result);
-              that.getRequestAllotTaskBoxes();
-            } else {
-              alert(data.result);
-              that.getRequestAllotTaskBoxes();
+        if (window.confirm('是否进行审核？')) {
+          let that = this;
+          let info = {
+            loginName: that.loginUser.loginName,
+            id: that.loginUser.id,
+            taskCode: code,
+            checkType: checkType,
+          };
+          $.ajax({
+            url: getUrlLocal() + 'task/check',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(info),
+            success: function (data) {
+              if (data.isSuccess) {
+                alert(data.result);
+                that.getRequestAllotTaskBoxes();
+              } else {
+                alert(data.result);
+                that.getRequestAllotTaskBoxes();
+              }
+            },
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
             }
-          },
-          error: function () {
-            alert('与服务器通信失败，请联系管理员');
-          }
-        });
+          });
+        }
       },
       checkAll: function (checkType) {
-        let that = this;
-        if (that.selectTaskBoxIndex.length === 0) {
-          alert('未选择任何任务箱！');
-          return;
-        }
-        let taskCodes = that.selectTaskBoxIndex.map(function (value) {
-          return that.requestAllotTaskBoxes[value].code;
-        });
-        console.log(taskCodes);
-        let info = {
-          loginName: that.loginUser.loginName,
-          id: that.loginUser.id,
-          taskCodes: taskCodes.toString(),
-          checkType: checkType,
-        };
-        $.ajax({
-          url: getUrlLocal() + 'task/checkAll',
-          type: 'post',
-          contentType: 'application/json',
-          data: JSON.stringify(info),
-          success: function (data) {
-            if (data.isSuccess) {
-              alert(data.result);
-              that.getRequestAllotTaskBoxes();
-            } else {
-              alert(data.result);
-              that.getRequestAllotTaskBoxes();
-            }
-          },
-          error: function () {
-            alert('与服务器通信失败，请联系管理员');
+        if (window.confirm('是否进行审核？')) {
+          let that = this;
+          if (that.selectTaskBoxIndex.length === 0) {
+            alert('未选择任何任务箱！');
+            return;
           }
-        });
+          let taskCodes = that.selectTaskBoxIndex.map(function (value) {
+            return that.requestAllotTaskBoxes[value].code;
+          });
+          console.log(taskCodes);
+          let info = {
+            loginName: that.loginUser.loginName,
+            id: that.loginUser.id,
+            taskCodes: taskCodes.toString(),
+            checkType: checkType,
+          };
+          $.ajax({
+            url: getUrlLocal() + 'task/checkAll',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(info),
+            success: function (data) {
+              if (data.isSuccess) {
+                alert(data.result);
+                that.getRequestAllotTaskBoxes();
+              } else {
+                alert(data.result);
+                that.getRequestAllotTaskBoxes();
+              }
+            },
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
+            }
+          });
+        }
+
       },
     }
   });

@@ -35,7 +35,8 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">&numsp;</a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><a href="javascript:void(0)" onclick="route.logout()"><i class="fa fa-sign-out" title="退出登录">&numsp;</i></a>
+          <li><a href="javascript:void(0)" onclick="route.logout()"><i class="fa fa-sign-out"
+                                                                       title="退出登录">&numsp;</i></a>
           </li>
         </ul>
       </div>
@@ -342,74 +343,76 @@
         return (amount * denomination * 100) + currencyDetail;
       },
       submitTask: function () {
-        let that = this;
-        if (that.requestAllotTaskBoxes.length < 1) {
-          alert('没有调拨的数据，请重新申请！');
-          return;
-        }
-        let isUnqualified = that.requestAllotTaskBoxes.some(function (requestAllotTaskBoxe) {
-          // 检查这两个数据是否为空，如果为空则返回true
-          if (requestAllotTaskBoxe.targetVaultCode === null ||
-            requestAllotTaskBoxe.reqAllotDate === null) {
-            return true;
+        if (window.confirm('是否提交申请？')) {
+          let that = this;
+          if (that.requestAllotTaskBoxes.length < 1) {
+            alert('没有调拨的数据，请重新申请！');
+            return;
           }
-          // 当物品类别为现金才检查现金数量是否小于等于0
-          if (requestAllotTaskBoxe.itemsType === 1) {
-            return requestAllotTaskBoxe.items.some(function (item) {
-              // 如果数量错误（数量小于等于0），则返回true。
-              if (item.amount <= 0) {
-                return true;
-              }
-            });
-          }
-        });
-        console.log(isUnqualified);
-        // 经过上面对申请数据的校验，得出结论（有不合格的地方，结果为true，反之false）
-        if (isUnqualified) {
-          alert('申请信息填写不规范，请检查页面红色部分，重新填写再申请！');
-          return;
-        }
-        that.requestAllotTaskBoxes.forEach(function (requestAllotTaskBoxe) {
-          requestAllotTaskBoxe.applyBankCode = that.loginUser.departmentCode;
-          requestAllotTaskBoxe.applyUserId = that.loginUser.id; // 申请人id
-          requestAllotTaskBoxe.applyUserLoginName = that.loginUser.loginName; // 申请人登录名
-        });
-        $.ajax({
-          url: getUrlLocal() + 'task/branchRequestAllotApply',
-          type: 'post',
-          contentType: 'application/json',
-          data: JSON.stringify(that.requestAllotTaskBoxes),
-          success: function (data) {
-            if (data.isSuccess) {
-              console.log(data.result);
-              // 申请成功后将页面恢复至初始化状态
-              that.requestAllotTaskBoxes = [
-                {
-                  targetVaultCode: null,
-                  boxType: 1,
-                  reqAllotDate: null,
-                  itemsType: 1,
-                  contentDesc: '',
-                  items: [
-                    {
-                      sceneType: 1,
-                      currency: 1,
-                      denomination: 100,
-                      amount: 0,
-                      sum: null,
-                    }
-                  ]
-                }
-              ];
-              alert(data.result);
-            } else {
-              alert(data.result + '可能是数据填写未规范，请检查后填写提交');
+          let isUnqualified = that.requestAllotTaskBoxes.some(function (requestAllotTaskBoxe) {
+            // 检查这两个数据是否为空，如果为空则返回true
+            if (requestAllotTaskBoxe.targetVaultCode === null ||
+              requestAllotTaskBoxe.reqAllotDate === null) {
+              return true;
             }
-          },
-          error: function () {
-            alert('与服务器通信失败，请联系管理员');
+            // 当物品类别为现金才检查现金数量是否小于等于0
+            if (requestAllotTaskBoxe.itemsType === 1) {
+              return requestAllotTaskBoxe.items.some(function (item) {
+                // 如果数量错误（数量小于等于0），则返回true。
+                if (item.amount <= 0) {
+                  return true;
+                }
+              });
+            }
+          });
+          console.log(isUnqualified);
+          // 经过上面对申请数据的校验，得出结论（有不合格的地方，结果为true，反之false）
+          if (isUnqualified) {
+            alert('申请信息填写不规范，请检查页面红色部分，重新填写再申请！');
+            return;
           }
-        });
+          that.requestAllotTaskBoxes.forEach(function (requestAllotTaskBoxe) {
+            requestAllotTaskBoxe.applyBankCode = that.loginUser.departmentCode;
+            requestAllotTaskBoxe.applyUserId = that.loginUser.id; // 申请人id
+            requestAllotTaskBoxe.applyUserLoginName = that.loginUser.loginName; // 申请人登录名
+          });
+          $.ajax({
+            url: getUrlLocal() + 'task/branchRequestAllotApply',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(that.requestAllotTaskBoxes),
+            success: function (data) {
+              if (data.isSuccess) {
+                console.log(data.result);
+                // 申请成功后将页面恢复至初始化状态
+                that.requestAllotTaskBoxes = [
+                  {
+                    targetVaultCode: null,
+                    boxType: 1,
+                    reqAllotDate: null,
+                    itemsType: 1,
+                    contentDesc: '',
+                    items: [
+                      {
+                        sceneType: 1,
+                        currency: 1,
+                        denomination: 100,
+                        amount: 0,
+                        sum: null,
+                      }
+                    ]
+                  }
+                ];
+                alert(data.result);
+              } else {
+                alert(data.result + '可能是数据填写未规范，请检查后填写提交');
+              }
+            },
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
+            }
+          });
+        }
       }
     }
   });
