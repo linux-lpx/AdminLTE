@@ -97,6 +97,7 @@
               <th>申请时间</th>
               <th>箱包类别</th>
               <th>物品类别</th>
+              <th>已装箱的尾箱编号</th>
               <th>申请详情</th>
               <th>操作</th>
               <!--<th>是否已装箱</th>-->
@@ -109,6 +110,7 @@
               <td v-text="box.createTime"></td>
               <td v-text="box.boxType === 1 ? '箱' : '包'"></td>
               <td v-text="box.boxItemType === 1 ? '现金' : '非现金'"></td>
+              <td v-text="taskBoxingInfo[index].boxOuterCode !== null ? taskBoxingInfo[index].boxOuterCode : '尚未装箱'"></td>
               <td>
                 <button class="btn btn-primary btn-sm btn-flat" data-toggle="modal" data-target="#itemsModal"
                         @click="boxIndex = index">查看

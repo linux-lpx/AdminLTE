@@ -104,9 +104,9 @@
               <th>箱包类别</th>
               <th>尾箱编号</th>
               <th>物品类别</th>
-              <th>详情</th>
               <th>确认</th>
               <th>拒绝</th>
+              <th>详情</th>
             </tr>
             <tr v-for="(box, index) in taskBoxes">
               <td><input type="checkbox" v-bind:value="index" v-model="selectedBoxIndex"></td>
@@ -120,15 +120,15 @@
               <td v-text="box.boxOuterCode"></td>
               <td v-text="box.boxItemType === 1 ? '现金' : '非现金'"></td>
               <td>
-                <button class="btn btn-primary btn-sm btn-flat" data-toggle="modal" data-target="#boxingOverModal"
-                        @click="boxIndex = index">查看
-                </button>
-              </td>
-              <td>
                 <button class="btn btn-success btn-sm btn-flat" @click="boxingConfirm(box.code, 8)">确认</button>
               </td>
               <td>
                 <button class="btn btn-danger btn-sm btn-flat" @click="boxingConfirm(box.code, 9)">拒绝</button>
+              </td>
+              <td>
+                <button class="btn btn-primary btn-sm btn-flat" data-toggle="modal" data-target="#boxingOverModal"
+                        @click="boxIndex = index">查看
+                </button>
               </td>
             </tr>
           </table>

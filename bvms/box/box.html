@@ -167,7 +167,8 @@
               <th>尾箱类型</th>
               <th>尾箱当前所在机构</th>
               <th>是否正常</th>
-              <!--<th>是否启用</th>-->
+              <th>启用</th>
+              <th>停用</th>
             </tr>
             <tr v-for="(box, index) in boxes">
               <td><input type="checkbox" title="选择" v-bind:value="index" v-model="selectedBoxIndex"></td>
@@ -177,7 +178,12 @@
               <td v-text="box.typeId === 1 ? '业务箱' : '其他'"></td>
               <td v-text="box.currentBankCode"></td>
               <td v-text="box.hasException === 0 ? '正常' : '异常'"></td>
-              <!--<td v-text="box.runStateName"></td>-->
+              <td>
+                <button class="btn btn-primary btn-flat btn-sm" @click="enableBox(1, box.innerCode)">启用</button>
+              </td>
+              <td>
+                <button class="btn btn-danger btn-flat btn-sm" @click="enableBox(0, box.innerCode)">停用</button>
+              </td>
             </tr>
           </table>
         </div>
@@ -254,6 +260,7 @@
       },
       selectedBoxIndex: [],
       deleteBoxId: [],
+      enableResult: {},
     },
     methods: {
       goToPage: function (path, parentName) {
@@ -393,6 +400,43 @@
           allotTime: null,
           isMonitor: null,
           baseStationCode: null,
+        }
+      },
+      enableBox: function (type, code) {
+        if (window.confirm('请确保已经将尾箱放置与交接定位器附近，是否停/启用尾箱？')) {
+          let that = this;
+          that.enableResult = {};
+          let url;
+          if (type === 1) {
+            // 启用
+            url = getUrlLocal() + 'cmd/' + that.loginUser.departmentCode + '/boxActivate?codes=' + code + '&site=0';
+          } else if (type === 0) {
+            // 停用
+            url = getUrlLocal() + 'cmd/' + that.loginUser.departmentCode + '/boxDeactivate?codes=' + code + '&site=0';
+          }
+          $.ajax({
+            url: url,
+            type: 'post',
+            success: function (data) {
+              if (data.isSuccess) {
+                that.enableResult = JSON.parse(data.result);
+                if (that.enableResult.success) {
+                  if (!that.enableResult.data[0].hasException) {
+                    alert('操作成功！编号：'+ that.enableResult.data[0].code+ ' ' + that.enableResult.data[0].memo);
+                  } else {
+                    alert('操作失败，请重试或检查尾箱状态');
+                  }
+                } else {
+                  alert('操作失败，请重试或检查尾箱状态');
+                }
+              } else {
+                alert(data.result);
+              }
+            },
+            error: function () {
+              alert('与服务器通信失败，请联系管理员');
+            }
+          });
         }
       }
     }

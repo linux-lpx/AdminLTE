@@ -96,7 +96,31 @@
               </div>
               <div class="box-body">
                 <div>
-                  <button class="btn btn-default btn-flat btn-block">点击验证</button>
+                  <button class="btn btn-default btn-flat btn-block" tabindex="-1"
+                          data-toggle="modal" data-target="#fingerprintCheckModal" @click="fingerprintCheck()">点击验证</button>
+                  <!--用户添加更新模态框-->
+                  <div class="modal fade" style="color: #1b6d85" id="fingerprintCheckModal" role="dialog">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h3 style="display: inline">指纹验证</h3>
+                          <button class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body" id="finger">
+                          <object id="fingerprint"
+                                  classid="clsid:315A2D7D-0110-4231-A582-1EE2D40B333B"
+                                  height="100%"
+                                  width="100%"
+                                  TYPE="application/x-itst-activex"
+                                  codebase="../view/JZTDLL.cab#version=1,0,0,0"></object>
+                        </div>
+                        <div class="modal-footer">
+                          <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                          <button class="btn btn-primary" data-dismiss="modal">确定</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -190,7 +214,7 @@
             <div class="box box-solid box-flat"
                  v-bind:class="{'box-danger':checkResult.data.hasException,'box-primary':!checkResult.data.hasException}">
               <div class="box-header">
-                <div class="box-title" v-text="'交接区已清点出的尾箱列表：'+checkResult.data.hasException?'有异常':'没有异常'"></div>
+                <div class="box-title" v-text="checkResult.data.hasException?'有异常':'没有异常'"></div>
               </div>
               <div class="box-body">
                 <table class="table table-bordered table-striped table-striped table-hover">
@@ -596,6 +620,16 @@
           }
         });
       },
+      fingerprintCheck: function () {
+        // TODO 调取指纹验证
+        let fingerprint = document.getElementById("fingerprint");
+        fingerprint.JZTLoad();
+        fingerprint.OpenUSB();
+        let feature = fingerprint.getFeature();
+        // document.getElementById("finger").focus();
+        document.getElementById("finger").value = feature;
+        // document.getElementById("finger").blur();
+      }
 
     }
 
