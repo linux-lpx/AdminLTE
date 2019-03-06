@@ -6,7 +6,7 @@
   border-color: #a94442;
 }
 
-.breadcrumb >.breadcrumb-active {
+.breadcrumb > .breadcrumb-active {
   font-weight: bold;
   color: #777;
   font-size: 16px;
@@ -30,4 +30,8 @@
   margin: 0 0 15px;
   padding: 5px 10px;
   font-size: large;
+}
+
+.mobile-div {
+  margin: 5px 0;
 }
